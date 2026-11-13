@@ -4,7 +4,15 @@ import { z } from "zod";
 const seed = JSON.parse(
   readFileSync(new URL("../../demo-data/ward.json", import.meta.url), "utf8"),
 ) as { patients: Patient[]; staff: Staff[] };
-type Patient = { id: string; name: string; room: string; reported: string };
+type Patient = {
+  id: string;
+  name: string;
+  room: string;
+  reported: string;
+  age?: number;
+  warning?: string;
+  summary?: string;
+};
 type Staff = { id: string; name: string; patients: string[] };
 type Task = {
   id: string;
@@ -61,6 +69,7 @@ export class Ward {
   snapshot(id: string) {
     const s = this.person(id);
     return {
+      me: { id: s.id, name: s.name },
       staff: this.staff.map((x) => ({ id: x.id, name: x.name })),
       patients: this.patients.filter((p) => s.patients.includes(p.id)),
       tasks: this.tasks.map((t) =>
