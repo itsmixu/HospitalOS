@@ -45,6 +45,8 @@ class GlassesLink(
     private val scope: CoroutineScope,
     /** Head turn for the alert map; attached with the display session. */
     val head: HeadTracker,
+    /** Speech for messages, notes and the assistant; attached with the display session. */
+    val voice: VoiceInput,
     private val onDisplayReady: () -> Unit,
 ) {
   private companion object {
@@ -143,6 +145,7 @@ class GlassesLink(
                   if (state == DisplayState.STARTED) {
                     _step.value = GlassesStep.ON
                     if (head.source.value == HeadingSource.NONE) head.attach(s) { _messages.tryEmit(it) }
+                    if (voice.source.value != VoiceSource.GLASSES) voice.attach(s) { _messages.tryEmit(it) }
                     onDisplayReady()
                   }
                 }
@@ -155,6 +158,7 @@ class GlassesLink(
     jobs.forEach { it.cancel() }
     jobs.clear()
     head.detach(session)
+    voice.detach(session)
     session?.let { s ->
       runCatching { s.removeDisplay() }
       s.stop()

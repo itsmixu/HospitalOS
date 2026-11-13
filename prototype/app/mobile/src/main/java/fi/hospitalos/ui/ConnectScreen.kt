@@ -45,7 +45,10 @@ fun ConnectScreen(
     onAllowBluetooth: () -> Unit,
     onRegister: () -> Unit,
     onUnregister: () -> Unit,
+    onAllowGlassesMic: () -> Unit,
+    onAllowPhoneMic: () -> Unit,
 ) {
+  val voice by vm.glasses.voice.source.collectAsStateWithLifecycle()
   val link by vm.ward.link.collectAsStateWithLifecycle()
   val snapshot by vm.ward.snapshot.collectAsStateWithLifecycle()
   val step by vm.glasses.step.collectAsStateWithLifecycle()
@@ -59,7 +62,7 @@ fun ConnectScreen(
   ) {
     Spacer(Modifier.height(12.dp))
     Text("Connect", color = C.Text, fontSize = 28.sp, fontWeight = FontWeight.Bold)
-    Text("Four steps. Each turns green when it's done.", color = C.Muted, fontSize = 15.sp)
+    Text("Five steps. Each turns green when it's done.", color = C.Muted, fontSize = 15.sp)
 
     // 1 — ward server
     val serverDone = link == Link.ONLINE
@@ -115,6 +118,17 @@ fun ConnectScreen(
       Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         PrimaryButton("Start display", { vm.glasses.startDisplay() }, enabled = regDone && !displayOn && step != GlassesStep.STARTING)
         if (displayOn || step == GlassesStep.PAUSED) SecondaryButton("Stop", { vm.glasses.stopDisplay() })
+      }
+    }
+
+    // 5 — Voice
+    val voiceDone = voice == fi.hospitalos.glasses.VoiceSource.GLASSES
+    StepCard(5, "Voice", done = voiceDone, active = displayOn && !voiceDone) {
+      Text("For notes, messages and the assistant. Glasses speech needs the microphone allowed in Meta AI; the phone mic is a backup.", color = C.Muted, fontSize = 13.sp)
+      StatusPill(voice.label, if (voiceDone) C.Green else if (voice == fi.hospitalos.glasses.VoiceSource.PHONE) C.Amber else C.Muted)
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        PrimaryButton("Allow glasses mic", onAllowGlassesMic, enabled = regDone)
+        SecondaryButton("Phone mic", onAllowPhoneMic)
       }
     }
     Spacer(Modifier.height(24.dp))

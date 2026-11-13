@@ -34,6 +34,8 @@ fun HospitalApp(
     onAllowBluetooth: () -> Unit,
     onRegister: () -> Unit,
     onUnregister: () -> Unit,
+    onAllowGlassesMic: () -> Unit,
+    onAllowPhoneMic: () -> Unit,
 ) {
   val link by vm.ward.link.collectAsStateWithLifecycle()
   var tab by rememberSaveable { mutableStateOf(Tab.CONNECT) }
@@ -67,7 +69,7 @@ fun HospitalApp(
                 selected = tab == Tab.WARD,
                 onClick = { tab = Tab.WARD },
                 icon = { Icon(Icons.Outlined.LocalHospital, null) },
-                label = { Text("Ward") },
+                label = { Text("Stage") },
                 colors = colors,
             )
             NavigationBarItem(
@@ -82,8 +84,8 @@ fun HospitalApp(
     ) { padding ->
       Crossfade(tab, animationSpec = tween(220), label = "tab") { t ->
         when (t) {
-          Tab.WARD -> WardScreen(vm, Modifier.padding(padding), openConnect = { tab = Tab.CONNECT })
-          Tab.CONNECT -> ConnectScreen(vm, Modifier.padding(padding), onAllowBluetooth, onRegister, onUnregister)
+          Tab.WARD -> StageScreen(vm, Modifier.padding(padding), openConnect = { tab = Tab.CONNECT })
+          Tab.CONNECT -> ConnectScreen(vm, Modifier.padding(padding), onAllowBluetooth, onRegister, onUnregister, onAllowGlassesMic, onAllowPhoneMic)
         }
       }
     }

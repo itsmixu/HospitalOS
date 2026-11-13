@@ -44,4 +44,5 @@ dependencies {
   implementation("com.meta.wearable:mwdat-core:1.0.1")
   implementation("com.meta.wearable:mwdat-display:1.0.1")
   implementation("com.meta.wearable:mwdat-motion:1.0.1")
+  implementation("com.meta.wearable:mwdat-speech:1.0.1")
 }

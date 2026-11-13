@@ -162,7 +162,9 @@ Extend, do not silently break, the current `{id,type,payload}` protocol. Version
 
 **Messages:** recording → transcribing → review → sent → delivered; read/acknowledged only after explicit recipient action. Text is primary; optional audio expires under a separate retention rule. Do not replay it aloud automatically.
 
-**New commands, planned:** `session.context.confirm`, `presence.update`, `message.create`, `message.received`, `message.ack`, `help.expire`, `help.briefing.get`, `observation.propose`, `observation.confirm`, `observation.discard`, `observation.attach`. Keep existing commands behind compatibility handlers until both clients migrate. Build response schemas too, not only incoming validation.
+**Implemented 2026-11-14 (branch `feat/animations`):** `presence.update {status: free|busy}`; `msg.send {to, text}` and `msg.read {messageId}` (snapshot `messages` = only the user's own); `help.auto {patientId, count, summary}` (server picks free colleagues assigned to the patient); `assistant.ask {text, patientId?}` → `assistant.reply {heard, say, actions, source}` sent only to the speaker — Claude or the rule parser maps speech to the commands above, executed as the speaker through the normal permission checks.
+
+**New commands, planned:** `session.context.confirm`, `message.received`, `message.ack`, `help.expire`, `help.briefing.get`, `observation.propose`, `observation.confirm`, `observation.discard`, `observation.attach`. Keep existing commands behind compatibility handlers until both clients migrate. Build response schemas too, not only incoming validation.
 
 **Briefings:** project fields for the requesting/assigned staff and active task; request details only on deliberate open. Replace broad full-record snapshots with generic inbox status plus separately authorised patient/task reads. Observations share only after confirmation and user selection. A ward observer receives task ID, room, status and ownership, not names, symptoms, free-text messages or instrument values. Changing permissions must affect live sockets, reconnects and cached screens.
 

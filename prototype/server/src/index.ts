@@ -2,7 +2,18 @@ import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import { WebSocketServer, WebSocket } from "ws";
+import { z } from "zod";
 import { Ward } from "./core.ts";
+import { runAssistant } from "./assistant.ts";
+
+const assistantAsk = z.object({
+  id: z.string().min(1).max(100),
+  type: z.literal("assistant.ask"),
+  payload: z.object({
+    text: z.string().trim().min(1).max(500),
+    patientId: z.string().max(100).optional(),
+  }),
+});
 const ward = new Ward();
 // DEMO_TOKENS=fixed gives stable tokens (`aino-demo`, …) for rehearsals on a
 // loopback-only server, so the phone app can remember its token. Default: random.
@@ -71,6 +82,24 @@ wss.on("connection", (ws, req) => {
           type: "snapshot",
           payload: ward.snapshot(clients.get(ws)!),
         });
+        return;
+      }
+      if (msg.type === "assistant.ask") {
+        // Voice assistant: async (may call Claude). Reply only to the speaker, then broadcast
+        // whatever the actions changed.
+        const actor = clients.get(ws)!;
+        const v = assistantAsk.parse(msg);
+        runAssistant(ward, actor, v.payload.text, { patientId: v.payload.patientId })
+          .then((reply) => {
+            send(ws, { type: "assistant.reply", id: v.id, payload: reply });
+            broadcast();
+          })
+          .catch((e) =>
+            send(ws, {
+              type: "error",
+              message: e instanceof Error ? e.message : "Assistant failed",
+            }),
+          );
         return;
       }
       ward.handle(clients.get(ws)!, msg);

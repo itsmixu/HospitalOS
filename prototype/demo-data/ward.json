@@ -22,6 +22,8 @@
   "staff": [
     { "id": "aino", "name": "Aino", "patients": ["p1", "p2"] },
     { "id": "ben", "name": "Ben", "patients": ["p1"] },
+    { "id": "sara", "name": "Sara", "patients": ["p1", "p2"] },
+    { "id": "leo", "name": "Leo", "patients": ["p2"] },
     { "id": "observer", "name": "Ward overview", "patients": [] }
   ]
 }

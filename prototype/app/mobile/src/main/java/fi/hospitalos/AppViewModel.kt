@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import fi.hospitalos.glasses.GlassesFlow
 import fi.hospitalos.glasses.GlassesLink
 import fi.hospitalos.glasses.HeadTracker
+import fi.hospitalos.glasses.VoiceInput
 import fi.hospitalos.ward.WardClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -23,7 +24,13 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
   lateinit var flow: GlassesFlow
     private set
 
-  val glasses = GlassesLink(viewModelScope, HeadTracker(app, viewModelScope), onDisplayReady = { flow.render() })
+  val glasses =
+      GlassesLink(
+          viewModelScope,
+          HeadTracker(app, viewModelScope),
+          VoiceInput(app, viewModelScope),
+          onDisplayReady = { flow.render() },
+      )
 
   init {
     flow = GlassesFlow(viewModelScope, ward, glasses)
@@ -55,6 +62,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
   }
 
   fun bluetoothGranted() = glasses.initialize(getApplication())
+
+  fun notice(text: String) {
+    _notices.tryEmit(text)
+  }
 
   fun register(activity: Activity) = glasses.register(activity)
 

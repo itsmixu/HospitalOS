@@ -65,6 +65,39 @@ function render() {
     }
     $("tasks").append(d);
   }
+  // Status and direct messages.
+  $("presence").textContent = `${state.me?.name ?? ""}: ${state.me?.status ?? "no status"}`;
+  $("staff").replaceChildren(
+    ...state.staff
+      .filter((s) => s.status)
+      .map((s) => {
+        const p = document.createElement("p");
+        p.textContent = `${s.name} · ${s.status}`;
+        return p;
+      }),
+  );
+  options(
+    "msgTo",
+    state.staff.filter((s) => s.status && s.id !== state.me?.id),
+    (s) => s.name,
+  );
+  const names = Object.fromEntries(state.staff.map((s) => [s.id, s.name]));
+  $("messages").replaceChildren(
+    ...[...(state.messages ?? [])].reverse().map((m) => {
+      const d = document.createElement("div");
+      d.className = "task";
+      const p = document.createElement("p");
+      p.textContent = `${names[m.from] ?? m.from} → ${names[m.to] ?? m.to}: ${m.text} · ${m.status}`;
+      d.append(p);
+      if (m.to === state.me?.id && m.status === "sent") {
+        const b = document.createElement("button");
+        b.textContent = "Mark read";
+        b.onclick = () => cmd("msg.read", { messageId: m.id });
+        d.append(b);
+      }
+      return d;
+    }),
+  );
   $("notes").textContent = JSON.stringify(state.notes, null, 2);
   $("encounter").textContent = JSON.stringify(state.drafts, null, 2);
 }
@@ -114,3 +147,14 @@ for (const [id, type] of [
       $("planned").value = "";
     }
   };
+$("setFree").onclick = () => cmd("presence.update", { status: "free" });
+$("setBusy").onclick = () => cmd("presence.update", { status: "busy" });
+$("msgSend").onclick = () => {
+  const text = $("msgText").value.trim();
+  if (!text) {
+    $("status").textContent = "Write a message first";
+    return;
+  }
+  cmd("msg.send", { to: $("msgTo").value, text });
+  $("msgText").value = "";
+};

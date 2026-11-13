@@ -59,7 +59,7 @@
   </style>
   <h1>Ward workspace</h1>
   <p>
-    Synthetic development mode · typed input · no audio recording or external AI
+    Synthetic development mode · typed input · the glasses assistant may use Claude if the server has an API key
   </p>
   <section>
     <input
@@ -97,6 +97,25 @@
         aria-label="Task summary"
       /><button id="request">Request help</button>
       <div id="tasks"></div>
+    </section>
+  </div>
+  <div class="grid">
+    <section>
+      <h2>Your status</h2>
+      <p id="presence">Unknown</p>
+      <button id="setFree">Free</button><button id="setBusy">Busy</button>
+      <h2>Staff</h2>
+      <div id="staff"></div>
+    </section>
+    <section>
+      <h2>Messages</h2>
+      <select id="msgTo" aria-label="Message recipient"></select
+      ><input id="msgText" placeholder="Short message" aria-label="Message" /><button
+        id="msgSend"
+      >
+        Send
+      </button>
+      <div id="messages"></div>
     </section>
   </div>
   <section>
