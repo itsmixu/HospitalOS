@@ -10,7 +10,7 @@ HospitalOS connects bedside encounters, acknowledged assistance, relevant patien
 1. **SPEC.md first.** If a change alters behavior, scope, message types or architecture, update SPEC.md in the same commit (or before). Code that disagrees with SPEC.md is a bug in one of them; fix it.
 2. **Log every agreement** in the decision log below: date, decision, one-line why. If it's not written here, it isn't agreed.
 3. **Keep docs in these three files** (README.md, CLAUDE.md, SPEC.md). Don't create new docs files; add a section instead.
-4. **Fake data only.** Never commit real patient, staff or personal data. All demo data lives in `demo-data/`.
+4. **Fake data only.** Never commit real patient, staff or personal data. All prototype demo data lives in `prototype/demo-data/`.
 5. **No secrets in git.** API keys go in `.env` (git-ignored); keep `.env.example` up to date with every variable name.
 6. **`main` must always run the demo.** Work on short-lived branches (`feat/…`, `fix/…`), merge to `main` the same day. Don't push broken builds to `main`.
 7. **Small commits, clear messages** (`feat(app): wristband QR decode`, `fix(server): alert routing`).
@@ -24,7 +24,7 @@ HospitalOS connects bedside encounters, acknowledged assistance, relevant patien
 | Who | Owns | Availability |
 |---|---|---|
 | itsmixu (repo owner) | Specs, research, deck, demo script | Fri 13 Nov + Sat 14 Nov morning |
-| Main developer (Mac + Android phone) | `app/`, `server/`, demo build | Whole event |
+| Main developer (Mac + Android phone) | `prototype/app/`, `prototype/server/`, demo build | Whole event |
 
 ## Decision log
 
@@ -56,3 +56,5 @@ These decisions supersede conflicting earlier scope/hardware decisions above; hi
 - 2026-11-13 — **Download the official Meta Android toolkit/samples as a sibling checkout**, outside HospitalOS; use published SDK dependencies when integrating — keep upstream code out of our repository and provide a clean development starting point.
 
 - 2026-11-13 — **Implement the development foundation:** TypeScript WebSocket server (`ws`), validation (`zod`), browser responder and Kotlin Android Display bridge (`OkHttp`, Android lifecycle, DAT 1.0.1), plus Prettier for consistent team formatting. These dependencies provide transport, validation and lifecycle support. Start with synthetic typed encounter input and an explicitly labelled deterministic draft, not claimed live speech or AI. Add shared state/permission tests and build scripts; leave QR and Gen 2 optional.
+
+- 2026-11-13 — **Move the working core into `prototype/`**, including Android, server, synthetic data and Node setup; planning/research remain at root. Run commands and CI from the new location — keep the prototype separate from other team work.

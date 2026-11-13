@@ -20,9 +20,9 @@ Display-first bedside coordination and reviewed care notes on Meta AI glasses. J
 
 | Folder | What |
 |---|---|
-| `app/` | Android companion app (Kotlin, Meta Wearables Device Access Toolkit) |
-| `server/` | Node/TypeScript WebSocket server + Claude API |
-| `demo-data/` | Fake staff, patients, floor plan, wristband QR codes, scenario |
+| `prototype/app/` | Android companion app (Kotlin, Meta Wearables Device Access Toolkit) |
+| `prototype/server/` | Node/TypeScript WebSocket server + Claude API |
+| `prototype/demo-data/` | Fake staff, patients, floor plan, wristband QR codes, scenario |
 | `research/` | Challenge brief, judging criteria, smart-glasses research |
 
 ## Setup
@@ -30,9 +30,9 @@ Display-first bedside coordination and reviewed care notes on Meta AI glasses. J
 1. **Meta Android toolkit and samples:** official upstream <https://github.com/meta/meta-wearables-dat-android>, downloaded beside this repository at `../meta-wearables-dat-android` (checkout `f4371bc9f90249d51eb07d7f8a61e8d829294f16`). Do not commit upstream code here. Open `../meta-wearables-dat-android/samples/DisplayAccess` in Android Studio as the Display-first starting point; `samples/CameraAccess` is the optional camera reference. The Display sample pins DAT **1.0.1** and resolves its SDK libraries from Maven Central during Gradle sync; cloning alone does not download all build dependencies.
    - Upstream prerequisites: Android Studio Narwhal (2025.1.1)+, JDK 17+, Android SDK 36+. Use Android Studio's bundled JDK for Gradle.
    - Add your Wearables Developer Center application ID and client token to the sample's local `local.properties` (`mwdat_application_id`, `mwdat_client_token`); do not commit credentials.
-   - Sync/build the sample, then test its display, input and audio paths on loan hardware before adapting it into `app/`. Download is verified; build, registration and hardware operation are not yet verified.
+   - Sync/build the sample, then test its display, input and audio paths on loan hardware before adapting it into `prototype/app/`. Download is verified; build, registration and hardware operation are not yet verified.
 2. **Glasses:** enable Developer Mode in the Meta AI app (tap the app version 5 times). Without glasses, use the SDK's mock device kit.
-3. **Secrets:** copy `.env.example` to `.env` and fill in `ANTHROPIC_API_KEY`.
+3. **Secrets:** the optional environment template is `prototype/.env.example`. The current deterministic demo requires no AI key; reserve `ANTHROPIC_API_KEY` for later integration.
 4. Use the development instructions below for the HospitalOS app and local ward server.
 
 ## Run the development foundation
@@ -40,6 +40,7 @@ Display-first bedside coordination and reviewed care notes on Meta AI glasses. J
 From the repository root (Node 22+):
 
 ```sh
+cd prototype
 npm ci
 npm run check
 npm test
@@ -58,18 +59,20 @@ This is typed/deterministic simulation, not ambient recording or an AI-generated
 
 ## Android development
 
-Open `app/` in Android Studio. Use its bundled JDK and Android SDK 36. The local, git-ignored `app/local.properties` contains the Android SDK path and DAT developer-mode IDs (`0`); production IDs belong in that local file, never Git. The public wrapper files come from Meta's sample; our application is independent.
+Open `prototype/app/` in Android Studio. Use its bundled JDK and Android SDK 36. The local, git-ignored `prototype/app/local.properties` contains the Android SDK path and DAT developer-mode IDs (`0`); production IDs belong in that local file, never Git. The public wrapper files come from Meta's sample; our application is independent.
+
+From the repository root:
 
 ```sh
-cd app
+cd prototype/app
 JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew :mobile:assembleDebug
 ```
 
-The debug APK is `app/mobile/build/outputs/apk/debug/mobile-debug.apk`. For a USB-connected Android phone:
+The debug APK is `prototype/app/mobile/build/outputs/apk/debug/mobile-debug.apk`. For a USB-connected Android phone, from the repository root:
 
 ```sh
 adb reverse tcp:8787 tcp:8787
-adb install -r app/mobile/build/outputs/apk/debug/mobile-debug.apk
+adb install -r prototype/app/mobile/build/outputs/apk/debug/mobile-debug.apk
 ```
 
 Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulator uses `ws://10.0.2.2:8787`. Paste Aino's fresh demo token, connect and use the labelled synthetic request button. Browser tabs provide detailed encounter entry/review. The phone preview receives the same filtered snapshot.

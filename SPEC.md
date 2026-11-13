@@ -104,9 +104,9 @@ Keep the demo under **3 minutes**. Every beat also has a clearly labelled script
                                                                                          demo-data/ (JSON)
 ```
 
-- **`app/` — Android companion (Kotlin).** Built on Meta Wearables Device Access Toolkit (DAT) **1.0.1 or later**, starting from Meta's `CameraAccess` / `DisplayAccess` samples. Owns everything device-side: session lifecycle, camera frames (QR), audio, display cards, inputs, offline queue. Developed in Android Studio on macOS.
-- **`server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence and patient-linked task state, enforces recipient permissions, routes messages and briefings, plays the scenario, stores reviewed care entries, and calls the Claude API with synthetic data. **The Claude API key lives only here.**
-- **`demo-data/`** — fake staff, patients, floor plan, wristband QR images, scenario timeline.
+- **`prototype/app/` — Android companion (Kotlin).** Built on Meta Wearables Device Access Toolkit (DAT) **1.0.1 or later**, starting from Meta's `CameraAccess` / `DisplayAccess` samples. Owns everything device-side: session lifecycle, camera frames (QR), audio, display cards, inputs, offline queue. Developed in Android Studio on macOS.
+- **`prototype/server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence and patient-linked task state, enforces recipient permissions, routes messages and briefings, plays the scenario, stores reviewed care entries, and calls the Claude API with synthetic data. **The Claude API key lives only here.**
+- **`prototype/demo-data/`** — fake staff, patients, floor plan, wristband QR images, scenario timeline.
 - **AI model:** Claude via the Anthropic API for summaries and briefings. Verify the available model identifier and measure latency before choosing it; do not assume accuracy or performance.
 - **Devices:** Meta Ray-Ban Display is the main demo target. Basic Gen 2 audio support is optional P1 and is dropped if it delays Display delivery. Keep one shared app/backend; use the phone for detailed review on non-display devices. Sensitive details are not automatically read aloud; open-ear audio is not a confidential channel. One Display pair plus a phone/browser responder is sufficient.
 
@@ -161,9 +161,9 @@ From Meta's DAT docs and our research ([research/notes/meta_dev_platform.md](res
 README.md     pitch + how to run
 CLAUDE.md     rules + decision log
 SPEC.md       this file
-app/          Android companion (Kotlin)
-server/       Node/TS WebSocket server + Claude calls
-demo-data/    fake staff, patients, floor plan, QR codes, scenario
+prototype/app/          Android companion (Kotlin)
+prototype/server/       Node/TS WebSocket server + Claude calls
+prototype/demo-data/    fake staff, patients, floor plan, QR codes, scenario
 research/     challenge brief, judging criteria, research report + notes
 ```
 
@@ -187,3 +187,7 @@ The first runnable slice uses synthetic typed patient reports/plans, explicit co
 Development protocol: authenticate using an initial `auth` message with a per-staff demo token. Commands have `id`, `type`, `payload`; patient/task IDs are validated in the payload. Responses are `snapshot`, `ok`, or `error`; snapshots are filtered per authenticated identity. Additional development commands: `patient.select`, `help.request`, `message.delivered`, `help.response`, `help.complete`, `help.cancel`, `log.start`, `log.stop`, `log.confirm`, `log.discard`. `help.request` selects a named, assigned colleague; no automatic staffing. `log.start` requires `consent: true`; `log.stop` accepts explicitly separated reported/planned fields and prepares a draft. Completion comes only from the task state. Retries are deduplicated by staff plus command ID. Reconnect sends current filtered state, never automatically replays requests.
 
 The server is local-only by default, has randomly generated development tokens, bounded inputs and in-memory synthetic state. Restart resets the ward; drafts expire after 30 minutes. No production authentication, EHR integration, persistent storage, audio transcription or external AI is implied. Android cleartext transport is debug-only for USB/emulator development. Do not use this foundation for real patient information.
+
+## 12. Prototype location
+
+The runnable development foundation lives entirely under `prototype/`: Android app, server/browser responder, synthetic ward data, Node manifests and local environment template. Run Node commands from `prototype/` and Android commands from `prototype/app/`. Root planning documents and `research/` remain shared. CI stays under root `.github/workflows/` and runs in `prototype/`. Earlier architecture paths in this specification are relative to `prototype/`.
