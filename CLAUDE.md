@@ -1,7 +1,7 @@
 # HospitalOS — Team rules & decision log
 
 Junction 2026 entry for the Meta AI glasses challenge (brief: [research/challenge-brief.md](research/challenge-brief.md)).
-HospitalOS connects bedside encounters, acknowledged assistance, relevant patient briefings and reviewed care notes, with explicit privacy routing. QR scanning remains optional.
+HospitalOS focuses on nurse-to-nurse communication plus verified bedside observation capture, with local-first processing and explicit privacy routing. Display is primary; QR remains optional.
 
 **Read [SPEC.md](SPEC.md) before doing any work.** It is the single source of truth for what we build. This file holds the rules and everything we've agreed.
 
@@ -14,7 +14,7 @@ HospitalOS connects bedside encounters, acknowledged assistance, relevant patien
 5. **No secrets in git.** API keys go in `.env` (git-ignored); keep `.env.example` up to date with every variable name.
 6. **`main` must always run the demo.** Work on short-lived branches (`feat/…`, `fix/…`), merge to `main` the same day. Don't push broken builds to `main`.
 7. **Small commits, clear messages** (`feat(app): wristband QR decode`, `fix(server): alert routing`).
-8. **Record glasses gotchas** in SPEC.md §6 as soon as you hit one. Hardware time is scarce; don't let the other person hit the same wall.
+8. **Record glasses gotchas** at the SPEC.md §10 G0 hardware gate as soon as you hit one. Hardware time is scarce; don't let the other person hit the same wall.
 9. **Every feature works in scripted mode** too (server fakes the step), so the demo survives hardware or Wi-Fi failure on stage.
 10. **Display is the main demo target.** Polish the Display workflow first. Basic non-display audio support is optional only if it does not delay Display development or rehearsal; no requirement for every card to have a spoken version. Use the phone for detailed non-display review.
 11. **AI agents:** don't add features beyond SPEC.md, don't add dependencies without noting why in the decision log, and ask before deleting files.
@@ -59,6 +59,19 @@ These decisions supersede conflicting earlier scope/hardware decisions above; hi
 
 - 2026-11-13 — **Move the working core into `prototype/`**, including Android, server, synthetic data and Node setup; planning/research remain at root. Run commands and CI from the new location — keep the prototype separate from other team work.
 
-- 2026-11-14 — **One phone app drives the glasses from live server state.** Mockup screens (from branch `feat/glasses-app`) were ported into `prototype/app` and wired to the ward server: patient card, consent → corner recording pill → draft note review, help requests with real sent/delivered/accepted/completed states, incoming request → briefing → done. Phone app rebuilt in Compose with two tabs (Connect, Ward) — the earlier button list was too confusing to demo.
+### Combined product plan — 2026-11-14
+
+These decisions supersede conflicting earlier priorities, including mandatory ambient conversation capture and external AI processing.
+
+- 2026-11-14 — **Build both workflows:** nurse-to-nurse communication is core; deliberate capture/review of one supported instrument display is the demoable first-person feature. Attach verified observations to requests only by choice; communication also works without a patient encounter.
+- 2026-11-14 — **Local-first processing:** plan bundled Android OCR and explicitly local speech recognition on the phone or controlled local computer. No cloud model is required for the core workflow. Candidate dependencies need benchmarking/telemetry review before adoption; this planning change does not install them.
+- 2026-11-14 — **Defer long ambient recording and generated narrative notes.** Use short reviewed messages and structured observation/task records — protect build time and reduce capture/privacy complexity.
+- 2026-11-14 — **SPEC.md is rewritten as the full implementation plan**, including the current code's gaps, state contracts, G0–G7 simulation/hardware gates, release targets and staged hospital deployment. Targets are not evidence of achieved performance; no clinical-readiness claim.
+- 2026-11-14 — **Display first; QR and Gen 2 optional.** One supported optical profile; reject uncertainty; nurse confirms every reading; never infer measurement freshness or clinical significance from a captured image.
+- 2026-11-14 — **Deployment is gated:** verify Meta platform permissions/terms, hospital access and privacy requirements, intended-purpose classification, EHR integration, hardware suitability and supervised validation before real care. Existing emergency systems remain authoritative.
+
+### Phone + glasses app — 2026-11-14 (branch `feat/full-app`)
+
+- 2026-11-14 — **One phone app drives the glasses from live server state.** Mockup screens (from branch `feat/glasses-app`) were ported into `prototype/app` and wired to the ward server: patient card, consent → corner recording pill → draft note review, help requests with real sent/delivered/accepted/completed states, incoming request → briefing → done. Phone app rebuilt in Compose with two tabs (Connect, Ward) — the earlier button list was too confusing to demo. **Built before the combined plan above:** its encounter/recording flow uses no audio but should be reshaped into short reviewed messages and instrument-reading capture per that plan.
 - 2026-11-14 — **Server additions:** snapshot includes `me`; synthetic patients gain optional `age`, `warning`, `summary`; `DEMO_TOKENS=fixed` gives stable rehearsal tokens on loopback. Default behaviour unchanged; all tests pass.
 - 2026-11-14 — **Hardware verified on Windows** (Ray-Ban Display + Android phone over USB). Build with JDK 17/21, not Android Studio's bundled Java 25.

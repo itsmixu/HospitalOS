@@ -1,193 +1,273 @@
-# HospitalOS — Spec
+# HospitalOS — product and implementation plan
 
-> Single source of truth for **what** we build and **how**. Change this file first, then the code.
-> Rules for working in the repo and the decision log live in [CLAUDE.md](CLAUDE.md).
+> Authoritative plan, revised 2026-11-14. This replaces earlier feature priorities; historical decisions remain in CLAUDE.md. Implementation lives in `prototype/`. A planned capability is not an implemented or validated capability.
 
-## 1. One-liner
+## 1. Product decision
 
-**HospitalOS lets nurses coordinate care and prepare patient notes hands-free.** A request for help carries relevant patient context to the responding colleague, while a privacy layer controls what is recorded, processed and shared.
+**HospitalOS helps nurses request and acknowledge help without leaving the bedside, and capture a visible instrument reading for immediate review on their glasses.**
 
-## 2. Problem & audience
+Communication is the core product. Bedside observation capture is the focused first-person-camera feature. They work independently and connect when a nurse deliberately attaches a confirmed observation to a request. The product does not diagnose, recommend treatment, infer medication administration or replace emergency communication.
 
-**Who:** Ward nurses first, doctors second.
+**Primary audience:** nurses on a ward with repeated requests for practical assistance and some equipment readings that still require manual entry. Start with one ward and one supported instrument display, not every hospital, profession or device. Confirm the need with actual nurses before asserting daily value. Communication-only users should never need to open a patient encounter or activate the camera.
 
-**Problems:** Finding available help takes time; a responding colleague needs context; patient conversations and completed care must be documented without reconstructing them later from memory.
+**Device:** Meta Ray-Ban Display first. One real pair plus a responder browser/phone is the minimum honest hardware demo; two Display pairs are preferred. Basic Gen 2 audio is optional only if it does not delay the Display workflow or rehearsal. QR remains optional.
 
-**Core experience:** Patient encounter → request assistance → colleague accepts and receives a briefing → explicit care update → reviewed draft note.
+**Success:** a wearer can send a request, see who accepted, capture and confirm a reading, and complete the task without taking their phone out during the demonstrated flow. The phone is still used for setup, detailed corrections and administrative review.
 
-**Why glasses:** Hands-free interaction at the bedside, a polished Display interface with glanceable patient cards, task status, briefings and draft-note previews, plus useful spoken acknowledgements. First-person camera value still needs testing: compare optional wristband selection with capturing a selected instrument reading. Retain the useful option after testing; neither is a proven differentiator or a prerequisite for the core workflow.
+## 2. Why glasses — and where they are not better
 
-**Positioning:** A connected bedside workflow with explicit acknowledgement and controlled information sharing. Do not claim that voice communication or ambient notes alone are novel, or that the prototype replaces a hospital information system.
-
-## 3. Scope: what we build
-
-Priority: **P0 = must be in the Display demo.** P1 = add only if it does not delay the Display workflow, device reliability or rehearsal. Everything else = deck only.
-
-**Device scope:** Meta Ray-Ban Display is the main demo and development target. Build and polish its full bedside workflow first. Basic non-display (Gen 2) audio support is P1 only: assistance requests, acknowledgements and encounter capture start/stop. Detailed patient/briefing and note review uses the companion phone on non-display devices. There is no requirement for feature parity or a spoken version of every card. Share patient context, permissions and task state in the existing app/backend; do not build a second application. If Gen 2 support causes delays, defer it and label it planned rather than working.
-
-| # | Feature | Priority |
+| Work | Advantage to prove | Existing alternative / limit |
 |---|---|---|
-| F1 | Direct colleague messages and acknowledged assistance requests | **P0** |
-| F2 | Relevant patient briefing when a colleague accepts a request | **P0** |
-| F3 | Consented conversation capture + explicit care updates → reviewed draft note | **P0** |
-| F4 | Optional wristband QR scan → patient selection/card | P1 |
-| — | Basic Gen 2 audio support (requests, acknowledgements, encounter capture); phone for detailed review | P1 only if no delay |
-| F5 | Explicit privacy routing and visible recipient-specific outputs | **P0** |
-| — | Staff map with labelled simulated positions; separate simulated alert scenario | P1 |
-| — | EHR integration, real indoor positioning, autonomous staffing, shift reports, production admin dashboard | Deck only |
+| Request help while handling equipment or assisting a patient | Short voice action plus a quiet visual confirmation of recipient and response | A headset or communication badge can handle audio. Do not claim communication alone needs glasses. |
+| Receive a task and its context | Glance at a short card without holding a separate screen or hearing clinical detail aloud | Phones are used in healthcare. The claim is reduced interruptions, not that phones are prohibited. |
+| Capture a visible instrument reading | First-person camera plus immediate visual verification while hands remain available | Phone cameras can do OCR; compare interaction effort. Connected monitors already export readings and should use their native integration. |
+| Hand off a confirmed observation | Same patient context and provenance travel with a deliberate request | EHR and communication integrations remain necessary for real deployment. |
 
-### Patient context (P0; QR is optional)
-- Carry the stable patient ID from an existing task, or select a patient explicitly by voice/phone and confirm identifying details before starting an encounter.
-- A room number may narrow a search but never identifies a patient on its own. Tasks, encounters and notes carry patient IDs, not just room labels.
-- Keep the selected patient visible/on-demand through audio; require confirmation when switching. Never silently attach an update to a different patient.
-- Selection does not grant access. The demo uses explicit staff assignments and permissions; a future integration must use the hospital's access controls.
+The differentiator is the complete **see → verify → share with an acknowledged colleague** interaction, rather than generic transcription, a new EHR, or an always-on camera. First-person view is head direction, not eye tracking. No spatially anchored AR or gaze selection is assumed.
 
-### F1 — Communication and assistance (P0)
-- **Presence:** declared `available`, `busy`, `in-room <n>`, or `responding`, set through supported controls. Scanning a wristband is not proof of physical room location.
-- **Direct message:** deliberately record/send to a selected colleague. Use a supported voice/gesture trigger or phone fallback; do not assume reserved touchpad gestures work.
-- **Request help:** create a patient-linked routine assistance task. Route using declared availability and assignment, not simulated proximity. Recipient accepts/declines; sender hears who accepted.
-- **State:** distinguish queued/sent, delivered, accepted and completed. Delivery requires recipient acknowledgement; acceptance names the responding colleague. Completion requires an explicit staff update. Neither delivery nor acceptance proves care occurred.
-- **Disconnected recipient:** show undelivered/unacknowledged status. Reconnect reconciles state using message IDs; it must not duplicate tasks or silently revive cancelled/stale requests. The sender reviews pending requests before resending.
-- One real Display pair is required for the main demo; a second Display pair is preferred. A phone/browser client can act as the second caregiver without requiring Gen 2 support. Other staff are simulated.
-- Optional staff map positions are clearly labelled simulated. Existing emergency channels remain authoritative; this prototype demonstrates routine assistance.
+Pilot value hypotheses: fewer device-handling interruptions, less retyping, faster acknowledgement, and fewer missing task owners. These must be measured, not presented as achieved savings. If existing ward tools outperform the glasses, narrow the target setting or do not deploy.
 
-### F2 — Briefing on acceptance (P0)
-- Accepting an assistance request opens a brief, task-relevant patient briefing drawn from the synthetic record and confirmed F3 entries.
-- Include only permitted, relevant information; do not automatically read the full patient history, medication list or diagnoses. Preserve source attribution such as "patient reported".
-- Offer a short audio acknowledgement, with clinical detail available on deliberate request or display so it is not automatically spoken into a shared room.
-- The ward overview shows task status/ownership, not the clinical briefing. A separate simulated fall/emergency alert is P1, not needed for the core demo and not evidence of real fall detection.
+## 3. Current baseline: what is actually built
 
-### F3 — Encounter and care record (P0)
-1. Confirm the selected patient and explicitly start the consent flow. The nurse asks permission before recording and records the consent decision in the app; refusal leaves capture off. Do not record a pre-consent conversation just to obtain consent evidence.
-2. Start/stop capture explicitly. Show recording state and provide spoken start/stop confirmation. Verify device indicators on the actual hardware; do not assume the camera LED indicates audio-only capture.
-3. Transcribe the synthetic encounter and create a draft with separate fields for **patient-reported information**, **advice/instructions**, **planned actions**, **staff-confirmed completed actions**, and **follow-ups**.
-4. Explicit care updates attach to the same patient/task. "We will help you walk" remains planned; a medication discussion is not administration. The model must not infer completed care from speech about intentions or a camera image.
-5. Nurse reviews, corrects and confirms or discards the draft. Only reviewed entries enter the simulated patient record; unreviewed drafts do not feed F2 briefings.
-6. Apply §8 retention and access rules. Record supporting source references while the draft is being reviewed; do not imply deleted transcripts remain available afterward.
+At plan revision the repo contains:
+- Local TypeScript/WebSocket ward server, synthetic fixtures, per-session demo tokens and server-filtered snapshots.
+- Browser responder with patient selection, typed encounters, requests, separate delivery/acceptance/completion and reviewed deterministic notes.
+- Kotlin Android shell with DAT registration/session code, a hard-coded synthetic request button and a basic Display status card. It is not yet a full glasses workflow.
+- Six passing foundation checks and a previously successful Android debug build. These do not validate real glasses interaction, clinical suitability, OCR or speech.
 
-### F4 — Optional wristband QR (P1)
-- Printed fake wristbands contain a patient ID. Deliberate capture decodes the QR on the phone, followed by patient confirmation and an authorised card.
-- QR scanning is a selection convenience, not authentication, permission, the main selling point, or a mandatory step in the demo.
-- Evaluate selected instrument-reading capture as an alternative camera experiment. It requires nurse verification and must not expand the P0 scope or claim clinical measurement accuracy.
+Missing: actual on-glasses actions, device-tested microphone/camera routing, observations pipeline, short-message capture, request expiry/presence, robust server-enforced selection, durable task recovery and production identity/integration.
 
-### F5 — Privacy routing (P0)
-- Server-enforced, explicit access rules determine allowed recipients and fields; the language model does not decide permissions.
-- Prepare different outputs for the assigned caregiver, ward overview and authorised patient record (see §8).
-- A small demo view displays the actual outgoing payloads and denied requests. This is a verification aid, not a production admin dashboard.
+Important existing gaps to fix: `patient.select` currently checks access but does not retain confirmed session context; snapshots expose all assigned-patient records rather than task-minimal context; delivery acknowledgement is manual in the development UI; task acceptance can currently bypass delivery; state is lost on server restart. Do not hide these behind polished screens.
 
-## 4. Demo script (fake scenario)
+## 4. Scope and order of cuts
 
-One coherent encounter in a **simulated ward**, using synthetic patients, assigned staff and no real hospital systems. One real Display wearer plus a phone/browser responder is sufficient; use two Display pairs if available. Show request status, patient context, the briefing and draft-note preview on the Display. Complete detailed editing/review on the companion phone if needed. Gen 2 is optional and never a prerequisite for rehearsal.
-
-| Beat | What happens | Features |
+| Priority | Deliverable | Boundaries |
 |---|---|---|
-| 1 | Aino explicitly selects and confirms a simulated patient, then starts a consented encounter; QR may be used if ready | Patient context, F3; optional F4 |
-| 2 | Patient reports a concern; Aino records it and requests routine assistance for that patient | F1, F3 |
-| 3 | Ben accepts, Aino receives acknowledgement, and Ben requests the relevant patient briefing | F1, F2 |
-| 4 | Ben explicitly confirms the completed task; the update retains patient ID and staff ownership | F1, F3 |
-| 5 | A draft care note distinguishes reported, planned and completed information; Aino reviews it | F3 |
-| 6 | Show ward task status beside the authorised clinical output and an unauthorised request being denied | F5 |
+| P0 | Complete Display request/response/task screens | A named colleague; routine assistance; explicit send, accept, decline, cancel and complete |
+| P0 | Basic nurse-to-nurse messages | Short dictated text, reviewed before send; local speech recognition; no simultaneous live call |
+| P0 | Delivery, presence and reconnect truth | Delivery means client received it; acceptance means person accepted; never conflate either with care |
+| P0 | One supported observation format | Deliberate camera capture, numeric/label/unit extraction, reject uncertainty, nurse review, explicit save |
+| P0 | Patient/encounter binding and minimal sharing | Patient selection without mandatory QR; confirmed observations only attached by choice |
+| P0 | Privacy controls and truthful offline demo | Camera/mic off by default, no external content processing in default mode, permitted fields only |
+| P0 | Simulation coverage and live hardware rehearsal | Same business logic for real and replay inputs; disclose substitutions |
+| P1 | Replay original short voice clip | Only if transport and retention are reliable; otherwise send reviewed text |
+| P1 | Second monitor profile, QR, second glasses pair, Gen 2 audio | Only after P0 is stable; no required dependency on any of these |
+| Later | Long ambient conversations, generated narrative notes, live calls, maps, automatic assignment, translation | Do not spend remaining hackathon time here |
+| Pilot | EHR write-back, hospital identity, durable audit, fleet management and clinical validation | Defined in §13, not claimed by the hackathon |
 
-Include one short failure: disconnect Ben before request delivery. Aino sees an unacknowledged request, never "Ben is coming". Reconnect/reconcile before proceeding to acceptance.
+Retain the existing typed note workflow as a development/review tool. The demonstration record is a deterministic structured entry from verified observations and explicit task updates. External LLMs are not a dependency. No automatic alarm, escalation decision, diagnosis, dosing or treatment interpretation.
 
-Keep the demo under **3 minutes**. Every beat also has a clearly labelled scripted fallback; disclose simulated events and hardware substitutions. A staff map and separate alert are optional and should not distract from the complete workflow.
+## 5. Intended real-use interaction
 
-**Acceptance checks:** finish and rehearse the full Display workflow without requiring Gen 2 support; complete the workflow without QR; no delivery implies acceptance; no planned action becomes completed; context stays on the selected patient; an unauthorised account cannot obtain clinical fields; confirm/discard handles raw-data deletion; disconnect/retry does not duplicate a task. Measure request-to-delivery latency on the actual setup.
+### Shift setup (phone; once, not every task)
 
-## 5. Architecture
+Sign in, select/confirm assigned ward, connect glasses, check permissions/battery, choose language and quiet mode. For the demo use explicit synthetic identities; for a hospital use managed identity. Show availability controls: Available / Busy / Off duty. Automatically mark a disconnected session Unreachable, never Available. Pairing and developer setup occur before the stage demo and are disclosed.
 
-```
-[Ray-Ban Display glasses]  ⇄ Bluetooth ⇄  [Android app (Kotlin, DAT SDK)]  ⇄ WebSocket ⇄  [Node/TS server]  →  Claude API
-   camera, mic, speakers,                   UI cards, QR decode, audio,                    presence, routing, alerts,
-   display, Neural Band                     transcription, offline queue                   scenario player, care log store
-                                                                                              ↑
-                                                                                         demo-data/ (JSON)
-```
+### A. Communication without patient data
 
-- **`prototype/app/` — Android companion (Kotlin).** Built on Meta Wearables Device Access Toolkit (DAT) **1.0.1 or later**, starting from Meta's `CameraAccess` / `DisplayAccess` samples. Owns everything device-side: session lifecycle, camera frames (QR), audio, display cards, inputs, offline queue. Developed in Android Studio on macOS.
-- **`prototype/server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence and patient-linked task state, enforces recipient permissions, routes messages and briefings, plays the scenario, stores reviewed care entries, and calls the Claude API with synthetic data. **The Claude API key lives only here.**
-- **`prototype/demo-data/`** — fake staff, patients, floor plan, wristband QR images, scenario timeline.
-- **AI model:** Claude via the Anthropic API for summaries and briefings. Verify the available model identifier and measure latency before choosing it; do not assume accuracy or performance.
-- **Devices:** Meta Ray-Ban Display is the main demo target. Basic Gen 2 audio support is optional P1 and is dropped if it delays Display delivery. Keep one shared app/backend; use the phone for detailed review on non-display devices. Sensitive details are not automatically read aloud; open-ear audio is not a confidential channel. One Display pair plus a phone/browser responder is sufficient.
+1. Deliberately activate **Help** or **Message** using the verified glasses input. Short voice input begins only after activation; no custom always-listening wake word.
+2. Choose a colleague from a short list, or speak a constrained command such as “Ask Ben for assistance in room twelve.” Resolve only against the roster; ambiguous names require selection. Room-only requests are allowed if no patient context is attached.
+3. Show recipient, room, task and any attachment; **Send / Edit / Cancel**. Speech recognition cannot send an unreviewed request.
+4. After Send: “Sending” → “Received by Ben's device” → “Ben accepted.” If offline or timed out, show that explicitly and offer Cancel / Choose another colleague / existing hospital channel.
+5. Recipient receives a short non-clinical cue and a card: requester, location, task, **Accept / Decline / Details**. No forced spoken clinical briefing. Routine notifications queue without obscuring an active observation confirmation.
+6. Acceptance claims ownership atomically. If routing to more than one recipient is added later, first valid acceptance wins unless a requested headcount is explicitly supported. Hackathon scope is one assisting colleague.
+7. **Complete** is an explicit action by the assigned responder; it is never inferred from arrival, proximity, silence or a disconnected device. Sender sees completion. Cancellation and decline stay distinct for audit and display.
 
-### Message types (server ⇄ app), JSON over WebSocket
-Core message types: `presence.update`, `msg.voice`, `message.delivered`, `help.request`, `help.response`, `help.complete`, `help.cancel`, `help.briefing`, `patient.select`, `patient.confirm`, `patient.card`, `log.consent`, `log.start`, `log.stop`, `log.summary`, `log.confirm`, `log.discard`, `care.update`, `access.denied`. Optional: `staff.positions`, `alert.new`, `alert.accept`, `alert.briefing`.
+Short messages use Delivered status and optional explicit acknowledgement; they are not actionable care requests unless deliberately created as a task. “Sent” means server acknowledgement, not socket.send() returning true.
 
-Every message has `type`, `id`, `from`, `ts`, `payload`; patient/task events also have stable `patientId`/`taskId` and encounter events an `encounterId`. The server derives sender identity from the authenticated session, checks assignments/access, and filters outgoing payloads before delivery. Client-supplied identity or patient ID is not authorisation. Reconcile task versions and deduplicate IDs on reconnect. Add new types here before using them.
+### B. Bedside observation capture
 
-## 6. Glasses platform: facts & gotchas
+1. Select and confirm a synthetic patient from an assigned task or short patient list. Display two identifying attributes; room is context, not identity. A patient switch clears unconfirmed readings and requests confirmation. Optional wristband capture is a shortcut, not access permission.
+2. Select **Capture reading**, explain the capture to the simulated patient and confirm the demo permission step. Camera remains off until this action. Use one supported blood-pressure-style layout (SYS/DIA in mmHg and pulse in bpm); choose the actual profile after the initial optical test.
+3. Brief camera session: a fixed aiming guide and “Hold steady” cue. Detect/crop the supported display; read several frames. Stop after a usable candidate or a short timeout. Do not continuously stream the ward.
+4. Display the proposed values, labels, units, patient and capture time. Where supported show the cropped source image on a second card; otherwise provide it on the phone for uncertain readings. **Confirm / Retry / Cancel**. Do not auto-confirm because a value seems medically plausible.
+5. Confirm creates an immutable confirmed observation with provenance. An explicitly corrected value is labelled manual correction, never “camera verified.” Corrections create a new version; old confirmations cannot silently change.
+6. **Save locally / Request help / Done**. Sharing requires a deliberate attachment selection; an old observation is labelled with its capture time, never presented as live monitoring. Changing the selected patient invalidates an unsubmitted attachment.
+7. A confirmed observation may join a reviewed structured note; it is not “filed in the EHR” until a future connector receives a success acknowledgement.
 
-From Meta's DAT docs and our research ([research/notes/meta_dev_platform.md](research/notes/meta_dev_platform.md)):
+### Display design rules
 
-- **Camera:** stream at 360p–720p, 2–30 fps over Bluetooth; lower resolution often looks *better* (less compression). For QR, grab single frames, don't stream continuously.
-- **Display (Ray-Ban Display only):** 600×600, built with the SDK's layout API (FlexBox, Text, Image, Button, Icon). **Black = transparent.** Screen dims after 20 s, sleeps at 25 s.
-- **Audio:** HFP is two-way mono 16 kHz. **Set up HFP before starting the camera stream** or audio can fail silently.
-- **Beta features (fine in Developer Mode, not shippable):** on-glasses speech-to-text, Neural Band / button inputs, motion, "Hey Meta" app launch, standalone photos.
-- **On-glasses speech-to-text stops after ~1 minute.** So F3's long conversations can't rely on it: capture audio on the phone and transcribe there or on the server.
-- **Inputs stop working after the glasses are taken off and put back on.** The app must detect this and tell the user.
-- **Tap (pause/resume) and tap-and-hold (stop) on the touchpad are reserved** and never reach our app.
-- Only **one session** on the glasses at a time; only **one third-party app** registered in Developer Mode per pair.
-- **Mock device kit:** develop without glasses using the phone camera as the glasses camera; it also simulates display, inputs and speech.
-- Registration needs internet. DAT app won't install below 10% glasses battery.
+- Home has three choices: **Help**, **Messages**, **Capture**. Task inbox/status is reachable without navigating through a patient record.
+- One decision per card, two or three actions, short readable text. Do not mirror the browser dashboard or put JSON/technical states in the wearer UI.
+- Maintain a compact patient banner in patient-bound screens, but omit names from generic notifications and the ward overview.
+- Quiet by default; sound indicates an event, never automatically reads symptoms/names. Open-ear speakers are not confidential. Speech controls have visual/button alternatives; don't rely only on colour.
+- Capture mode unmistakably shows Camera on / Listening / Stopped. Screen sleep must not silently change task or capture state. Cancel/stop always available.
+- Confirmations happen standing safely at the bedside, not while walking. No arrows over the physical world, gaze assumptions or dense scrolling during movement.
 
-## 7. Challenge requirements → how we handle them
+## 6. Implementation architecture: local first
 
-| Requirement | Our handling |
-|---|---|
-| Permissions | Camera/mic/Bluetooth permission flow in the app with plain-language explanations; patient verbal consent for F3 |
-| Errors | Every failure becomes a short card + spoken message ("Couldn't read wristband, try again closer") |
-| Performance trade-offs | Camera capture only for optional selected actions; summaries on stop; measure delivery and summary latency |
-| Connectivity | Show offline/undelivered/unacknowledged states separately; reconcile on reconnect and review pending requests before resending; no duplicate or stale tasks |
-| Device state changes | Handle glasses disconnect, removed/put back on, hinge closed, low battery, thermal stop; each has a visible state |
-| Accessibility | Prioritise readable Display cards, adjustable text size where supported, concise acknowledgements and supported voice/gesture controls with phone fallback. Full audio parity is not required; basic Gen 2 support is optional and must not delay Display work. |
-| Consent & safe data | See §8 |
-
-## 8. Privacy, consent & data
-
-- **Fake data only.** No real patient or staff data in the demo or repository.
-- **Capture controls:** explicit encounter start/stop, consent decision before recording, clear capture state and no background ward recording. Staff can stop capture immediately.
-- **Explicit demo access policy:** the requesting and assigned accepting caregivers may receive permitted clinical context for their task. The ward overview receives room/task/status/ownership only, without patient name, symptoms, diagnoses or transcript. Only assigned staff may review/write the patient record; unrelated accounts are denied. These are prototype rules, not a claim about the exact permissions of a Finnish hospital.
-- **Server-side filtering:** construct recipient-specific payloads before sending them. Hiding fields in the UI is insufficient. Apply the same checks to voice messages, briefings, record requests and reconnect queues. Avoid sending raw encounter audio to colleagues.
-- **External processing:** synthetic encounter text may be sent to Claude for summarisation; specify any external transcription service too. Show what is sent. This is not hospital-local processing, and local deletion does not prove deletion from external providers.
-- **Retention:** delete app/server raw audio and transcripts after confirmation or discard, including temporary and retry copies; retain only reviewed structured notes and minimal consent/task metadata. Define cleanup for abandoned sessions before the demo. Do not log raw clinical payloads outside the deliberately shown synthetic-data inspection view.
-- **Demonstrate privacy:** show the actual caregiver, ward and record outputs plus an unrelated account's denied request. Removing names is not a guarantee of anonymisation.
-- **Patient identification:** confirmed task context, explicit selection or optional wristband QR. No face recognition or bystander identification. Identification never grants permission.
-- **Scope of claims:** this layer governs our app/server data flow, not Meta firmware, other apps or all device telemetry. No production privacy, security, regulatory or clinical-safety claim follows from the demo.
-- **Pilot path (deck):** validate with nurses, then consider a single Finnish ward with hospital-controlled processing, identity/access integration and EHR integration. Appropriate privacy, security and clinical reviews remain future work.
-
-## 9. Repo layout
-
-```
-README.md     pitch + how to run
-CLAUDE.md     rules + decision log
-SPEC.md       this file
-prototype/app/          Android companion (Kotlin)
-prototype/server/       Node/TS WebSocket server + Claude calls
-prototype/demo-data/    fake staff, patients, floor plan, QR codes, scenario
-research/     challenge brief, judging criteria, research report + notes
+```text
+Meta Display glasses (camera / microphone / Display / supported input)
+                       ↕ DAT + Android audio route, verified on actual hardware
+Managed Android companion
+  Display presenter + interaction state machine
+  explicit capture controller → temporary frames → local crop/OCR/profile parser
+  deliberate short audio → local ASR / restricted intent parser → user review
+  session context + local encrypted outbox + credential store
+                       ↕ authenticated WSS, hospital/local network
+Ward service (Node/TypeScript)
+  identity/assignment checks → atomic tasks/messages → recipient-specific projections
+  confirmed observations + draft/review state → audit + persistence
+                       ↕ later: approved EHR interface / hospital messaging connector
 ```
 
-## 10. Open questions
+**Where computation runs:** glasses are sensors/output, not an assumed general-purpose AI computer. Start with bundled ML Kit Latin OCR on Android; model bundling avoids a first-use download. Google states ML Kit processes input on-device but documents metrics/diagnostics separately; evaluate telemetry and merged permissions. If hospital policy cannot accept it, replace the adapter with a self-hosted/offline OCR engine, accepting revalidation cost. Do not claim all ML Kit network traffic is absent.
 
-Resolve these, then move the answer into the decision log in CLAUDE.md and delete it here.
+**Speech:** first test Android's explicitly on-device recognition availability and selected language; never silently fall back to a cloud recognition service. Alternative: whisper.cpp on the controlled demo laptop/ward server, with model downloaded in advance. Local-server speech is local-network processing, not phone-only. Use a multilingual model for Finnish; English-only models do not prove Finnish support. Start the demo in one declared language and test names/numbers/noise. If neither local recognizer is reliable, use presets/Display controls and label free dictation unavailable; do not claim working voice messaging.
 
-- Speech-to-text for F1/F3: Android's on-device `SpeechRecognizer` (routed to the glasses mic over HFP) vs a cloud STT service on the server. Needs a quick test on real glasses.
-- Where the server runs during the demo: team laptop on venue Wi-Fi vs a small hosted instance (Render/Fly). Venue Wi-Fi may block device-to-device traffic.
-- How the wearer triggers actions: Neural Band gestures vs capture button vs voice, given the beta inputs.
+**AI boundaries:** OCR and speech recognition are bounded perception tools. Intent parsing uses a restricted schema and roster matching. Values, access decisions, request lifecycle and completion come from deterministic code. Do not use a generative model to guess obscured digits, assign a patient, interpret clinical significance or decide access. Optional future summarisation consumes only reviewed text and cannot change verified numbers.
 
-- Which first-person camera interaction actually saves effort: optional wristband selection or a selected instrument reading? Test both briefly; QR stays optional and neither is a proven differentiator.
-- Confirm available Claude model, transcription data destination, abandoned-session cleanup and actual device indicators before demo claims.
+**Local network:** use the existing Node server on the team laptop, Android phones on a controlled router/hotspot or USB reverse. Prefer authenticated TLS/WSS on a LAN; cleartext remains restricted to USB/emulator synthetic development. Validate certificates on the phones; never disable certificate checks to make the demo work. Demo identities use short-lived tokens entered on the phone. Provision models and register devices before venue connectivity tests. No public deployment or internet exposure is required.
 
-- Prove the Display sample, input and audio path on loan hardware first. Smoke-test Gen 2 only if available without delaying Display; document which optional functions actually work.
+### Proposed modules and ownership boundaries
 
-## 11. Development foundation
+All paths below are under `prototype/`; create these as implementation advances rather than empty scaffolding.
 
-The first runnable slice uses synthetic typed patient reports/plans, explicit completed task updates and editable deterministic draft notes. It does not record audio or call an external model yet. The browser responder supports the full task/record development loop; the Android shell connects to the same server and provides DAT registration, session lifecycle and a Display card bridge. Real hardware operation remains a separate acceptance check.
+| Module | Responsibility | Test seam |
+|---|---|---|
+| `app/.../ui/` | Display cards and companion correction/review | Fake presenter event replay |
+| `app/.../session/` | Registration, capabilities, lifecycle and input | MockDeviceKit + hardware checklist |
+| `app/.../capture/` | Permission-gated camera/mic; bounded buffers | Recorded synthetic frames/audio |
+| `app/.../observation/` | Profile detection, crop, OCR, stability, review candidate | Shared labelled fixtures and rejected cases |
+| `app/.../speech/` | Local recognizer adapter and schema-based intent | Recorded phrases with expected intents |
+| `app/.../transport/` | WSS, auth, acks, timeouts, outbox and reconnection | Fault-injected local service |
+| `server/src/` | Authoritative task/message/observation state and permissions | Existing tests extended with concurrency/restart cases |
+| `demo-data/` | Synthetic identities, monitor generator, fixture labels, replay | Frozen holdout and reproducible seed |
 
-Development protocol: authenticate using an initial `auth` message with a per-staff demo token. Commands have `id`, `type`, `payload`; patient/task IDs are validated in the payload. Responses are `snapshot`, `ok`, or `error`; snapshots are filtered per authenticated identity. Additional development commands: `patient.select`, `help.request`, `message.delivered`, `help.response`, `help.complete`, `help.cancel`, `log.start`, `log.stop`, `log.confirm`, `log.discard`. `help.request` selects a named, assigned colleague; no automatic staffing. `log.start` requires `consent: true`; `log.stop` accepts explicitly separated reported/planned fields and prepares a draft. Completion comes only from the task state. Retries are deduplicated by staff plus command ID. Reconnect sends current filtered state, never automatically replays requests.
+Refactor the current single Activity into lifecycle-owned state and presenters; keep the activity as wiring. Cancel old session collectors and socket callbacks on replacement; a stale connection must not overwrite the current connection's state. No hard-coded “request Ben for p1” controls in the finished wearer flow.
 
-The server is local-only by default, has randomly generated development tokens, bounded inputs and in-memory synthetic state. Restart resets the ward; drafts expire after 30 minutes. No production authentication, EHR integration, persistent storage, audio transcription or external AI is implied. Android cleartext transport is debug-only for USB/emulator development. Do not use this foundation for real patient information.
+## 7. Observation pipeline: the technical feature
 
-## 12. Prototype location
+1. **Scope device support:** choose one layout with identifiable labels/units. For the hackathon generate a visible simulated monitor with randomized values on a second screen; the camera must read pixels. Never feed hidden values directly to the OCR pipeline. If a real device is available, collect separate fixtures at actual working distance and label its results separately.
+2. **Acquire:** short bounded stream; no all-day recording. Tag capture ID, patient ID, context version, time and profile version at start. Reject results arriving after context changes or cancellation.
+3. **Locate:** fixed guide plus profile anchors; rectify perspective if useful. Crop before any local-network transmission. Unknown layout, missing unit/label, excessive glare, blur or clipped digit means Retry, not a partial saved record.
+4. **Recognise:** bundled phone OCR baseline, followed by a profile-specific parser. Segment-display digits may need a dedicated decoder; test this before adding another general model.
+5. **Temporal check:** require the same complete tuple from three separate frames over a short stable interval. This reduces transient errors but is not three independent votes or a clinical confidence guarantee; systematic errors can repeat. Stop within five seconds and request repositioning if unstable.
+6. **Verify:** display exact value/unit tuple for nurse confirmation. Syntactic format checks detect malformed captures; do not reject unusual but visible readings using a “normal patient” range or substitute a normal value. No unit conversion in the first profile.
+7. **Save/share:** persist confirmed numbers, source kind, reviewer, capture time, confirmation time and versions. Raw images remain temporary; keep clinical measurement time unknown if the display does not establish it. “Captured now” does not prove the device measured now.
 
-The runnable development foundation lives entirely under `prototype/`: Android app, server/browser responder, synthetic ward data, Node manifests and local environment template. Run Node commands from `prototype/` and Android commands from `prototype/app/`. Root planning documents and `research/` remain shared. CI stays under root `.github/workflows/` and runs in `prototype/`. Earlier architecture paths in this specification are relative to `prototype/`.
+**Candidate data:** `captureId`, `patientId`, `encounterId`, `contextVersion`, `profileId/version`, `capturedAt`, `displayedMeasurementTime?`, labelled values/units, frame-agreement/quality flags, `reviewState`, `reviewerId`, `confirmedAt`, optional manual-correction provenance. Unconfirmed candidates never enter colleague briefings or records.
+
+**Evaluation:** use at least 40 labelled synthetic scene cases (clear, dim, angled, glare, occluded, changing, missing labels, unsupported layouts), with a held-out split fixed before tuning. Measure complete-tuple exact accuracy, wrong proposals, rejection rate, useful-read coverage and latency. Count a capture attempt as a case, not every correlated frame as a new sample. Report numbers honestly; all-reject is not success. A projected-screen demo does not validate physical medical displays.
+
+## 8. Authoritative state and contracts
+
+Extend, do not silently break, the current `{id,type,payload}` protocol. Version it before Android/browser divergence. Derive actor from authenticated session; client `from`, role or patient ID is never authority. All patient-bound operations include patient/encounter/context version and are checked server-side. For a generic staff request, patientId/encounterId are absent and room is only a location label; it cannot retrieve clinical data. Attaching an observation upgrades it to a patient-bound operation and requires explicit confirmed context and access checks.
+
+**Tasks:** draft (client) → queued locally → server accepted → delivered → accepted → completed. Alternatives: declined, cancelled, expired. Server accepted is the current compatibility equivalent of `sent`; migrate deliberately. Use monotonically increasing revisions, atomic transitions and request IDs scoped to actor. Persist idempotency outcomes; hashing content is not itself durable deduplication. A cancelled/expired request cannot be revived by an offline client. Treat two recipients racing as a real concurrency test.
+
+**Presence:** available/busy/off-duty plus online/unreachable are separate. Heartbeat timeout indicates reachability, not staffing availability. Choose a demonstrative request expiry (e.g. 60 seconds), show it, and make production timing ward-configured. Timeout never implies the task was handled; offer existing communication routes. A request is never called an emergency alert.
+
+**Observation:** capturing → candidate → confirmed → saved locally → submitted to connector → acknowledged by EHR (last two are later). Rejected/discarded/expired are terminal. Pending captures expire after 30 seconds or patient change. The prototype ends at saved locally and labels it accordingly.
+
+**Messages:** recording → transcribing → review → sent → delivered; read/acknowledged only after explicit recipient action. Text is primary; optional audio expires under a separate retention rule. Do not replay it aloud automatically.
+
+**New commands, planned:** `session.context.confirm`, `presence.update`, `message.create`, `message.received`, `message.ack`, `help.expire`, `help.briefing.get`, `observation.propose`, `observation.confirm`, `observation.discard`, `observation.attach`. Keep existing commands behind compatibility handlers until both clients migrate. Build response schemas too, not only incoming validation.
+
+**Briefings:** project fields for the requesting/assigned staff and active task; request details only on deliberate open. Replace broad full-record snapshots with generic inbox status plus separately authorised patient/task reads. Observations share only after confirmation and user selection. A ward observer receives task ID, room, status and ownership, not names, symptoms, free-text messages or instrument values. Changing permissions must affect live sockets, reconnects and cached screens.
+
+**Storage:** SQLite on the local server for tasks, messages, confirmed observations, revisions and audit metadata. Use transactions for state transitions and idempotency; startup restores pending states accurately. Android Keystore-backed secrets and encrypted local pending drafts/outbox; no patient data in shared external storage. The demo uses synthetic data, but persistence/restart correctness is a release gate. Hospital storage and backup policies come later.
+
+## 9. Privacy design and explicit limits
+
+| Data | Default processing / recipients | Retention target for prototype |
+|---|---|---|
+| Full camera frames | Phone memory only; never ward broadcast or cloud | Bounded capture buffer; release on stop/cancel within 10 seconds; no gallery files |
+| Cropped evidence | Phone-only review by default | Delete at confirmation/discard, or 30-second candidate expiry |
+| Short command audio | Phone; optionally explicitly configured ward-local recognizer | Delete after transcript review/send/discard; maximum 2 minutes for abandoned commands |
+| Reviewed message text | Named authorised recipient and sender | Synthetic demo session, with explicit reset and expiry policy; pilot governed by hospital policy |
+| Confirmed observation | Assigned patient context; attached only by choice | Synthetic local database until explicit reset; real clinical retention determined by hospital |
+| Audit | Actor, action, resource ID, revision, time, outcome; no raw media | Synthetic reset policy; production access/retention controlled separately |
+
+“No raw content stored” means no intentional file/database/log copy. It is not a promise of forensic erasure from managed-language memory, OS caches or vendor components. Check temp files, request/error logs, backups and crash reports; include failed and cancelled flows.
+
+Camera and mic off by default. No ambient corridor listening, facial recognition, worker tracking or automatic room detection. Use short camera capture only after the user intentionally starts it. A fixed crop cannot guarantee that bystanders never enter the sensor's view, so source frames stay local and temporary. Staff can stop capture immediately, and a patient refusal takes the workflow to manual entry without pressure.
+
+The prototype uses simulated permission/consent steps. For real care, the hospital establishes the lawful basis, notices, patient choices, workforce policies and any consent requirements; a recorded “yes” is not a universal legal solution. Kanta access requires appropriate grounds and rights, not merely possession of glasses. SDK analytics/crash-reporting opt-outs are already configured; audit Meta AI app/device traffic and all OCR/ASR dependencies separately. Do not claim control of the glasses firmware, vendor telemetry or other apps.
+
+**Local-first acceptance test:** preload models and register devices, preserve local Wi-Fi/Bluetooth but block external internet. Run both workflows, capture network destinations and inspect payload paths. Report app content routing separately from residual system/vendor traffic. Distinguish WAN loss (local service may still work) from LAN loss (colleague communication cannot work). No silent switch to cloud ASR/LLM. Signed-in device provisioning and updates can still require internet.
+
+## 10. Build sequence and simulation gates
+
+Effort ranges are rough focused engineering hours, not promised delivery dates. Dependencies and pass/fail criteria determine order. Existing code is reused. One developer should execute sequentially; owners below describe responsibilities, not additional staffing commitments. Expect roughly 20–30 focused engineering hours including integration/rehearsal; if less time remains, use the cut rules rather than claim finished features.
+
+| Step | Work / responsible role | Check before advancing | Estimate |
+|---|---|---|---|
+| G0 | Developer + nurse/mentor: confirm one routine assistance scenario, monitor support and platform viability | Ask a nurse to walk through current practice; test real Display rendering, button callback, camera view of a monitor at natural distance, mic route and capability coexistence. Record firmware/SDK/device. No claims from simulator alone. | 1–2 h |
+| G1 | Backend: state contracts, persisted tasks/context, minimal projections, fake clock/network | Simulation: unauthorised IDs, patient switch, malformed command, duplicate send, accept race, decline/cancel/expire, server restart and stale reconnect. No incorrect ownership or cross-patient write. | 3–4 h |
+| G2 | Android: three core screens plus inbox/status using fake transport first | Replay incoming request while capturing, long text, screen sleep, no devices, lost connection, permission denied. Then real glasses A → browser B → A acceptance/completion with no phone touch during A's flow. | 3–4 h |
+| G3 | Android/local ASR: deliberate activation, short command, recipient resolution, review/send | At least 20 recorded phrases across two speakers plus ambiguous names, background speech and silence. No command sends without confirmation. Then real glasses mic test; label phone mic fallback honestly. | 2–4 h |
+| G4 | Vision: single profile, frame fixtures, crop/OCR/parser/stability/review | Freeze held-out scene set before tuning; verify failure rejection and no guessing. Then actual camera capture of randomized monitor values, with no data connection from generator to extractor. | 3–5 h |
+| G5 | Integration: bind confirmed observation to patient/task and review entry | Simulation: late OCR after patient switch, repeated confirm, wrong encounter, cancel during inference, manual correction, old reading and denied attachment. Live: capture → confirm → request → accept → complete → saved local record. | 2–3 h |
+| G6 | Privacy/reliability: offline, permission revocation, lifecycle, restart and soak | Egress test, raw-data cleanup, unauthorised recipient test; remove/re-wear glasses, phone background, Wi-Fi drop, reconnect. A 30-minute trial with bursts of 20 tasks; no stale confirmations or hidden recording. | 2–3 h |
+| G7 | Team/nurse: usability pass and demo freeze | New user completes after a short explanation; compare phone/badge baseline; three consecutive clean rehearsals with judge-chosen readings and one failure. Freeze features. | 2–3 h |
+
+Do simulation at every boundary, not only at the end. Inject fake frame/audio/network adapters into the same state machine and parser used live. Do not make a separate “demo success” implementation. Fixtures and UI must label **replay**, **simulated monitor**, **phone camera** and **live glasses** distinctly.
+
+**Hardware fallback rules:** if camera+Display cannot coexist, capture a brief burst, stop the camera and then render review; explicitly validate this sequence. If local speech is slow, use short presets and retain reviewed dictated message input only where measured reliable. If optics cannot read an actual device, demonstrate a supported simulated monitor and disclose the limit; don't promote it as device-validated. If Display inputs fail, phone controls are a development fallback, not evidence of the hands-free milestone.
+
+**Cut order:** maps/live calls → original-audio playback → long dictation/free-form notes → second monitor → QR/Gen 2. Do not cut privacy checks, truthful acknowledgement, patient binding, explicit observation confirmation or a working camera demonstration and still call the full plan complete. If one essential hardware gate fails, present the reduced prototype honestly with the blocker and next step.
+
+### Release targets (engineering targets, not measured results)
+
+- Established-session request delivery and response update: p95 under 2 seconds on the test local network, measured over at least 30 events; report both latency and loss, including cold/reconnect separately.
+- Short local command transcription: target under 3 seconds after speech ends; no silent wrong-recipient sends in the test corpus.
+- Supported optical capture: candidate within 5 seconds; at least 90% useful exact-tuple capture on clear held-out scenes; no incorrect proposal in deliberately unreadable/unsupported fixtures. Report wrong-proposal rate separately; passing a small test is not a clinical accuracy guarantee.
+- No cross-patient/unauthorised output or duplicate task in defined contract tests. All writes require valid state transitions.
+- Main wearer completes the rehearsed interaction without touching a phone. A one-pair demo can use the browser for the responder.
+- Capture stops reliably on cancel/permission loss/session loss; stored raw content cleaned under the defined limits. A 30-minute soak measures heat/battery and interruptions, not all-shift endurance.
+
+## 11. Three-minute demonstration
+
+1. **0:00–0:25:** Aino requests routine assistance from Ben on Display. Show confirmed recipient and room; no camera is needed for communication.
+2. **0:25–0:45:** Ben accepts on a second Display or labelled browser responder. Aino sees the named acceptance. Explain that received, accepted and completed are separate states.
+3. **0:45–1:30:** Aino confirms the synthetic patient; a judge changes values on a visibly simulated monitor. Deliberately capture through glasses, review labels/units and confirm. Show a short obscured-digit failure/retry if timing permits.
+4. **1:30–2:05:** Attach the confirmed observation to the existing task. Ben opens the relevant briefing and explicitly completes the assistance. Display “saved locally”, not “filed in hospital record”.
+5. **2:05–2:35:** Disconnect responder before another request; show pending/unreachable, never invented acceptance. Switch to ward observer view: no clinical fields.
+6. **2:35–3:00:** Show local processing/network evidence and pilot path. State remaining constraints: one supported profile, simulated data, no EHR, hardware coverage and language tested.
+
+Keep a labelled replay available for venue failure, with no claim it is live. Never use a fake error-catch that only works for a preselected wrong digit. Measure the actual displayed values chosen by the judge.
+
+## 12. Evidence to collect and user validation
+
+Before polishing, ask at least one nurse: What assistance requests repeat daily? How are they acknowledged now? Which readings still need manual entry? Is patient information visible/readable in their working conditions? When would glasses distract or breach privacy? What PPE/cleaning rules apply? These are discovery questions, not evidence of demand until answered.
+
+Test with two or three people unfamiliar with the interface (prefer nurses if available). Ask them to send/cancel/accept a task, reject a bad reading and recover from a disconnect. Count device touches, time, mistakes, clarification requests and perceived interruption. Compare against a phone workflow and, where available, their existing badge. A tiny hackathon usability exercise is directional, not a clinical study.
+
+Store synthetic result summaries and fixture manifests under `prototype/demo-data/`; describe results/limitations in the existing README/SPEC rather than new planning documents. Keep evaluation scenes separate from tuning scenes. Capture exact versions, sample sizes, device model, distance, lighting, network and language so the deck cannot imply universal performance.
+
+## 13. From hackathon to actual hospital use
+
+Realistic first customer: one ward with an identified manual workflow and a clinical sponsor. Product integrates with existing systems; hospital adoption is not “install the APK and give everyone glasses”. Deployment gates are sequential:
+
+| Stage / outside hackathon | Required work and why | Exit evidence / decision owner |
+|---|---|---|
+| 1. Platform and intended-use feasibility | Read applicable Meta developer terms/AUP with mentor; establish permitted healthcare use, production distribution, supported APIs/firmware, account management and telemetry controls. Developer Mode is not a production distribution plan. | Vendor/IT written feasibility; if unsuitable, keep hardware adapter portable and evaluate hospital-approved hardware. Current AUP page requires login; its terms have not been verified here. |
+| 2. Workflow co-design | Ward nurse lead selects routine use case and baseline; assess interruptions, screen readability, cleaning, prescription lenses, PPE fit, batteries/charging, infection-control approval and shared-device logout. | Approved workflow and device handling instructions; occupational/infection-control review; no operating-room/PPE-safety claim without evidence. |
+| 3. Legal, data and intended purpose | Hospital DPO/security and qualified regulatory lead assess controller/processor roles, lawful basis, DPIA need, contracts, retention, EU transfers and medical-device/software classification. No-diagnosis wording alone does not establish exemption. | Written applicability/classification decision, required certification/conformity route and risk management plan before clinical deployment. |
+| 4. Secure managed deployment | Managed Android fleet, hospital identity/roles, assignment feed, secure enrolment, revocation/lost-device controls, WSS/TLS, network segmentation, audit, backups, monitoring and versioned releases. Ward-local ASR if phones cannot meet performance/policy. | Security test, recovery exercise, traffic inventory, access review, support owner and approved release process. |
+| 5. Clinical system connection | EHR vendor-approved interface; explicit patient/encounter mapping, units/codes, author/provenance, idempotent write-back and success/error acknowledgement. FHIR Observation/Task are candidate mappings, not proof that a local EHR permits write access. Integrate existing communication/nurse-call systems rather than replacing emergency channels. | Vendor sandbox and reconciliation tests; hospital-approved integration. Determine applicable Finnish information-system requirements; direct Kanta connectivity is not assumed. |
+| 6. Supervised shadow trial | Run beside current practice, no clinical write-back; compare device-reading accuracy, communication outcomes, staff workload, patient acceptance and failure handling. Validate real displays across lighting/angles and Finnish/Swedish as needed. | Protocol-defined accuracy/usability/privacy criteria signed off by clinical safety/IT owners; stop on wrong-patient association or unsafe distraction. |
+| 7. Limited real-care pilot | Enable only approved routine tasks and reviewed write-back, with training, supervision, incident reporting, rollback and normal workflow always available. | Monitored pilot outcomes versus baseline; expand only on demonstrated benefit and reliability. |
+| 8. Scale | Multi-ward identity/assignment support, HA local services, shift-long endurance, fleet cleaning/charging, multilingual evaluation, support SLA and lifecycle/security updates. | Sustainable operating cost, support capacity and ward-level evidence; no universal rollout on hackathon results. |
+
+**EHR ownership:** records remain in the hospital's clinical system; HospitalOS is an interaction/capture client. Retention of clinical records follows approved obligations; our demo's deletion rules must not erase production records. Preserve audit metadata while minimising raw media.
+
+**Clinical-risk boundary:** transcribing a displayed reading can still affect care even with human review. Regulatory classification depends on intended purpose and implementation. No autonomous risk score, treatment suggestions, dosage calculation or alarms are in scope. If later added, reassess classification, validation and governance before development claims.
+
+**Economic reality:** sell only where avoided manual effort exceeds glasses/phone fleet, integration, support and training cost. Measure per-round savings and reliability before proposing a price or ROI. Prefer direct monitor integration where already available. If a headset plus phone serves a ward better, do not force glasses.
+
+## 14. External evidence and unresolved facts
+
+Primary references checked 2026-11-14; statements above distinguish documented capability from proposed implementation.
+
+- [Meta Android DAT source and samples](https://github.com/meta/meta-wearables-dat-android): SDK integration and sample lifecycle. Pin the tested dependency and record actual device capability results.
+- [Meta developer acceptable-use policy](https://wearables.developer.meta.com/acceptable-use-policy): login required when checked; healthcare permissions/restrictions remain an explicit mentor/vendor check, not assumed approval.
+- [ML Kit Android OCR](https://developers.google.com/ml-kit/vision/text-recognition/v2/android): bundled-model option supports immediate availability; image quality matters. [ML Kit terms/privacy](https://developers.google.com/ml-kit/terms) distinguish on-device input processing from metrics collection.
+- [whisper.cpp](https://github.com/ggml-org/whisper.cpp): local inference and Android/Mac support make it a candidate, not a guarantee of Finnish accuracy or phone latency.
+- [Kanta patient data access](https://www.kanta.fi/en/professionals/patient-data-repository): use requires a legitimate care need and appropriate access. [Certification and key requirements](https://www.kanta.fi/en/system-developers/certification-and-key-requirements): assess applicable information-system obligations with the hospital/vendor.
+- [Fimea intended purpose and classification](https://fimea.fi/en/medical-devices/placing-a-medical-device-on-the-market/intended-purpose-and-classification) and [EU software guidance](https://health.ec.europa.eu/system/files/2025-06/mdcg_2019_11_en.pdf): classification requires an intended-purpose assessment; clinical review alone is not proof of exemption.
+- [Microsoft nursing documentation](https://support.microsoft.com/en-us/dragon-copilot/nurses/overview-of-the-dragon-copilot-experience-for-nurses): ambient nursing capture already exists; it is not our novelty claim.
+- [Baxter connected vitals workflow](https://www.hillrom.com/content/dam/hillrom-aem/us/en/marketing/products/connex-spot-monitor/documents/US-FLC45-220030-EN-V2_Vitals-Oracle-Cerner-Connectivity_Sell-Sheet-LR.pdf): connected devices can already transfer readings; target the remaining manual gap.
+
+Open decisions for G0: exact loan hardware and simultaneous capabilities; monitor profile and working distance; named nurse validation contact; available focused engineering hours; language; input gesture; local audio route; local-network topology; permitted SDK use. Resolve each with evidence, update CLAUDE.md, and adjust scope explicitly rather than silently substituting a simulated feature.
