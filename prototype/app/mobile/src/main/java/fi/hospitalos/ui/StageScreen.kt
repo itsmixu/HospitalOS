@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fi.hospitalos.AppViewModel
+import fi.hospitalos.assistant.ModelState
 import fi.hospitalos.glasses.GlassesStep
 import fi.hospitalos.glasses.HeadingSource
 import fi.hospitalos.glasses.Screen
@@ -124,6 +125,20 @@ fun StageScreen(vm: AppViewModel, modifier: Modifier, openConnect: () -> Unit) {
         if (s?.patients?.isNotEmpty() == true) Body("Context: ${vm.flow.selected.value?.let { id -> s?.patient(id)?.let { "${it.name}, Room ${it.room}" } } ?: "none (open a patient)"}", C.Muted)
       }
       lastReply?.let { Body(it, C.Muted) }
+      // On-phone Gemma status; the server assistant answers when it isn't loaded.
+      val model by vm.local.state.collectAsStateWithLifecycle()
+      val brain by vm.flow.lastBrain.collectAsStateWithLifecycle()
+      when (val m = model) {
+        is ModelState.Ready -> StatusPill("Gemma on phone: ${m.name}", C.Green)
+        ModelState.Loading -> StatusPill("Loading Gemma…", C.Amber)
+        is ModelState.Failed -> StatusPill("Gemma failed: ${m.reason}", C.Red)
+        ModelState.Missing -> {
+          StatusPill("No on-phone model, using the server", C.Muted)
+          Body("Push a model: adb push gemma3-1b-it-int4.task ${vm.local.modelFolder().absolutePath}/ then tap Load.", C.Muted)
+        }
+      }
+      if (model !is ModelState.Ready && model !is ModelState.Loading) SecondaryButton("Load model", { vm.local.load() })
+      brain?.let { Body("Last answer: $it", C.Muted) }
     }
 
     // Demo events.

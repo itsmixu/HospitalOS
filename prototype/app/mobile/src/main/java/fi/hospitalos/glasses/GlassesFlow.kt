@@ -1,5 +1,7 @@
 package fi.hospitalos.glasses
 
+import fi.hospitalos.assistant.LocalAction
+import fi.hospitalos.assistant.LocalAssistant
 import fi.hospitalos.ward.Link
 import fi.hospitalos.ward.Snapshot
 import fi.hospitalos.ward.Task
@@ -23,7 +25,13 @@ class GlassesFlow(
     private val scope: CoroutineScope,
     private val ward: WardClient,
     private val glasses: GlassesLink,
+    /** On-phone Gemma. When it isn't loaded (or doesn't understand), the server assistant answers. */
+    private val local: LocalAssistant,
 ) {
+  /** Who answered the last request, for the stage remote ("Gemma on phone, 850 ms"). */
+  private val _lastBrain = MutableStateFlow<String?>(null)
+  val lastBrain: StateFlow<String?> = _lastBrain.asStateFlow()
+
   companion object {
     const val WARD_NAME = "Ward 4B"
   }
@@ -366,6 +374,55 @@ class GlassesFlow(
   /** Also used by the phone's typed fallback during the demo. */
   fun askAssistant(text: String, patientId: String? = _selected.value) {
     if (_screen.value !is Screen.AssistantListening && _screen.value !is Screen.AssistantAnswer) saved = _screen.value
+    timed?.cancel()
+    _screen.value = Screen.AssistantThinking(text)
+    render()
+    if (local.isReady) {
+      timed = scope.launch { askLocal(text, patientId) }
+      return
+    }
+    askServer(text, patientId)
+  }
+
+  /** On-phone Gemma proposes one action; the phone sends it as a normal (permission-checked) command. */
+  private suspend fun askLocal(text: String, patientId: String?) {
+    val s = snapshot ?: return askServer(text, patientId)
+    val action = local.interpret(text, s, patientId)
+    _lastBrain.value = "Gemma on phone, ${local.lastMs.value ?: "?"} ms"
+    val say: String =
+        when (action) {
+          is LocalAction.RequestHelp -> {
+            if (patientId == null) "Which patient? Open their card first."
+            else {
+              getHelp(patientId, action.count)
+              return
+            }
+          }
+          is LocalAction.SendMessage ->
+              if (ward.send("msg.send", JSONObject().put("to", action.to).put("text", action.text))) "Sent to ${s.name(action.to)}: \"${action.text}\"" else "Not sent"
+          is LocalAction.SetStatus ->
+              if (ward.send("presence.update", JSONObject().put("status", action.status))) "You're now ${action.status}." else "Not changed"
+          is LocalAction.OpenPatient -> {
+            _screen.value = Screen.AssistantAnswer(text, "Opening ${s.patient(action.patientId)?.name}")
+            render()
+            delay(1500)
+            openPatient(action.patientId)
+            return
+          }
+          is LocalAction.Answer -> action.text
+          LocalAction.Unknown -> {
+            // The small model didn't get it: let the server assistant (rules / Claude) try.
+            askServer(text, patientId)
+            return
+          }
+        }
+    _screen.value = Screen.AssistantAnswer(text, say)
+    render()
+    delay(7000)
+    if (_screen.value is Screen.AssistantAnswer) resume()
+  }
+
+  private fun askServer(text: String, patientId: String?) {
     if (!ward.ask(text, patientId)) return
     timed?.cancel()
     _screen.value = Screen.AssistantThinking(text)
@@ -377,6 +434,7 @@ class GlassesFlow(
             show(Screen.Toast("The assistant didn't answer", false, null))
             return@launch
           }
+          _lastBrain.value = if (reply.usedClaude) "Claude on the server" else "Rule parser on the server"
           _screen.value = Screen.AssistantAnswer(reply.heard, reply.say)
           render()
           delay(if (reply.openPatientId != null) 2500 else 7000)

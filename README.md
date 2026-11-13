@@ -79,7 +79,19 @@ Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulat
 
 **Rehearsal tokens:** start the server with `DEMO_TOKENS=fixed npm run dev` to get stable tokens `aino-demo`, `ben-demo`, `observer-demo` (loopback only). Without it, tokens are random per restart, as before.
 
-### Voice assistant (Claude)
+### Voice assistant — on-phone Gemma first
+
+The assistant's "brain" runs **on the phone**: Gemma via Google's MediaPipe LLM Inference (`tasks-genai`). It turns the transcript into one JSON action, which the phone validates against ids the user may see and sends as a normal ward command — so the server's permission checks still apply, and only that command leaves the phone.
+
+The model isn't in the APK (Gemma license + size). Download a MediaPipe `.task` model after accepting the Gemma terms — recommended: `gemma3-1b-it-int4.task` (~550 MB, fast) from Hugging Face `litert-community/Gemma3-1B-IT`; `gemma-3n-E2B` (~3 GB) is smarter but slower — then:
+
+```sh
+adb push gemma3-1b-it-int4.task /sdcard/Android/data/fi.hospitalos.demo/files/
+```
+
+and tap **Load model** on the Stage tab. If no model is loaded, or Gemma returns nothing usable, the request falls back to the server assistant below.
+
+### Server assistant fallback (Claude or rules)
 
 Put an Anthropic API key in `prototype/.env` (git-ignored; copy `.env.example`): `ANTHROPIC_API_KEY=...`. `npm run dev` loads it. The key stays on the laptop server, never on the phone.
 

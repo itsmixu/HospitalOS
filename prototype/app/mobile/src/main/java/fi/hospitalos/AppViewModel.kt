@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import fi.hospitalos.assistant.LocalAssistant
 import fi.hospitalos.glasses.GlassesFlow
 import fi.hospitalos.glasses.GlassesLink
 import fi.hospitalos.glasses.HeadTracker
@@ -32,8 +33,12 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
           onDisplayReady = { flow.render() },
       )
 
+  /** On-phone Gemma for the voice assistant (loads a .task model from the app's files folder). */
+  val local = LocalAssistant(app, viewModelScope)
+
   init {
-    flow = GlassesFlow(viewModelScope, ward, glasses)
+    flow = GlassesFlow(viewModelScope, ward, glasses, local)
+    local.load()
   }
 
   /** One stream of short messages for the phone's snackbar. */
@@ -75,6 +80,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
   fun send(type: String, payload: JSONObject) = ward.send(type, payload)
 
   override fun onCleared() {
+    local.close()
     glasses.stopDisplay()
     ward.close()
   }
