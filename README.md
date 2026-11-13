@@ -75,9 +75,34 @@ adb reverse tcp:8787 tcp:8787
 adb install -r prototype/app/mobile/build/outputs/apk/debug/mobile-debug.apk
 ```
 
-Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulator uses `ws://10.0.2.2:8787`. Paste Aino's fresh demo token, connect and use the labelled synthetic request button. Browser tabs provide detailed encounter entry/review. The phone preview receives the same filtered snapshot.
+Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulator uses `ws://10.0.2.2:8787`. Debug builds alone permit cleartext local traffic; this is not a production network configuration. SDK analytics/crash-reporting opt-outs are configured, without claiming device-wide privacy.
 
-For glasses, initialise Bluetooth/SDK, register with Meta AI (Developer Mode enabled), then start Display. The initial Display bridge shows ward task/note status; full patient/task card interactions are the next development step. Stop Display explicitly when finished. Hardware registration and rendering must be verified on the provided glasses. Debug builds alone permit cleartext local traffic; this is not a production network configuration. SDK analytics/crash-reporting opt-outs are configured, without claiming device-wide privacy.
+**Rehearsal tokens:** start the server with `DEMO_TOKENS=fixed npm run dev` to get stable tokens `aino-demo`, `ben-demo`, `observer-demo` (loopback only). Without it, tokens are random per restart, as before.
+
+### The phone app
+
+Two tabs:
+
+- **Connect** — four steps in order, each turns green: ward server (address + token, remembered and auto-reconnected), Bluetooth, Meta AI registration, glasses display.
+- **Ward** — what's on your glasses right now (+ Start display / Home / Clear), requests for you, the open recording or draft note (edit and save on the phone), your patients (tap to expand: show on glasses, record with consent, ask a colleague), requests you sent with their real status, and clearly labelled simulated demo extras (staff map, fall alert).
+
+### The glasses (Meta Ray-Ban Display)
+
+Screens follow the mockups (`mockups/glasses-scenes.html` on branch `feat/glasses-app`) and are driven by live server state:
+
+| Flow | Glasses |
+|---|---|
+| Home | Ward card + tappable patient rows |
+| Patient | Name, room, warning, latest reviewed note or patient report; Record, Ask, Ask &lt;colleague&gt;, Back |
+| Encounter | Consent question → small corner recording pill (tap for Stop / Ask colleague / Keep going) → draft note with Reported / Planned / Done-by → Save or Discard |
+| Request I sent | "Not seen yet" → "Ben has seen it" → "Ben is coming" → "Ben finished" (sent ≠ delivered ≠ accepted, SPEC F1) |
+| Request for me | Pops up, auto-acknowledged as delivered once shown on the lens → On my way / Can't → briefing with only relevant info and its source → Done |
+| Ask | Demo answer from this patient's own record, always naming its source |
+| Offline | "Offline. Nothing is sent"; no automatic replay on reconnect |
+
+Code: `mobile/src/main/java/fi/hospitalos/` — `ward/` (server model + WebSocket client), `glasses/` (SDK link, screen flow, renderer, ward map bitmap), `ui/` (Compose phone screens).
+
+**Still demo-only:** no audio is captured; the draft uses the patient's synthetic report plus a fixed planned line (`GlassesFlow.DEMO_PLANNED`). Ask answers come from the record, not an AI model. Staff map and fall alert are simulated.
 
 ## Next implementation steps
 
@@ -95,4 +120,9 @@ The browser instructions above describe the existing typed foundation. They are 
 - `npm run check`: passed.
 - `npm test`: six checks passed, including real WebSocket auth/routing/reconnect, recipient filtering, explicit completion, consent/review, idempotent retry and encounter isolation.
 - `npm audit --audit-level=high`: no reported vulnerabilities at setup time.
-- `:mobile:assembleDebug`: passed using Android Studio's bundled Java 21 and SDK 36; debug APK generated. No physical phone or glasses test has been performed.
+- `:mobile:assembleDebug`: passed using Android Studio's bundled Java 21 and SDK 36; debug APK generated.
+
+## Verified on hardware (2026-11-14, Windows)
+
+- Built on Windows, installed on an Android phone over USB with `adb reverse tcp:8787 tcp:8787`, connected to the local ward as Aino, registered with Meta AI (Developer Mode), and **Start Display showed the HospitalOS status card on real Meta Ray-Ban Display glasses**.
+- Gotcha: newer Android Studio bundles **Java 25**, which Gradle 8.14 can't run on (build fails with just `25.0.4`). Point `JAVA_HOME` at a JDK 17/21 instead, e.g. on Windows `JAVA_HOME="$HOME/.jdks/jbr-21.0.11" ./gradlew :mobile:assembleDebug`.

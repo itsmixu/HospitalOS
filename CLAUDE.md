@@ -69,3 +69,9 @@ These decisions supersede conflicting earlier priorities, including mandatory am
 - 2026-11-14 — **SPEC.md is rewritten as the full implementation plan**, including the current code's gaps, state contracts, G0–G7 simulation/hardware gates, release targets and staged hospital deployment. Targets are not evidence of achieved performance; no clinical-readiness claim.
 - 2026-11-14 — **Display first; QR and Gen 2 optional.** One supported optical profile; reject uncertainty; nurse confirms every reading; never infer measurement freshness or clinical significance from a captured image.
 - 2026-11-14 — **Deployment is gated:** verify Meta platform permissions/terms, hospital access and privacy requirements, intended-purpose classification, EHR integration, hardware suitability and supervised validation before real care. Existing emergency systems remain authoritative.
+
+### Phone + glasses app — 2026-11-14 (branch `feat/full-app`)
+
+- 2026-11-14 — **One phone app drives the glasses from live server state.** Mockup screens (from branch `feat/glasses-app`) were ported into `prototype/app` and wired to the ward server: patient card, consent → corner recording pill → draft note review, help requests with real sent/delivered/accepted/completed states, incoming request → briefing → done. Phone app rebuilt in Compose with two tabs (Connect, Ward) — the earlier button list was too confusing to demo. **Built before the combined plan above:** its encounter/recording flow uses no audio but should be reshaped into short reviewed messages and instrument-reading capture per that plan.
+- 2026-11-14 — **Server additions:** snapshot includes `me`; synthetic patients gain optional `age`, `warning`, `summary`; `DEMO_TOKENS=fixed` gives stable rehearsal tokens on loopback. Default behaviour unchanged; all tests pass.
+- 2026-11-14 — **Hardware verified on Windows** (Ray-Ban Display + Android phone over USB). Build with JDK 17/21, not Android Studio's bundled Java 25.

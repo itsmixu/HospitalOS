@@ -4,8 +4,14 @@ import { randomBytes } from "node:crypto";
 import { WebSocketServer, WebSocket } from "ws";
 import { Ward } from "./core.ts";
 const ward = new Ward();
+// DEMO_TOKENS=fixed gives stable tokens (`aino-demo`, …) for rehearsals on a
+// loopback-only server, so the phone app can remember its token. Default: random.
+const fixedTokens = process.env.DEMO_TOKENS === "fixed";
 const tokens = new Map(
-  ward.staff.map((s) => [randomBytes(24).toString("hex"), s.id]),
+  ward.staff.map((s) => [
+    fixedTokens ? `${s.id}-demo` : randomBytes(24).toString("hex"),
+    s.id,
+  ]),
 );
 const server = createServer((req, res) => {
   if (req.url === "/health") {
