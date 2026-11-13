@@ -16,7 +16,7 @@ HospitalOS connects bedside encounters, acknowledged assistance, relevant patien
 7. **Small commits, clear messages** (`feat(app): wristband QR decode`, `fix(server): alert routing`).
 8. **Record glasses gotchas** in SPEC.md §6 as soon as you hit one. Hardware time is scarce; don't let the other person hit the same wall.
 9. **Every feature works in scripted mode** too (server fakes the step), so the demo survives hardware or Wi-Fi failure on stage.
-10. **Every glasses card has a spoken version** (accessibility + non-display glasses).
+10. **Display is the main demo target.** Polish the Display workflow first. Basic non-display audio support is optional only if it does not delay Display development or rehearsal; no requirement for every card to have a spoken version. Use the phone for detailed non-display review.
 11. **AI agents:** don't add features beyond SPEC.md, don't add dependencies without noting why in the decision log, and ask before deleting files.
 
 ## Team & ownership
@@ -51,3 +51,6 @@ These decisions supersede conflicting earlier scope/hardware decisions above; hi
 - 2026-11-13 — **Staff map and separate alert scenario are P1.** Core routing uses declared availability and assignment, not simulated proximity — reduce scope and avoid implying indoor positioning exists.
 - 2026-11-13 — **One real glasses pair required, two preferred; phone/browser responder fallback.** Display is preferred, core audio remains supported — shared hardware must not block the workflow.
 - 2026-11-13 — **Camera value remains an open validation question.** Test optional wristband selection versus selected instrument-reading capture; neither is mandatory or a proven USP — preserve the challenge's first-person focus without inventing value.
+
+- 2026-11-13 — **Display is the main demo and development target**, superseding earlier full-audio-support requirements. Basic Gen 2 requests, acknowledgements and encounter capture are P1 only if they do not slow Display work; detailed review uses the phone, and deferred support is labelled planned — focus hardware time and polish on one complete demo.
+- 2026-11-13 — **Download the official Meta Android toolkit/samples as a sibling checkout**, outside HospitalOS; use published SDK dependencies when integrating — keep upstream code out of our repository and provide a clean development starting point.

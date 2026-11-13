@@ -15,13 +15,15 @@
 
 **Core experience:** Patient encounter → request assistance → colleague accepts and receives a briefing → explicit care update → reviewed draft note.
 
-**Why glasses:** Hands-free interaction at the bedside, spoken responses and optional glanceable cards. First-person camera value still needs testing: compare optional wristband selection with capturing a selected instrument reading. Retain the useful option after testing; neither is a proven differentiator or a prerequisite for the core workflow.
+**Why glasses:** Hands-free interaction at the bedside, a polished Display interface with glanceable patient cards, task status, briefings and draft-note previews, plus useful spoken acknowledgements. First-person camera value still needs testing: compare optional wristband selection with capturing a selected instrument reading. Retain the useful option after testing; neither is a proven differentiator or a prerequisite for the core workflow.
 
 **Positioning:** A connected bedside workflow with explicit acknowledgement and controlled information sharing. Do not claim that voice communication or ambient notes alone are novel, or that the prototype replaces a hospital information system.
 
 ## 3. Scope: what we build
 
-Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else = deck only.
+Priority: **P0 = must be in the Display demo.** P1 = add only if it does not delay the Display workflow, device reliability or rehearsal. Everything else = deck only.
+
+**Device scope:** Meta Ray-Ban Display is the main demo and development target. Build and polish its full bedside workflow first. Basic non-display (Gen 2) audio support is P1 only: assistance requests, acknowledgements and encounter capture start/stop. Detailed patient/briefing and note review uses the companion phone on non-display devices. There is no requirement for feature parity or a spoken version of every card. Share patient context, permissions and task state in the existing app/backend; do not build a second application. If Gen 2 support causes delays, defer it and label it planned rather than working.
 
 | # | Feature | Priority |
 |---|---|---|
@@ -29,6 +31,7 @@ Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else
 | F2 | Relevant patient briefing when a colleague accepts a request | **P0** |
 | F3 | Consented conversation capture + explicit care updates → reviewed draft note | **P0** |
 | F4 | Optional wristband QR scan → patient selection/card | P1 |
+| — | Basic Gen 2 audio support (requests, acknowledgements, encounter capture); phone for detailed review | P1 only if no delay |
 | F5 | Explicit privacy routing and visible recipient-specific outputs | **P0** |
 | — | Staff map with labelled simulated positions; separate simulated alert scenario | P1 |
 | — | EHR integration, real indoor positioning, autonomous staffing, shift reports, production admin dashboard | Deck only |
@@ -45,7 +48,7 @@ Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else
 - **Request help:** create a patient-linked routine assistance task. Route using declared availability and assignment, not simulated proximity. Recipient accepts/declines; sender hears who accepted.
 - **State:** distinguish queued/sent, delivered, accepted and completed. Delivery requires recipient acknowledgement; acceptance names the responding colleague. Completion requires an explicit staff update. Neither delivery nor acceptance proves care occurred.
 - **Disconnected recipient:** show undelivered/unacknowledged status. Reconnect reconciles state using message IDs; it must not duplicate tasks or silently revive cancelled/stale requests. The sender reviews pending requests before resending.
-- One real pair of glasses is required; two are preferred. A phone/browser client can act as the second caregiver. Other staff are simulated.
+- One real Display pair is required for the main demo; a second Display pair is preferred. A phone/browser client can act as the second caregiver without requiring Gen 2 support. Other staff are simulated.
 - Optional staff map positions are clearly labelled simulated. Existing emergency channels remain authoritative; this prototype demonstrates routine assistance.
 
 ### F2 — Briefing on acceptance (P0)
@@ -74,7 +77,7 @@ Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else
 
 ## 4. Demo script (fake scenario)
 
-One coherent encounter in a **simulated ward**, using synthetic patients, assigned staff and no real hospital systems. One real glasses wearer plus a phone/browser responder is sufficient; use two pairs if available.
+One coherent encounter in a **simulated ward**, using synthetic patients, assigned staff and no real hospital systems. One real Display wearer plus a phone/browser responder is sufficient; use two Display pairs if available. Show request status, patient context, the briefing and draft-note preview on the Display. Complete detailed editing/review on the companion phone if needed. Gen 2 is optional and never a prerequisite for rehearsal.
 
 | Beat | What happens | Features |
 |---|---|---|
@@ -89,7 +92,7 @@ Include one short failure: disconnect Ben before request delivery. Aino sees an 
 
 Keep the demo under **3 minutes**. Every beat also has a clearly labelled scripted fallback; disclose simulated events and hardware substitutions. A staff map and separate alert are optional and should not distract from the complete workflow.
 
-**Acceptance checks:** complete the workflow without QR; no delivery implies acceptance; no planned action becomes completed; context stays on the selected patient; an unauthorised account cannot obtain clinical fields; confirm/discard handles raw-data deletion; disconnect/retry does not duplicate a task. Measure request-to-delivery latency on the actual setup.
+**Acceptance checks:** finish and rehearse the full Display workflow without requiring Gen 2 support; complete the workflow without QR; no delivery implies acceptance; no planned action becomes completed; context stays on the selected patient; an unauthorised account cannot obtain clinical fields; confirm/discard handles raw-data deletion; disconnect/retry does not duplicate a task. Measure request-to-delivery latency on the actual setup.
 
 ## 5. Architecture
 
@@ -105,7 +108,7 @@ Keep the demo under **3 minutes**. Every beat also has a clearly labelled script
 - **`server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence and patient-linked task state, enforces recipient permissions, routes messages and briefings, plays the scenario, stores reviewed care entries, and calls the Claude API with synthetic data. **The Claude API key lives only here.**
 - **`demo-data/`** — fake staff, patients, floor plan, wristband QR images, scenario timeline.
 - **AI model:** Claude via the Anthropic API for summaries and briefings. Verify the available model identifier and measure latency before choosing it; do not assume accuracy or performance.
-- **Devices:** Ray-Ban Display is the preferred presentation device; Gen 2 supports the core audio workflow. Every card has a spoken version, with sensitive details spoken only on deliberate request. One real pair is required, two preferred; a minimal phone/browser responder supports the fallback.
+- **Devices:** Meta Ray-Ban Display is the main demo target. Basic Gen 2 audio support is optional P1 and is dropped if it delays Display delivery. Keep one shared app/backend; use the phone for detailed review on non-display devices. Sensitive details are not automatically read aloud; open-ear audio is not a confidential channel. One Display pair plus a phone/browser responder is sufficient.
 
 ### Message types (server ⇄ app), JSON over WebSocket
 Core message types: `presence.update`, `msg.voice`, `message.delivered`, `help.request`, `help.response`, `help.complete`, `help.cancel`, `help.briefing`, `patient.select`, `patient.confirm`, `patient.card`, `log.consent`, `log.start`, `log.stop`, `log.summary`, `log.confirm`, `log.discard`, `care.update`, `access.denied`. Optional: `staff.positions`, `alert.new`, `alert.accept`, `alert.briefing`.
@@ -136,7 +139,7 @@ From Meta's DAT docs and our research ([research/notes/meta_dev_platform.md](res
 | Performance trade-offs | Camera capture only for optional selected actions; summaries on stop; measure delivery and summary latency |
 | Connectivity | Show offline/undelivered/unacknowledged states separately; reconcile on reconnect and review pending requests before resending; no duplicate or stale tasks |
 | Device state changes | Handle glasses disconnect, removed/put back on, hinge closed, low battery, thermal stop; each has a visible state |
-| Accessibility | Every card has a spoken version (works on non-display glasses too); voice, gesture and phone fallback for every action; adjustable text size |
+| Accessibility | Prioritise readable Display cards, adjustable text size where supported, concise acknowledgements and supported voice/gesture controls with phone fallback. Full audio parity is not required; basic Gen 2 support is optional and must not delay Display work. |
 | Consent & safe data | See §8 |
 
 ## 8. Privacy, consent & data
@@ -174,3 +177,5 @@ Resolve these, then move the answer into the decision log in CLAUDE.md and delet
 
 - Which first-person camera interaction actually saves effort: optional wristband selection or a selected instrument reading? Test both briefly; QR stays optional and neither is a proven differentiator.
 - Confirm available Claude model, transcription data destination, abandoned-session cleanup and actual device indicators before demo claims.
+
+- Prove the Display sample, input and audio path on loan hardware first. Smoke-test Gen 2 only if available without delaying Display; document which optional functions actually work.
