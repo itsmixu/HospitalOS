@@ -1,27 +1,27 @@
 # HospitalOS
 
-Display-first bedside coordination and reviewed care notes on Meta AI glasses. Junction 2026, Meta challenge.
+Display-first nurse-to-nurse communication, with a bedside observation capture feature. Junction 2026, Meta challenge.
 
-**One connected workflow:** patient encounter → assistance request → colleague accepts and receives relevant context → explicit care update → reviewed draft note.
+**Core:** request help or send a short reviewed message, see who received/accepted it, and explicitly complete the task. **Camera feature:** look at one supported instrument display, verify the extracted reading on the glasses, then optionally share it with the assigned colleague. No diagnosis or automatic clinical escalation.
 
-- **Reach colleagues and get acknowledged help**, using declared availability and assignment.
-- **Receive a relevant briefing** when accepting a patient-linked request.
-- **Prepare care notes with consent**, separating patient reports, plans and confirmed completed actions; the nurse reviews before saving.
-- **Control information sharing:** caregivers, ward overview and patient record receive different permitted information, demonstrated through actual outgoing payloads.
-- **QR wristband scanning stays optional.** Confirmed task context or explicit patient selection supports the full core workflow without scanning.
+- Display is the main demo; one pair plus a browser responder is sufficient, two Display pairs preferred.
+- QR and Gen 2 audio remain optional and must not delay the main workflow.
+- Local-first target: OCR on the phone; short speech recognition on-device or on a controlled local computer; no external AI required for the core demo.
+- Communication can work without a patient encounter or camera. Patient-specific observations require explicit identification, review and permitted sharing.
+- Long ambient recording and generative care notes are deferred. Structured records come from confirmed observations and staff updates.
 
-**Meta Ray-Ban Display is the main demo target.** One real Display pair is required; two are preferred, with a phone/browser responder fallback. Basic Gen 2 audio support (assistance requests, acknowledgements and encounter capture) is optional only if it does not slow Display development or rehearsal; detailed review stays on the phone. No full audio parity is required. Staff maps and separate simulated alerts are optional. All demo data is synthetic. External AI processing is disclosed; this prototype does not establish hospital readiness or device-wide privacy.
+**Current status:** the existing `prototype/` contains a working synthetic browser workflow and a buildable Android Display shell. It does **not yet** implement the full Display interaction, local speech, observation OCR, persistence or production identity. The new plan describes work to do, not functionality already delivered.
 
-**Status:** runnable synthetic development foundation: local WebSocket ward, browser responder, permission-filtered tasks and reviewed notes, plus an Android DAT Display shell. Voice capture, live AI summaries and hardware verification are still pending.
+**Implementation plan:** [SPEC.md](SPEC.md) contains the complete product scope, interaction design, local-processing architecture, staged implementation and simulation gates, demo acceptance targets and hospital deployment path. Start with **§10 G0: hardware/workflow feasibility**, then build through G1–G7. [CLAUDE.md](CLAUDE.md) records the updated decisions.
 
-**Start here:** [SPEC.md](SPEC.md) (what we build) · [CLAUDE.md](CLAUDE.md) (rules + decisions)
+**Hospital readiness:** the prototype uses synthetic data. A real deployment needs platform-use approval, nurse co-design, security/regulatory assessment, managed identity/devices, EHR integration and a supervised pilot; see SPEC §13. Existing connected monitors should use their direct integrations rather than camera transcription.
 
 ## Repo
 
 | Folder | What |
 |---|---|
 | `prototype/app/` | Android companion app (Kotlin, Meta Wearables Device Access Toolkit) |
-| `prototype/server/` | Node/TypeScript WebSocket server + Claude API |
+| `prototype/server/` | Local TypeScript/WebSocket ward service and browser responder |
 | `prototype/demo-data/` | Fake staff, patients, floor plan, wristband QR codes, scenario |
 | `research/` | Challenge brief, judging criteria, smart-glasses research |
 
@@ -81,10 +81,14 @@ For glasses, initialise Bluetooth/SDK, register with Meta AI (Developer Mode ena
 
 ## Next implementation steps
 
-- Verify registration, Display session and interactions on loan hardware; refine task/briefing/review cards.
-- Add deliberate voice input and consented capture, then real transcription and a validated external-model adapter.
-- Expand task-relevant briefings and patient selection; QR stays optional.
-- Keep basic Gen 2 audio deferred until the Display workflow is stable.
+Follow the dependency-ordered implementation plan in [SPEC §10](SPEC.md#10-build-sequence-and-simulation-gates):
+
+1. G0: actual Display/input/camera/microphone checks and nurse workflow validation.
+2. G1–G2: persisted task/context contracts, simulation checks and a complete on-glasses communication loop.
+3. G3–G4: local short speech and one supported observation parser, with recorded fixtures and held-out failure cases before hardware integration.
+4. G5–G7: join confirmed observations to requests, verify privacy/offline recovery, run usability checks and rehearse the live demo.
+
+The browser instructions above describe the existing typed foundation. They are not evidence that the new vision/speech milestones already work. Proposed time/accuracy targets in SPEC are acceptance goals, not measured results.
 
 ## Verified setup (2026-11-13)
 
