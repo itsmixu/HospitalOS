@@ -1,7 +1,7 @@
 # HospitalOS — Team rules & decision log
 
 Junction 2026 entry for the Meta AI glasses challenge (brief: [research/challenge-brief.md](research/challenge-brief.md)).
-HospitalOS connects ward staff's Meta glasses: nurse-to-nurse communication, live alerts with briefings, and consented patient-conversation logging.
+HospitalOS connects bedside encounters, acknowledged assistance, relevant patient briefings and reviewed care notes, with explicit privacy routing. QR scanning remains optional.
 
 **Read [SPEC.md](SPEC.md) before doing any work.** It is the single source of truth for what we build. This file holds the rules and everything we've agreed.
 
@@ -39,3 +39,15 @@ Newest at the bottom. Format: `YYYY-MM-DD — decision — why`.
 - 2026-11-13 — **Small Node/TypeScript WebSocket server** with the Claude API — relays messages between glasses and keeps the API key off phones.
 - 2026-11-13 — **Docs live in 3 files only** (README, CLAUDE, SPEC) — AI agents and people don't read scattered docs.
 - 2026-11-13 — Repo **HospitalOS**, private, on itsmixu's GitHub.
+
+### Approved scope revision — 2026-11-13
+
+These decisions supersede conflicting earlier scope/hardware decisions above; historical entries remain for context.
+
+- 2026-11-13 — **Core is one connected bedside workflow:** encounter → assistance request → acceptance and relevant briefing → explicit care update → reviewed note — gives the demo one complete outcome.
+- 2026-11-13 — **QR wristband scanning remains P1/optional.** Patient context comes from a confirmed task or explicit selection; room alone is insufficient — scanning is a convenience, not the core feature or an access grant.
+- 2026-11-13 — **Privacy routing is P0:** explicit server rules and distinct caregiver/ward/record outputs, demonstrated with actual outgoing payloads — privacy must be observable, with external AI processing disclosed and no device-wide guarantees.
+- 2026-11-13 — **Delivery, acceptance and completion are separate.** Completed care requires explicit staff confirmation; draft notes distinguish reported, planned and completed — avoid overstating either response or care.
+- 2026-11-13 — **Staff map and separate alert scenario are P1.** Core routing uses declared availability and assignment, not simulated proximity — reduce scope and avoid implying indoor positioning exists.
+- 2026-11-13 — **One real glasses pair required, two preferred; phone/browser responder fallback.** Display is preferred, core audio remains supported — shared hardware must not block the workflow.
+- 2026-11-13 — **Camera value remains an open validation question.** Test optional wristband selection versus selected instrument-reading capture; neither is mandatory or a proven USP — preserve the challenge's first-person focus without inventing value.

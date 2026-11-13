@@ -5,74 +5,91 @@
 
 ## 1. One-liner
 
-**HospitalOS** connects every nurse's and doctor's Meta AI glasses into one hands-free ward network: talk to colleagues instantly, get alerts with a briefing while you walk, and have patient conversations logged for you, without touching a phone.
+**HospitalOS lets nurses coordinate care and prepare patient notes hands-free.** A request for help carries relevant patient context to the responding colleague, while a privacy layer controls what is recorded, processed and shared.
 
 ## 2. Problem & audience
 
-**Who:** Ward nurses first (they do most of the moving, talking and documenting), doctors second.
+**Who:** Ward nurses first, doctors second.
 
-**Problems:**
-1. **Finding and reaching a colleague is slow.** You walk the corridor, phone around or shout. You don't know who is free or where they are.
-2. **Remembering what was said is hard.** Care tasks run from minutes to hours. What the nurse advised (medication, instructions) and what the patient said gets written down later, from memory, or not at all.
-3. **Alerts arrive without context.** You run to an emergency knowing the room number, not the patient.
+**Problems:** Finding available help takes time; a responding colleague needs context; patient conversations and completed care must be documented without reconstructing them later from memory.
 
-**Why glasses, not a phone:** Hands are busy, gloved or must stay clean. The glasses are already on your face, see what you see (the patient's wristband) and hear what you hear (the conversation). Glanceable cards and audio don't interrupt care.
+**Core experience:** Patient encounter → request assistance → colleague accepts and receives a briefing → explicit care update → reviewed draft note.
+
+**Why glasses:** Hands-free interaction at the bedside, spoken responses and optional glanceable cards. First-person camera value still needs testing: compare optional wristband selection with capturing a selected instrument reading. Retain the useful option after testing; neither is a proven differentiator or a prerequisite for the core workflow.
+
+**Positioning:** A connected bedside workflow with explicit acknowledgement and controlled information sharing. Do not claim that voice communication or ambient notes alone are novel, or that the prototype replaces a hospital information system.
 
 ## 3. Scope: what we build
 
-Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else = mention in the deck only.
+Priority: **P0 = must be in the demo.** P1 = add if time allows. Everything else = deck only.
 
 | # | Feature | Priority |
 |---|---|---|
-| F1 | Nurse-to-nurse communication (presence, staff map, voice messages, call for help) | **P0** |
-| F2 | Live alerts with a walking briefing | **P0** |
-| F3 | Care conversation log (consent → capture → AI summary → nurse confirms) | **P0** |
-| F4 | Wristband QR scan → patient card | P1 |
-| — | EHR integration, real indoor positioning, shift handover reports, admin dashboard | Deck only |
+| F1 | Direct colleague messages and acknowledged assistance requests | **P0** |
+| F2 | Relevant patient briefing when a colleague accepts a request | **P0** |
+| F3 | Consented conversation capture + explicit care updates → reviewed draft note | **P0** |
+| F4 | Optional wristband QR scan → patient selection/card | P1 |
+| F5 | Explicit privacy routing and visible recipient-specific outputs | **P0** |
+| — | Staff map with labelled simulated positions; separate simulated alert scenario | P1 |
+| — | EHR integration, real indoor positioning, autonomous staffing, shift reports, production admin dashboard | Deck only |
 
-### F1 — Nurse-to-nurse communication (P0)
-- **Presence:** each wearer has a status: `available`, `busy`, `in-room <n>`, `responding`. Status is set by voice/gesture or automatically (e.g. `in-room` after a wristband scan).
-- **Staff map:** a simple ward floor plan on the glasses showing each colleague as a dot, colored by status. Positions are **scripted** from `demo-data/` (no real indoor positioning).
-- **Voice message (push-to-talk):** hold to record → sent to one colleague or to the whole ward → recipient hears it in their glasses and sees the transcript as a card.
-- **Call for help:** one action ("Hey, I need help in room 12") → the nearest `available` colleague gets a request card → accept / decline → sender sees who's coming.
-- **Live between two real pairs of glasses.** The two team phones run the app; messages go through the server. Other colleagues are simulated by the server.
+### Patient context (P0; QR is optional)
+- Carry the stable patient ID from an existing task, or select a patient explicitly by voice/phone and confirm identifying details before starting an encounter.
+- A room number may narrow a search but never identifies a patient on its own. Tasks, encounters and notes carry patient IDs, not just room labels.
+- Keep the selected patient visible/on-demand through audio; require confirmation when switching. Never silently attach an update to a different patient.
+- Selection does not grant access. The demo uses explicit staff assignments and permissions; a future integration must use the hospital's access controls.
 
-### F2 — Live alerts with a walking briefing (P0)
-- Alerts come from the server (scripted in the demo, e.g. "Fall detected, room 7").
-- Routed to the nearest `available` staff member; shown as a full card + sound; accept / pass.
-- On accept, the wearer gets a **briefing** while walking: patient name, age, main diagnosis, allergies, last medications, and the **latest care-log summaries from F3**. Read aloud (audio) and shown as swipeable cards (display).
-- Other staff see that the alert is taken.
+### F1 — Communication and assistance (P0)
+- **Presence:** declared `available`, `busy`, `in-room <n>`, or `responding`, set through supported controls. Scanning a wristband is not proof of physical room location.
+- **Direct message:** deliberately record/send to a selected colleague. Use a supported voice/gesture trigger or phone fallback; do not assume reserved touchpad gestures work.
+- **Request help:** create a patient-linked routine assistance task. Route using declared availability and assignment, not simulated proximity. Recipient accepts/declines; sender hears who accepted.
+- **State:** distinguish queued/sent, delivered, accepted and completed. Delivery requires recipient acknowledgement; acceptance names the responding colleague. Completion requires an explicit staff update. Neither delivery nor acceptance proves care occurred.
+- **Disconnected recipient:** show undelivered/unacknowledged status. Reconnect reconciles state using message IDs; it must not duplicate tasks or silently revive cancelled/stale requests. The sender reviews pending requests before resending.
+- One real pair of glasses is required; two are preferred. A phone/browser client can act as the second caregiver. Other staff are simulated.
+- Optional staff map positions are clearly labelled simulated. Existing emergency channels remain authoritative; this prototype demonstrates routine assistance.
 
-### F3 — Care conversation log (P0)
-1. Nurse starts a log for the current patient (voice or gesture). The patient is selected by F4 scan or by voice ("log for room 12").
-2. **Consent step:** the glasses prompt the nurse to ask the patient; the patient's verbal yes is captured and stored with the log. No consent → no recording.
-3. Recording indicator is visible on the display for the whole capture (plus the glasses' own capture LED).
-4. Audio is transcribed; on stop, the server asks Claude to turn it into a structured entry:
-   - medications discussed / advised (name, dose, timing)
-   - instructions given to the patient
-   - what the patient reported (symptoms, concerns)
-   - follow-ups for staff
-5. The nurse reviews the summary card and **confirms or discards**. Only confirmed entries are saved. The raw transcript is deleted after confirmation (see §8).
-6. Confirmed entries appear in the patient's record and in F2 briefings.
+### F2 — Briefing on acceptance (P0)
+- Accepting an assistance request opens a brief, task-relevant patient briefing drawn from the synthetic record and confirmed F3 entries.
+- Include only permitted, relevant information; do not automatically read the full patient history, medication list or diagnoses. Preserve source attribution such as "patient reported".
+- Offer a short audio acknowledgement, with clinical detail available on deliberate request or display so it is not automatically spoken into a shared room.
+- The ward overview shows task status/ownership, not the clinical briefing. A separate simulated fall/emergency alert is P1, not needed for the core demo and not evidence of real fall detection.
 
-### F4 — Wristband QR scan (P1)
-- Patient wristbands carry a QR code with a patient ID (we print fake ones from `demo-data/`).
-- Looking at the wristband and triggering a capture decodes the QR on the phone → patient card on the glasses (name, age, allergies, meds due, latest log entries) and status becomes `in-room <n>`.
+### F3 — Encounter and care record (P0)
+1. Confirm the selected patient and explicitly start the consent flow. The nurse asks permission before recording and records the consent decision in the app; refusal leaves capture off. Do not record a pre-consent conversation just to obtain consent evidence.
+2. Start/stop capture explicitly. Show recording state and provide spoken start/stop confirmation. Verify device indicators on the actual hardware; do not assume the camera LED indicates audio-only capture.
+3. Transcribe the synthetic encounter and create a draft with separate fields for **patient-reported information**, **advice/instructions**, **planned actions**, **staff-confirmed completed actions**, and **follow-ups**.
+4. Explicit care updates attach to the same patient/task. "We will help you walk" remains planned; a medication discussion is not administration. The model must not infer completed care from speech about intentions or a camera image.
+5. Nurse reviews, corrects and confirms or discards the draft. Only reviewed entries enter the simulated patient record; unreviewed drafts do not feed F2 briefings.
+6. Apply §8 retention and access rules. Record supporting source references while the draft is being reviewed; do not imply deleted transcripts remain available afterward.
+
+### F4 — Optional wristband QR (P1)
+- Printed fake wristbands contain a patient ID. Deliberate capture decodes the QR on the phone, followed by patient confirmation and an authorised card.
+- QR scanning is a selection convenience, not authentication, permission, the main selling point, or a mandatory step in the demo.
+- Evaluate selected instrument-reading capture as an alternative camera experiment. It requires nurse verification and must not expand the P0 scope or claim clinical measurement accuracy.
+
+### F5 — Privacy routing (P0)
+- Server-enforced, explicit access rules determine allowed recipients and fields; the language model does not decide permissions.
+- Prepare different outputs for the assigned caregiver, ward overview and authorised patient record (see §8).
+- A small demo view displays the actual outgoing payloads and denied requests. This is a verification aid, not a production admin dashboard.
 
 ## 4. Demo script (fake scenario)
 
-The demo is a **scripted fake ward**: two team members wear glasses and act as nurses; the rest of the ward (other staff, alerts, patient records) is played by the server from `demo-data/`. No real hospital systems.
+One coherent encounter in a **simulated ward**, using synthetic patients, assigned staff and no real hospital systems. One real glasses wearer plus a phone/browser responder is sufficient; use two pairs if available.
 
 | Beat | What happens | Features |
 |---|---|---|
-| 1 | Nurse Aino starts her shift; glasses show the ward status card and staff map | F1 |
-| 2 | Aino enters room 12, looks at the patient's wristband → patient card appears | F4 |
-| 3 | Aino explains a new medication schedule to the patient; asks consent, logs the conversation; summary card appears; she confirms | F3 |
-| 4 | Aino needs a second pair of hands → "call for help" → nurse Ben (second glasses) gets the request, accepts; Aino sees "Ben is coming" | F1 |
-| 5 | Scripted alert: fall in room 7 → routed to Ben (nearest available) → he accepts and gets the briefing while walking, including the log entry from beat 3 if it's the same patient | F2 + F3 |
-| 6 | Failure moment: Aino's glasses disconnect → app shows a clear state, messages queue, reconnect resumes | Robustness |
+| 1 | Aino explicitly selects and confirms a simulated patient, then starts a consented encounter; QR may be used if ready | Patient context, F3; optional F4 |
+| 2 | Patient reports a concern; Aino records it and requests routine assistance for that patient | F1, F3 |
+| 3 | Ben accepts, Aino receives acknowledgement, and Ben requests the relevant patient briefing | F1, F2 |
+| 4 | Ben explicitly confirms the completed task; the update retains patient ID and staff ownership | F1, F3 |
+| 5 | A draft care note distinguishes reported, planned and completed information; Aino reviews it | F3 |
+| 6 | Show ward task status beside the authorised clinical output and an unauthorised request being denied | F5 |
 
-Keep the full demo under **3 minutes**. Each beat must also work in **scripted mode** (server fakes the step) in case live hardware fails on stage.
+Include one short failure: disconnect Ben before request delivery. Aino sees an unacknowledged request, never "Ben is coming". Reconnect/reconcile before proceeding to acceptance.
+
+Keep the demo under **3 minutes**. Every beat also has a clearly labelled scripted fallback; disclose simulated events and hardware substitutions. A staff map and separate alert are optional and should not distract from the complete workflow.
+
+**Acceptance checks:** complete the workflow without QR; no delivery implies acceptance; no planned action becomes completed; context stays on the selected patient; an unauthorised account cannot obtain clinical fields; confirm/discard handles raw-data deletion; disconnect/retry does not duplicate a task. Measure request-to-delivery latency on the actual setup.
 
 ## 5. Architecture
 
@@ -85,13 +102,15 @@ Keep the full demo under **3 minutes**. Each beat must also work in **scripted m
 ```
 
 - **`app/` — Android companion (Kotlin).** Built on Meta Wearables Device Access Toolkit (DAT) **1.0.1 or later**, starting from Meta's `CameraAccess` / `DisplayAccess` samples. Owns everything device-side: session lifecycle, camera frames (QR), audio, display cards, inputs, offline queue. Developed in Android Studio on macOS.
-- **`server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence, routes messages and alerts, plays the scripted scenario, stores care log entries in memory/JSON, and calls the Claude API. **The Claude API key lives only here.**
+- **`server/` — Node + TypeScript.** One WebSocket hub. Holds staff presence and patient-linked task state, enforces recipient permissions, routes messages and briefings, plays the scenario, stores reviewed care entries, and calls the Claude API with synthetic data. **The Claude API key lives only here.**
 - **`demo-data/`** — fake staff, patients, floor plan, wristband QR images, scenario timeline.
-- **AI model:** Claude via the Anthropic API (`claude-sonnet-5-5` for summaries and briefings; fast and accurate enough).
-- **Devices:** Ray-Ban Display is the primary target (the map, cards and alerts need a screen). Ray-Ban Meta Gen 2 gets an **audio-only fallback**: every card has a spoken version.
+- **AI model:** Claude via the Anthropic API for summaries and briefings. Verify the available model identifier and measure latency before choosing it; do not assume accuracy or performance.
+- **Devices:** Ray-Ban Display is the preferred presentation device; Gen 2 supports the core audio workflow. Every card has a spoken version, with sensitive details spoken only on deliberate request. One real pair is required, two preferred; a minimal phone/browser responder supports the fallback.
 
 ### Message types (server ⇄ app), JSON over WebSocket
-`presence.update`, `staff.positions`, `msg.voice` (audio ref + transcript), `help.request`, `help.response`, `alert.new`, `alert.accept`, `alert.briefing`, `log.start`, `log.consent`, `log.stop`, `log.summary`, `log.confirm`, `patient.card`. Every message has `type`, `id`, `from`, `ts`, `payload`. Add new types here before using them.
+Core message types: `presence.update`, `msg.voice`, `message.delivered`, `help.request`, `help.response`, `help.complete`, `help.cancel`, `help.briefing`, `patient.select`, `patient.confirm`, `patient.card`, `log.consent`, `log.start`, `log.stop`, `log.summary`, `log.confirm`, `log.discard`, `care.update`, `access.denied`. Optional: `staff.positions`, `alert.new`, `alert.accept`, `alert.briefing`.
+
+Every message has `type`, `id`, `from`, `ts`, `payload`; patient/task events also have stable `patientId`/`taskId` and encounter events an `encounterId`. The server derives sender identity from the authenticated session, checks assignments/access, and filters outgoing payloads before delivery. Client-supplied identity or patient ID is not authorisation. Reconcile task versions and deduplicate IDs on reconnect. Add new types here before using them.
 
 ## 6. Glasses platform: facts & gotchas
 
@@ -114,20 +133,24 @@ From Meta's DAT docs and our research ([research/notes/meta_dev_platform.md](res
 |---|---|
 | Permissions | Camera/mic/Bluetooth permission flow in the app with plain-language explanations; patient verbal consent for F3 |
 | Errors | Every failure becomes a short card + spoken message ("Couldn't read wristband, try again closer") |
-| Performance trade-offs | Single frames for QR instead of streaming; low resolution; summaries only on stop, not live |
-| Connectivity | Outgoing messages and log entries queue offline and send on reconnect; UI shows offline state |
+| Performance trade-offs | Camera capture only for optional selected actions; summaries on stop; measure delivery and summary latency |
+| Connectivity | Show offline/undelivered/unacknowledged states separately; reconcile on reconnect and review pending requests before resending; no duplicate or stale tasks |
 | Device state changes | Handle glasses disconnect, removed/put back on, hinge closed, low battery, thermal stop; each has a visible state |
 | Accessibility | Every card has a spoken version (works on non-display glasses too); voice, gesture and phone fallback for every action; adjustable text size |
 | Consent & safe data | See §8 |
 
 ## 8. Privacy, consent & data
 
-- **Demo uses fake data only.** No real patient or staff data, ever, anywhere in the repo.
-- **Patient consent** is required before any conversation log; the consent is stored with the entry.
-- **Visible recording state** on the display for the whole capture.
-- **Data minimization:** raw audio and transcripts are deleted once the nurse confirms or discards the summary; only the confirmed structured entry is kept.
-- **No face recognition, no bystander identification.** Patients are identified only by their wristband.
-- **Pilot path (for the deck):** a single ward pilot in a Finnish hospital, data kept within the hospital's own environment, later integration with the hospital's patient record system. Medical-device and GDPR health-data requirements are named as the next step, not solved in the demo.
+- **Fake data only.** No real patient or staff data in the demo or repository.
+- **Capture controls:** explicit encounter start/stop, consent decision before recording, clear capture state and no background ward recording. Staff can stop capture immediately.
+- **Explicit demo access policy:** the requesting and assigned accepting caregivers may receive permitted clinical context for their task. The ward overview receives room/task/status/ownership only, without patient name, symptoms, diagnoses or transcript. Only assigned staff may review/write the patient record; unrelated accounts are denied. These are prototype rules, not a claim about the exact permissions of a Finnish hospital.
+- **Server-side filtering:** construct recipient-specific payloads before sending them. Hiding fields in the UI is insufficient. Apply the same checks to voice messages, briefings, record requests and reconnect queues. Avoid sending raw encounter audio to colleagues.
+- **External processing:** synthetic encounter text may be sent to Claude for summarisation; specify any external transcription service too. Show what is sent. This is not hospital-local processing, and local deletion does not prove deletion from external providers.
+- **Retention:** delete app/server raw audio and transcripts after confirmation or discard, including temporary and retry copies; retain only reviewed structured notes and minimal consent/task metadata. Define cleanup for abandoned sessions before the demo. Do not log raw clinical payloads outside the deliberately shown synthetic-data inspection view.
+- **Demonstrate privacy:** show the actual caregiver, ward and record outputs plus an unrelated account's denied request. Removing names is not a guarantee of anonymisation.
+- **Patient identification:** confirmed task context, explicit selection or optional wristband QR. No face recognition or bystander identification. Identification never grants permission.
+- **Scope of claims:** this layer governs our app/server data flow, not Meta firmware, other apps or all device telemetry. No production privacy, security, regulatory or clinical-safety claim follows from the demo.
+- **Pilot path (deck):** validate with nurses, then consider a single Finnish ward with hospital-controlled processing, identity/access integration and EHR integration. Appropriate privacy, security and clinical reviews remain future work.
 
 ## 9. Repo layout
 
@@ -148,3 +171,6 @@ Resolve these, then move the answer into the decision log in CLAUDE.md and delet
 - Speech-to-text for F1/F3: Android's on-device `SpeechRecognizer` (routed to the glasses mic over HFP) vs a cloud STT service on the server. Needs a quick test on real glasses.
 - Where the server runs during the demo: team laptop on venue Wi-Fi vs a small hosted instance (Render/Fly). Venue Wi-Fi may block device-to-device traffic.
 - How the wearer triggers actions: Neural Band gestures vs capture button vs voice, given the beta inputs.
+
+- Which first-person camera interaction actually saves effort: optional wristband selection or a selected instrument reading? Test both briefly; QR stays optional and neither is a proven differentiator.
+- Confirm available Claude model, transcription data destination, abandoned-session cleanup and actual device indicators before demo claims.

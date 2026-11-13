@@ -1,11 +1,18 @@
 # HospitalOS
 
-Hands-free ward communication on Meta AI glasses. Junction 2026, Meta challenge.
+Hands-free bedside coordination and reviewed care notes on Meta AI glasses. Junction 2026, Meta challenge.
 
-- **Talk to any colleague instantly** and see who's free on a live staff map.
-- **Get alerts with a briefing** about the patient while you walk to the room.
-- **Log patient conversations** (with consent): what you advised, what they said, turned into a confirmed care note.
-- **Look at a wristband** to pull up the patient's card.
+**One connected workflow:** patient encounter → assistance request → colleague accepts and receives relevant context → explicit care update → reviewed draft note.
+
+- **Reach colleagues and get acknowledged help**, using declared availability and assignment.
+- **Receive a relevant briefing** when accepting a patient-linked request.
+- **Prepare care notes with consent**, separating patient reports, plans and confirmed completed actions; the nurse reviews before saving.
+- **Control information sharing:** caregivers, ward overview and patient record receive different permitted information, demonstrated through actual outgoing payloads.
+- **QR wristband scanning stays optional.** Confirmed task context or explicit patient selection supports the full core workflow without scanning.
+
+One real pair of glasses is required; two are preferred, with a phone/browser responder fallback. Staff maps and separate simulated alerts are optional. All demo data is synthetic. External AI processing is disclosed; this prototype does not establish hospital readiness or device-wide privacy.
+
+**Status:** planning and research scaffold; app/server implementation and run instructions are still to come.
 
 **Start here:** [SPEC.md](SPEC.md) (what we build) · [CLAUDE.md](CLAUDE.md) (rules + decisions)
 
