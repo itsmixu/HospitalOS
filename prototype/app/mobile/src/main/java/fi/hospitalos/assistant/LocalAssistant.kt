@@ -109,7 +109,8 @@ class LocalAssistant(private val context: Context, private val scope: CoroutineS
                         engine,
                         LlmInferenceSession.LlmInferenceSessionOptions.builder().setTemperature(0.0f).setTopK(1).build(),
                     )
-                session.addQueryChunk(prompt(heard, s, patientId))
+                // Gemma instruct turn format; without it the small model tends to echo the first example.
+                session.addQueryChunk("<start_of_turn>user\n" + prompt(heard, s, patientId) + "<end_of_turn>\n<start_of_turn>model\n")
                 val out = session.generateResponse()
                 session.close()
                 out
@@ -118,7 +119,7 @@ class LocalAssistant(private val context: Context, private val scope: CoroutineS
                 ""
               }
           _lastMs.value = System.currentTimeMillis() - t0
-          Log.i(TAG, "${_lastMs.value} ms: $raw")
+          Log.i(TAG, "${_lastMs.value} ms: \"$heard\" -> $raw")
           parse(raw, s)
         }
       }
@@ -149,6 +150,8 @@ Examples:
 Nurse: "two nurses to my room now" -> {"action":"request_help","count":2}
 Nurse: "I need a hand here" -> {"action":"request_help","count":1}
 Nurse: "tell Sara I'm on break" -> {"action":"send_message","to":"sara","text":"I'm on break"}
+Nurse: "message Ben the bed in room 12 is free" -> {"action":"send_message","to":"ben","text":"The bed in room 12 is free"}
+Nurse: "get someone to help me lift" -> {"action":"request_help","count":1}
 Nurse: "set me busy" -> {"action":"set_status","status":"busy"}
 Nurse: "open the patient in room 7" -> {"action":"open_patient","patient":"p2"}
 Nurse: "what did the patient report" -> {"action":"answer","text":"Patient reported dizziness earlier today."}
