@@ -39,6 +39,21 @@ class GlassesFlow(
   private val _selected = MutableStateFlow<String?>(null)
   val selected: StateFlow<String?> = _selected.asStateFlow()
 
+  /**
+   * Stepped reveal: the display SDK has no animations (each send replaces the screen), so key
+   * screens arrive in stages — e.g. alert banner, then map, then buttons. Toggle from the phone
+   * to compare on real hardware; Bluetooth latency decides whether it looks smooth.
+   */
+  private val _steppedReveal = MutableStateFlow(false)
+  val steppedReveal: StateFlow<Boolean> = _steppedReveal.asStateFlow()
+
+  fun setSteppedReveal(on: Boolean) {
+    _steppedReveal.value = on
+  }
+
+  /** Current reveal stage of the screen on the lens: 0 = first part only … [Renderer.FULL] = everything. */
+  private var reveal = Renderer.FULL
+
   private var recordingStartedAt = 0L
   private val seenIncoming = mutableSetOf<String>()
   private val acknowledged = mutableSetOf<String>()
@@ -47,6 +62,26 @@ class GlassesFlow(
 
   val snapshot: Snapshot?
     get() = ward.snapshot.value
+
+  /** How far the wearer has turned left since the alert opened (degrees). */
+  val turnDegrees: Float
+    get() = glasses.head.turnDegrees.value
+
+  init {
+    // Re-send the alert/briefing as the head turns. GlassesLink keeps only the newest pending
+    // screen, so the rate is limited by the Bluetooth send itself and never builds a backlog.
+    scope.launch {
+      var sentTurn = 0f
+      glasses.head.turnDegrees.collect { turn ->
+        val s = _screen.value
+        if (s != Screen.FallAlert && s != Screen.FallBriefing) return@collect
+        if (kotlin.math.abs(turn - sentTurn) >= 5f) {
+          sentTurn = turn
+          render()
+        }
+      }
+    }
+  }
 
   init {
     scope.launch { ward.snapshot.collect { s -> if (s != null) onSnapshot(s) } }
@@ -68,15 +103,28 @@ class GlassesFlow(
   fun show(screen: Screen) {
     timed?.cancel()
     _screen.value = screen
+    val staged = _steppedReveal.value && Renderer.isStaged(screen)
+    reveal = if (staged) 0 else Renderer.FULL
     render()
-    timed = scope.launch { afterShown(screen) }
+    timed =
+        scope.launch {
+          if (staged) {
+            for (stage in 1..Renderer.FULL) {
+              delay(Renderer.STEP_MS)
+              reveal = stage
+              render()
+            }
+          }
+          afterShown(screen)
+        }
   }
 
   /** Re-send the current screen (data changed, or the display restarted). */
   fun render() {
     val s = snapshot
     val current = _screen.value
-    glasses.show { with(renderer) { render(current, s) } }
+    val stage = reveal
+    glasses.show { with(renderer) { render(current, s, stage) } }
     if (current is Screen.Incoming) acknowledge(current.taskId)
   }
 
@@ -282,7 +330,16 @@ class GlassesFlow(
 
   fun staffMap() = show(Screen.StaffMap)
 
-  fun fallAlert() = show(Screen.FallAlert)
+  /** The wearer is assumed to face map-up when the alert opens, so start counting turns now. */
+  fun fallAlert() {
+    glasses.head.reset()
+    show(Screen.FallAlert)
+  }
+
+  fun resetDirection() {
+    glasses.head.reset()
+    render()
+  }
 
   fun acceptFall() = show(Screen.FallBriefing)
 

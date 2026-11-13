@@ -1,6 +1,18 @@
 package fi.hospitalos.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -68,13 +80,17 @@ fun Panel(
     accent: Color? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+  // Accent color fades when a panel changes state; size changes animate instead of jumping.
+  val bg by animateColorAsState(if (accent != null) accent.copy(alpha = 0.10f) else C.Panel, tween(300), label = "panelBg")
+  val edge by animateColorAsState(accent?.copy(alpha = 0.45f) ?: C.Line, tween(300), label = "panelEdge")
   Column(
       modifier =
           modifier
               .fillMaxWidth()
               .clip(RoundedCornerShape(20.dp))
-              .background(if (accent != null) accent.copy(alpha = 0.10f) else C.Panel)
-              .border(1.dp, accent?.copy(alpha = 0.45f) ?: C.Line, RoundedCornerShape(20.dp))
+              .background(bg)
+              .border(1.dp, edge, RoundedCornerShape(20.dp))
+              .animateContentSize(spring(dampingRatio = 0.9f, stiffness = Spring.StiffnessMediumLow))
               .padding(16.dp),
       verticalArrangement = Arrangement.spacedBy(10.dp),
       content = content,
@@ -95,18 +111,27 @@ fun Body(text: String, color: Color = C.Text) = Text(text, color = color, fontSi
 /** Small status pill with a colored dot. */
 @Composable
 fun StatusPill(text: String, color: Color) {
+  // Status changes (Sent → Seen → Accepted) fade color and crossfade the label.
+  val c by animateColorAsState(color, tween(350), label = "pill")
   Row(
       modifier =
           Modifier.clip(RoundedCornerShape(999.dp))
-              .background(color.copy(alpha = 0.14f))
+              .background(c.copy(alpha = 0.14f))
+              .animateContentSize()
               .padding(horizontal = 10.dp, vertical = 5.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(6.dp),
   ) {
-    Box(Modifier.size(8.dp).clip(CircleShape).background(color))
-    Text(text, color = color, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+    Box(Modifier.size(8.dp).clip(CircleShape).background(c))
+    AnimatedContent(text, transitionSpec = { fadeIn(tween(250)) togetherWith fadeOut(tween(150)) }, label = "pillText") { t ->
+      Text(t, color = c, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+    }
   }
 }
+
+/** Standard enter/exit for sections that appear and disappear (requests, drafts). */
+val SectionEnter = fadeIn(tween(250)) + expandVertically(spring(dampingRatio = 0.9f, stiffness = Spring.StiffnessMediumLow))
+val SectionExit = fadeOut(tween(150)) + shrinkVertically(tween(250))
 
 @Composable
 fun PrimaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, color: Color = C.Blue) {

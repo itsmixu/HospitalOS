@@ -1,5 +1,7 @@
 package fi.hospitalos.ui
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocalHospital
@@ -78,9 +80,11 @@ fun HospitalApp(
           }
         },
     ) { padding ->
-      when (tab) {
-        Tab.WARD -> WardScreen(vm, Modifier.padding(padding), openConnect = { tab = Tab.CONNECT })
-        Tab.CONNECT -> ConnectScreen(vm, Modifier.padding(padding), onAllowBluetooth, onRegister, onUnregister)
+      Crossfade(tab, animationSpec = tween(220), label = "tab") { t ->
+        when (t) {
+          Tab.WARD -> WardScreen(vm, Modifier.padding(padding), openConnect = { tab = Tab.CONNECT })
+          Tab.CONNECT -> ConnectScreen(vm, Modifier.padding(padding), onAllowBluetooth, onRegister, onUnregister)
+        }
       }
     }
   }

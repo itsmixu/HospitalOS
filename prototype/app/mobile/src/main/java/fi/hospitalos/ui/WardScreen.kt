@@ -2,7 +2,20 @@ package fi.hospitalos.ui
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.runtime.key
+import androidx.compose.ui.draw.rotate
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -77,8 +90,15 @@ fun WardScreen(vm: AppViewModel, modifier: Modifier, openConnect: () -> Unit) {
 
     // What the wearer sees right now.
     SectionTitle("On your glasses")
+    val stepped by vm.flow.steppedReveal.collectAsStateWithLifecycle()
     Panel(accent = C.Blue) {
-      Body(describe(screen, snap))
+      AnimatedContent(
+          describe(screen, snap),
+          transitionSpec = {
+            (fadeIn(tween(220)) + slideInVertically(tween(220)) { it / 3 }) togetherWith fadeOut(tween(120))
+          },
+          label = "lens",
+      ) { text -> Body(text) }
       when (step) {
         GlassesStep.ON -> Unit
         GlassesStep.REGISTERED -> PrimaryButton("Start glasses display", { vm.glasses.startDisplay() })
@@ -91,36 +111,68 @@ fun WardScreen(vm: AppViewModel, modifier: Modifier, openConnect: () -> Unit) {
         SecondaryButton("Clear", { vm.flow.clear() })
         SecondaryButton("Re-send", { vm.flow.render() })
       }
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+          Body("Stepped reveal")
+          Body("Key screens arrive in parts on the lens", C.Muted)
+        }
+        Switch(
+            checked = stepped,
+            onCheckedChange = { vm.flow.setSteppedReveal(it) },
+            colors = SwitchDefaults.colors(checkedTrackColor = C.Blue, checkedThumbColor = Color.Black),
+        )
+      }
     }
 
-    // Requests sent to me.
-    if (snap.incoming.isNotEmpty()) {
-      SectionTitle("Requests for you")
-      snap.incoming.forEach { t -> IncomingCard(vm, snap, t) }
+    // Sections slide in when something arrives and out when it's handled. The last value is kept
+    // during the exit animation so the card doesn't blank out while it collapses.
+    val incoming = snap.incoming
+    var lastIncoming by remember { mutableStateOf(incoming) }
+    if (incoming.isNotEmpty()) lastIncoming = incoming
+    AnimatedVisibility(incoming.isNotEmpty(), enter = SectionEnter, exit = SectionExit) {
+      Column(Modifier.animateContentSize()) {
+        SectionTitle("Requests for you")
+        lastIncoming.forEach { t -> key(t.id) { IncomingCard(vm, snap, snap.tasks.firstOrNull { it.id == t.id } ?: t) } }
+      }
     }
 
-    // Open or review-ready encounter.
-    snap.drafts.firstOrNull()?.let { d ->
-      SectionTitle(if (d.status == "open") "Recording" else "Draft note to review")
-      DraftCard(vm, snap, d)
+    val draft = snap.drafts.firstOrNull()
+    var lastDraft by remember { mutableStateOf(draft) }
+    if (draft != null) lastDraft = draft
+    AnimatedVisibility(draft != null, enter = SectionEnter, exit = SectionExit) {
+      lastDraft?.let { d ->
+        Column {
+          SectionTitle(if (d.status == "open") "Recording" else "Draft note to review")
+          DraftCard(vm, snap, d)
+        }
+      }
     }
 
     SectionTitle("My patients")
-    snap.patients.forEach { p -> PatientCard(vm, snap, p) }
+    snap.patients.forEach { p -> key(p.id) { PatientCard(vm, snap, p) } }
     if (snap.patients.isEmpty()) Body("No patients assigned to you.", C.Muted)
 
-    if (snap.outgoing.isNotEmpty()) {
-      SectionTitle("Requests you sent")
-      snap.outgoing.take(5).forEach { t -> OutgoingCard(vm, snap, t) }
+    AnimatedVisibility(snap.outgoing.isNotEmpty(), enter = SectionEnter, exit = SectionExit) {
+      Column(Modifier.animateContentSize()) {
+        SectionTitle("Requests you sent")
+        snap.outgoing.take(5).forEach { t -> key(t.id) { OutgoingCard(vm, snap, t) } }
+      }
     }
 
     SectionTitle("Demo extras (simulated)")
     Panel {
-      Body("Not part of the core workflow. Positions and the fall are simulated.", C.Muted)
+      Body("Not part of the core workflow. Positions and the fall are simulated; the turning is real.", C.Muted)
       FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SecondaryButton("Staff map", { vm.flow.staffMap() })
         SecondaryButton("Fall alert", { vm.flow.fallAlert() })
+        SecondaryButton("Reset direction", { vm.flow.resetDirection() })
       }
+      val source by vm.glasses.head.source.collectAsStateWithLifecycle()
+      val turn by vm.glasses.head.turnDegrees.collectAsStateWithLifecycle()
+      StatusPill(
+          "${source.label}: ${"%.0f".format(kotlin.math.abs(turn))}° ${if (turn >= 0) "left" else "right"}",
+          if (source == fi.hospitalos.glasses.HeadingSource.GLASSES) C.Green else if (source == fi.hospitalos.glasses.HeadingSource.PHONE) C.Amber else C.Muted,
+      )
     }
     Spacer(Modifier.height(24.dp))
   }
@@ -137,10 +189,12 @@ private fun PatientCard(vm: AppViewModel, s: Snapshot, p: Patient) {
         Title(p.title)
         Body("Room ${p.room}${p.summary?.let { " · $it" } ?: ""}", C.Muted)
       }
-      Text(if (open) "▲" else "▼", color = C.Muted)
+      val turn by animateFloatAsState(if (open) 180f else 0f, tween(250), label = "chevron")
+      Text("▼", color = C.Muted, modifier = Modifier.rotate(turn))
     }
     p.warning?.let { StatusPill("⚠ $it", C.Red) }
-    if (open) {
+    AnimatedVisibility(open, enter = SectionEnter, exit = SectionExit) {
+      Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
       Body("Patient reported: ${p.reported}")
       s.notesFor(p.id).take(3).forEach { n ->
         Body("${n.time} · ${s.name(n.author)}: ${listOf(n.reported, n.planned).filter { it.isNotBlank() }.joinToString(" / ")}", C.Muted)
@@ -149,6 +203,7 @@ private fun PatientCard(vm: AppViewModel, s: Snapshot, p: Patient) {
         PrimaryButton("Show on glasses", { vm.flow.openPatient(p.id) })
         SecondaryButton("Record (consent)", { vm.flow.startConsent(p.id) }, enabled = !busy)
         s.colleagues.forEach { c -> SecondaryButton("Ask ${c.name}", { vm.flow.requestHelp(p.id, c.id) }) }
+      }
       }
     }
   }

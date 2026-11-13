@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fi.hospitalos.glasses.GlassesFlow
 import fi.hospitalos.glasses.GlassesLink
+import fi.hospitalos.glasses.HeadTracker
 import fi.hospitalos.ward.WardClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,7 +23,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
   lateinit var flow: GlassesFlow
     private set
 
-  val glasses = GlassesLink(viewModelScope, onDisplayReady = { flow.render() })
+  val glasses = GlassesLink(viewModelScope, HeadTracker(app, viewModelScope), onDisplayReady = { flow.render() })
 
   init {
     flow = GlassesFlow(viewModelScope, ward, glasses)

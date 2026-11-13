@@ -22,24 +22,41 @@ import com.meta.wearable.dat.display.views.TextStyle
  * The display has no custom colors or scrolling; the map is a phone-drawn bitmap (SPEC §6).
  */
 class Renderer(private val f: GlassesFlow) {
+  companion object {
+    /** Last reveal stage: everything visible. */
+    const val FULL = 2
 
-  fun ContentScope.render(screen: Screen, s: Snapshot?) {
+    /** Pause between reveal stages. Tune on hardware: too short and Bluetooth merges them. */
+    const val STEP_MS = 160L
+
+    /** Screens that arrive in stages (mockup Transitions tab): most important part first. */
+    fun isStaged(screen: Screen) =
+        screen is Screen.FallAlert ||
+            screen is Screen.Incoming ||
+            screen is Screen.PatientCard ||
+            screen is Screen.NoteReview ||
+            screen is Screen.Briefing ||
+            screen is Screen.Home
+  }
+
+  /** [r] = reveal stage, 0..[FULL]. Non-staged screens ignore it. */
+  fun ContentScope.render(screen: Screen, s: Snapshot?, r: Int = FULL) {
     when (screen) {
       Screen.Clear -> flexBox {}
-      Screen.Home -> home(s)
-      is Screen.PatientCard -> patientCard(screen, s)
+      Screen.Home -> home(s, r)
+      is Screen.PatientCard -> patientCard(screen, s, r)
       is Screen.Consent -> consent(screen)
       is Screen.Recording -> recording(screen)
       is Screen.RecordingMenu -> recordingMenu(screen, s)
       is Screen.Drafting -> status(IconName.STAR_CIRCLE_TRIANGLE_AI, "Preparing the draft note")
-      is Screen.NoteReview -> noteReview(screen, s)
+      is Screen.NoteReview -> noteReview(screen, s, r)
       is Screen.AskListening -> askListening(screen, s)
       is Screen.AskAnswer -> askAnswer(screen)
       is Screen.Outgoing -> outgoing(screen, s)
-      is Screen.Incoming -> incoming(screen, s)
-      is Screen.Briefing -> briefing(screen, s)
+      is Screen.Incoming -> incoming(screen, s, r)
+      is Screen.Briefing -> briefing(screen, s, r)
       Screen.StaffMap -> staffMap(s)
-      Screen.FallAlert -> fallAlert()
+      Screen.FallAlert -> fallAlert(r)
       Screen.FallBriefing -> fallBriefing(s)
       Screen.Offline -> offline()
       is Screen.Toast -> status(if (screen.ok) IconName.CHECKMARK_CIRCLE else IconName.I_CIRCLE, screen.text)
@@ -74,13 +91,14 @@ class Renderer(private val f: GlassesFlow) {
 
   // ---------------------------------------------------------------- home & patient
 
-  private fun ContentScope.home(s: Snapshot?) = bottom {
+  /** Stages: ward card → first patient row → all rows. */
+  private fun ContentScope.home(s: Snapshot?, r: Int) = bottom {
     card {
       text(GlassesFlow.WARD_NAME, style = TextStyle.HEADING)
       val open = s?.incoming?.size ?: 0
       text(if (open == 0) "No open requests" else "$open request${if (open > 1) "s" else ""} for you", style = TextStyle.BODY, color = TextColor.SECONDARY)
     }
-    s?.patients?.forEach { p ->
+    s?.patients?.take(if (r == 0) 0 else if (r == 1) 1 else Int.MAX_VALUE)?.forEach { p ->
       flexBox(direction = Direction.ROW, gap = 12, padding = 16, crossAlignment = Alignment.CENTER, background = FlexBoxBackground.CARD, onClick = { f.openPatient(p.id) }) {
         icon(name = IconName.BED_SIDE, style = IconStyle.FILLED)
         flexBox(flexGrow = 1f) { text(p.name, style = TextStyle.BODY) }
@@ -89,7 +107,8 @@ class Renderer(private val f: GlassesFlow) {
     }
   }
 
-  private fun ContentScope.patientCard(screen: Screen.PatientCard, s: Snapshot?) {
+  /** Stages: name + room → warning + latest info → buttons. */
+  private fun ContentScope.patientCard(screen: Screen.PatientCard, s: Snapshot?, r: Int) {
     val p = s?.patient(screen.patientId) ?: return status(IconName.I_CIRCLE, "Patient not available")
     val latest = s.notesFor(p.id).firstOrNull()
     flexBox(direction = Direction.COLUMN, gap = 10, padding = 16, alignment = Alignment.END, crossAlignment = Alignment.STRETCH) {
@@ -98,14 +117,16 @@ class Renderer(private val f: GlassesFlow) {
           flexBox(flexGrow = 1f) { text(p.title, style = TextStyle.HEADING) }
           text("Room ${p.room}", style = TextStyle.BODY, color = TextColor.SECONDARY)
         }
-        p.warning?.let { warning(it) }
-        if (latest != null) {
-          text("${latest.time}  ${latest.planned.ifBlank { latest.reported }}", style = TextStyle.BODY)
-        } else {
-          text("Reported: ${p.reported}", style = TextStyle.BODY)
+        if (r >= 1) {
+          p.warning?.let { warning(it) }
+          if (latest != null) {
+            text("${latest.time}  ${latest.planned.ifBlank { latest.reported }}", style = TextStyle.BODY)
+          } else {
+            text("Reported: ${p.reported}", style = TextStyle.BODY)
+          }
         }
       }
-      buttons {
+      if (r >= 2) buttons {
         button("Record", style = ButtonStyle.PRIMARY, iconName = IconName.SPEECH_BUBBLE, onClick = { f.startConsent(p.id) })
         button("Ask", style = ButtonStyle.SECONDARY, iconName = IconName.STAR_CIRCLE_TRIANGLE_AI, onClick = { f.ask(p.id) })
         s.colleagues.firstOrNull()?.let { c ->
@@ -171,7 +192,8 @@ class Renderer(private val f: GlassesFlow) {
     }
   }
 
-  private fun ContentScope.noteReview(screen: Screen.NoteReview, s: Snapshot?) = bottom {
+  /** Stages: title → note lines → Save/Discard. */
+  private fun ContentScope.noteReview(screen: Screen.NoteReview, s: Snapshot?, r: Int) = bottom {
     val d = s?.drafts?.firstOrNull { it.id == screen.draftId }
     if (d == null) {
       card { text("Draft no longer available", style = TextStyle.BODY) }
@@ -180,10 +202,12 @@ class Renderer(private val f: GlassesFlow) {
     val done = s.tasks.filter { it.patientId == d.patientId && it.from == s.me.id && it.status == "completed" }
     card {
       text("Draft care note", style = TextStyle.HEADING)
-      if (d.reported.isNotBlank()) text("Reported: ${d.reported}", style = TextStyle.BODY)
-      if (d.planned.isNotBlank()) text("Planned: ${d.planned}", style = TextStyle.BODY)
-      done.forEach { text("Done by ${s.name(it.to)}: ${it.summary}", style = TextStyle.BODY) }
-      buttons {
+      if (r >= 1) {
+        if (d.reported.isNotBlank()) text("Reported: ${d.reported}", style = TextStyle.BODY)
+        if (d.planned.isNotBlank()) text("Planned: ${d.planned}", style = TextStyle.BODY)
+        done.forEach { text("Done by ${s.name(it.to)}: ${it.summary}", style = TextStyle.BODY) }
+      }
+      if (r >= 2) buttons {
         button("Save", style = ButtonStyle.PRIMARY, iconName = IconName.CHECKMARK, onClick = { f.saveNote(d.id) })
         button("Discard", style = ButtonStyle.SECONDARY, onClick = { f.discardNote(d.id) })
       }
@@ -225,14 +249,15 @@ class Renderer(private val f: GlassesFlow) {
     }
   }
 
-  private fun ContentScope.incoming(screen: Screen.Incoming, s: Snapshot?) = bottom {
+  /** Stages: who + room → what they need → buttons. */
+  private fun ContentScope.incoming(screen: Screen.Incoming, s: Snapshot?, r: Int) = bottom {
     val t = s?.tasks?.firstOrNull { it.id == screen.taskId } ?: return@bottom
     val p = s.patient(t.patientId)
     card {
       text("${s.name(t.from)} needs help", style = TextStyle.BODY)
       text(if (p != null) "Room ${p.room}" else "Room ${t.room ?: "?"}", style = TextStyle.HEADING)
-      t.summary?.let { text("\"$it\"", style = TextStyle.BODY, color = TextColor.SECONDARY) }
-      buttons {
+      if (r >= 1) t.summary?.let { text("\"$it\"", style = TextStyle.BODY, color = TextColor.SECONDARY) }
+      if (r >= 2) buttons {
         button("On my way", style = ButtonStyle.PRIMARY, iconName = IconName.CHECKMARK, onClick = { f.acceptRequest(t.id) })
         button("Can't", style = ButtonStyle.SECONDARY, onClick = { f.declineRequest(t.id) })
       }
@@ -240,15 +265,18 @@ class Renderer(private val f: GlassesFlow) {
   }
 
   /** Only task-relevant, permitted info, with its source (SPEC F2). */
-  private fun ContentScope.briefing(screen: Screen.Briefing, s: Snapshot?) = bottom {
+  /** Stages: patient + task → warning and report → Done/Hide. */
+  private fun ContentScope.briefing(screen: Screen.Briefing, s: Snapshot?, r: Int) = bottom {
     val t = s?.tasks?.firstOrNull { it.id == screen.taskId } ?: return@bottom
     val p = s.patient(t.patientId)
     card {
       text(p?.title ?: "Room ${t.room}", style = TextStyle.HEADING)
       text("Room ${p?.room ?: t.room}  ·  ${t.summary ?: "Assistance"}", style = TextStyle.BODY, color = TextColor.SECONDARY)
-      p?.warning?.let { warning(it) }
-      p?.let { text("Patient reported: ${it.reported}", style = TextStyle.BODY) }
-      buttons {
+      if (r >= 1) {
+        p?.warning?.let { warning(it) }
+        p?.let { text("Patient reported: ${it.reported}", style = TextStyle.BODY) }
+      }
+      if (r >= 2) buttons {
         button("Done", style = ButtonStyle.PRIMARY, iconName = IconName.CHECKMARK, onClick = { f.completeRequest(t.id) })
         button("Hide", style = ButtonStyle.SECONDARY, onClick = { f.clear() })
       }
@@ -265,14 +293,22 @@ class Renderer(private val f: GlassesFlow) {
         buttons { button("Close", style = ButtonStyle.SECONDARY, onClick = { f.show(f.base()) }) }
       }
 
-  private fun ContentScope.fallAlert() =
+  /** Red banner is static, so draw it once. */
+  private val fallBanner by lazy { WardMap.alertBanner("Fall in Room 7") }
+
+  /**
+   * Stages: red alert banner → heading-up map + direction → Accept/Pass.
+   * The map turns with the wearer's head (HeadTracker); the plan itself is simulated.
+   */
+  private fun ContentScope.fallAlert(r: Int) =
       flexBox(direction = Direction.COLUMN, gap = 10, padding = 16, crossAlignment = Alignment.STRETCH) {
-        flexBox(direction = Direction.ROW, gap = 10, padding = 14, crossAlignment = Alignment.CENTER, background = FlexBoxBackground.CARD) {
-          icon(name = IconName.EXCLAMATION_TRIANGLE, style = IconStyle.FILLED)
-          text("Fall in Room 7", style = TextStyle.HEADING)
+        image(bitmap = fallBanner, sizePreset = ImageSize.FILL, cornerRadius = CornerRadius.MEDIUM)
+        if (r >= 1) {
+          val turn = f.turnDegrees
+          image(bitmap = WardMap.headingUpMap(SimulatedPositions.me, 7, turn), sizePreset = ImageSize.FILL, cornerRadius = CornerRadius.MEDIUM)
+          text(WardMap.direction(SimulatedPositions.me, 7, turn), style = TextStyle.HEADING, alignSelf = Alignment.CENTER)
         }
-        image(bitmap = WardMap.alertMap(from = SimulatedPositions.me, alertRoom = 7), sizePreset = ImageSize.FILL, cornerRadius = CornerRadius.MEDIUM)
-        buttons {
+        if (r >= 2) buttons {
           button("Accept", style = ButtonStyle.PRIMARY, iconName = IconName.CHECKMARK, onClick = { f.acceptFall() })
           button("Pass", style = ButtonStyle.SECONDARY, onClick = { f.passFall() })
         }
@@ -282,9 +318,20 @@ class Renderer(private val f: GlassesFlow) {
     val p = s?.patients?.firstOrNull { it.room == "7" }
     flexBox(direction = Direction.COLUMN, crossAlignment = Alignment.STRETCH, padding = 16) {
       flexBox(direction = Direction.ROW, alignment = Alignment.END) {
+        // Live direction from head tracking instead of a fixed "2nd door left".
+        val dir = WardMap.direction(SimulatedPositions.me, 7, f.turnDegrees)
         flexBox(direction = Direction.ROW, gap = 8, padding = 12, crossAlignment = Alignment.CENTER, background = FlexBoxBackground.CARD) {
-          text("2nd door left", style = TextStyle.BODY)
-          icon(name = IconName.ARROW_LEFT, style = IconStyle.FILLED)
+          text(dir, style = TextStyle.BODY)
+          icon(
+              name =
+                  when (dir) {
+                    "Turn left" -> IconName.ARROW_LEFT
+                    "Turn right" -> IconName.ARROW_RIGHT
+                    "Turn around" -> IconName.ARROW_U_LEFT
+                    else -> IconName.CARET_UP
+                  },
+              style = IconStyle.FILLED,
+          )
         }
       }
       flexBox(flexGrow = 1f) {}

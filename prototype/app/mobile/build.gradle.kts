@@ -43,4 +43,5 @@ dependencies {
   implementation("com.squareup.okhttp3:okhttp:4.12.0")
   implementation("com.meta.wearable:mwdat-core:1.0.1")
   implementation("com.meta.wearable:mwdat-display:1.0.1")
+  implementation("com.meta.wearable:mwdat-motion:1.0.1")
 }
