@@ -179,3 +179,11 @@ Resolve these, then move the answer into the decision log in CLAUDE.md and delet
 - Confirm available Claude model, transcription data destination, abandoned-session cleanup and actual device indicators before demo claims.
 
 - Prove the Display sample, input and audio path on loan hardware first. Smoke-test Gen 2 only if available without delaying Display; document which optional functions actually work.
+
+## 11. Development foundation
+
+The first runnable slice uses synthetic typed patient reports/plans, explicit completed task updates and editable deterministic draft notes. It does not record audio or call an external model yet. The browser responder supports the full task/record development loop; the Android shell connects to the same server and provides DAT registration, session lifecycle and a Display card bridge. Real hardware operation remains a separate acceptance check.
+
+Development protocol: authenticate using an initial `auth` message with a per-staff demo token. Commands have `id`, `type`, `payload`; patient/task IDs are validated in the payload. Responses are `snapshot`, `ok`, or `error`; snapshots are filtered per authenticated identity. Additional development commands: `patient.select`, `help.request`, `message.delivered`, `help.response`, `help.complete`, `help.cancel`, `log.start`, `log.stop`, `log.confirm`, `log.discard`. `help.request` selects a named, assigned colleague; no automatic staffing. `log.start` requires `consent: true`; `log.stop` accepts explicitly separated reported/planned fields and prepares a draft. Completion comes only from the task state. Retries are deduplicated by staff plus command ID. Reconnect sends current filtered state, never automatically replays requests.
+
+The server is local-only by default, has randomly generated development tokens, bounded inputs and in-memory synthetic state. Restart resets the ward; drafts expire after 30 minutes. No production authentication, EHR integration, persistent storage, audio transcription or external AI is implied. Android cleartext transport is debug-only for USB/emulator development. Do not use this foundation for real patient information.

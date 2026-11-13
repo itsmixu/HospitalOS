@@ -1,0 +1,22 @@
+{
+  "name": "hospitalos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --import tsx server/src/index.ts",
+    "test": "node --import tsx --test server/test/*.test.ts",
+    "check": "tsc --noEmit",
+    "format": "prettier --write \"server/**/*.{ts,js,html}\" package.json tsconfig.json demo-data/ward.json"
+  },
+  "dependencies": {
+    "ws": "^8.18.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "prettier": "^3.10.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

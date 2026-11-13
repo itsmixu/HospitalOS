@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>HospitalOS — simulated ward</title
+  ><style>
+    body {
+      font: 16px system-ui;
+      background: #eef2f5;
+      color: #172c3b;
+      max-width: 1050px;
+      margin: 32px auto;
+      padding: 20px;
+    }
+    section {
+      background: white;
+      padding: 22px;
+      margin: 16px 0;
+      border-radius: 12px;
+    }
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #bccbd5;
+      border-radius: 6px;
+    }
+    button {
+      cursor: pointer;
+      background: #e5f3ef;
+    }
+    textarea {
+      width: 90%;
+      min-height: 70px;
+    }
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    #status {
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+    .task {
+      border-top: 1px solid #ddd;
+      padding: 12px 0;
+    }
+    label {
+      display: block;
+    }
+  </style>
+  <h1>Ward workspace</h1>
+  <p>
+    Synthetic development mode · typed input · no audio recording or external AI
+  </p>
+  <section>
+    <input
+      id="token"
+      type="password"
+      placeholder="Demo token from server"
+      aria-label="Demo token"
+    /><button id="connect">Connect</button
+    ><button id="disconnect">Disconnect</button>
+    <p id="status" role="status">Disconnected</p>
+  </section>
+  <div class="grid">
+    <section>
+      <h2>Patient encounter</h2>
+      <select id="patient" aria-label="Patient"></select
+      ><button id="select">Confirm patient</button>
+      <p id="selected">No patient confirmed</p>
+      <label
+        ><input id="consent" type="checkbox" />Simulated patient consent
+        obtained</label
+      ><button id="start">Start typed encounter</button
+      ><label>Patient reported<textarea id="reported"></textarea></label
+      ><label>Planned actions<textarea id="planned"></textarea></label
+      ><button id="draft">Prepare draft</button
+      ><button id="confirm">Confirm reviewed note</button
+      ><button id="discard">Discard encounter</button>
+      <pre id="encounter"></pre>
+    </section>
+    <section>
+      <h2>Assistance</h2>
+      <select id="recipient" aria-label="Recipient"></select
+      ><input
+        id="summary"
+        value="Assistance requested"
+        aria-label="Task summary"
+      /><button id="request">Request help</button>
+      <div id="tasks"></div>
+    </section>
+  </div>
+  <section>
+    <h2>Reviewed records</h2>
+    <pre id="notes"></pre>
+  </section>
+  <details>
+    <summary>Actual authorised payload received</summary>
+    <pre id="payload"></pre>
+  </details>
+  <script src="/client.js"></script>
+</html>

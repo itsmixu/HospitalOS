@@ -1,0 +1,21 @@
+{
+  "patients": [
+    {
+      "id": "p1",
+      "name": "Demo Patient A",
+      "room": "12",
+      "reported": "Patient reports dizziness earlier today."
+    },
+    {
+      "id": "p2",
+      "name": "Demo Patient B",
+      "room": "7",
+      "reported": "Patient requests help finding their glasses."
+    }
+  ],
+  "staff": [
+    { "id": "aino", "name": "Aino", "patients": ["p1", "p2"] },
+    { "id": "ben", "name": "Ben", "patients": ["p1"] },
+    { "id": "observer", "name": "Ward overview", "patients": [] }
+  ]
+}
