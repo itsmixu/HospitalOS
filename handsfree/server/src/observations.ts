@@ -1,9 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
+import recordFixtures from '../../../prototype/demo-data/handsfree-patient-records.json' with {type:'json'};
+export type Medication={name:string;dose:string;route:string;schedule:string;prescribedBy:string;prescribedAt:string};
+export type CareEvent={kind:string;description:string;at:string;author:string};
+export type PatientRecord={admissionReason:string;allergies:string[];medications:Medication[];careHistory:CareEvent[]};
 export const patients = [
   { id:'demo-a', name:'Demo Patient A', encounterId:'enc-a', room:'12', warning:'Synthetic warning: assistance required for transfers', reported:'Patient reports discomfort when standing.', staff:['aino','ben'] },
   { id:'demo-b', name:'Demo Patient B', encounterId:'enc-b', room:'14', warning:null, reported:'Patient requested water.', staff:['aino'] },
-];
+  { id:'demo-c', name:'Demo Patient C', encounterId:'enc-c', room:'8', warning:'Synthetic emergency scenario', reported:'Team-reported emergency handover.', staff:['ben','sara'] },
+].map(p=>({...p,...(recordFixtures as Record<string,PatientRecord>)[p.id]}));
 const id = z.string().min(1).max(100);
 const tuple = z.object({ systolic:z.number().int().min(0).max(999), diastolic:z.number().int().min(0).max(999), pulse:z.number().int().min(0).max(999) }).strict();
 const binding = { patientId:id, encounterId:id, contextRevision:z.number().int().positive() };

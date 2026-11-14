@@ -63,6 +63,12 @@ class HandsFreePreviewActivity : ComponentActivity() {
   private var error by mutableStateOf("")
   private val lock = Mutex()
   private var lastCard: Card? = null
+  private val tiltFeedback=TiltFeedback()
+  private var lastTilt=TiltProgress()
+  private var renderedTilt=TiltProgress()
+  private var nextFeedbackRender=0L
+  private fun tiltEligible(c:Card)=eligible && renderedCard==c && c.phase !in setOf("quiet","offline","saving","sending","reconciling")
+  private fun currentTilt()=tiltFeedback.visible(engine.tiltActionLabel!=null)
   private var nextRenderAt=0L
   private var stopped = false
   private var authReady = false
@@ -71,6 +77,8 @@ class HandsFreePreviewActivity : ComponentActivity() {
   private var computerVoice = false
   private var glassesVoice by mutableStateOf(false)
   private var voiceStatus by mutableStateOf("Microphone off")
+  private var speechDiagnostic by mutableStateOf("")
+  private var listeningDisplayRefreshAt=0L
   private var speechInput: DatSpeechInput? = null
   private var renderedCard: Card? = null
   private var reportedSpeechListening=false
@@ -99,7 +107,7 @@ class HandsFreePreviewActivity : ComponentActivity() {
       if(!persistPending()){error="Local recovery state unavailable; restart after restoring storage";recoveryHealthy=false;syncReadiness()}
       else if(socket?.send(m.toString()) != true) {authReady=false;syncReadiness()}
     }
-    engine.quietMode=physical
+    engine.quietMode=physical || intent.getBooleanExtra("wearableDemo",false)
     getSharedPreferences("handsfree-recovery",MODE_PRIVATE).getString("pending",null)?.let{engine.restoreUnresolvedCommand(it)}
     try {
       Wearables.initialize(applicationContext)
@@ -128,7 +136,19 @@ class HandsFreePreviewActivity : ComponentActivity() {
       else {
         kit.enable()
         kit.pairGlasses(GlassesModel.META_RAYBAN_DISPLAY).onSuccess { g ->
-          mock=g;g.powerOn();g.don();beginDisplaySession(SpecificDeviceSelector(g.deviceIdentifier))
+          mock=g;g.powerOn();g.don()
+          lifecycleScope.launch {
+            val connected=withTimeoutOrNull(30_000){
+              while(isActive){
+                val device=Wearables.devicesMetadata[g.deviceIdentifier]?.value
+                if(g.deviceIdentifier in Wearables.devices.value && device?.linkState==com.meta.wearable.dat.core.types.LinkState.CONNECTED)return@withTimeoutOrNull true
+                delay(100)
+              }
+              false
+            }==true
+            if(connected)beginDisplaySession(SpecificDeviceSelector(g.deviceIdentifier))
+            else {error="Simulated glasses did not become connected; restart preview";publish()}
+          }
           kit.startTestServer(9001).onFailure{e,_->error=e.toString()}
         }.onFailure{e,_->error=e.toString()}
       }
@@ -136,16 +156,17 @@ class HandsFreePreviewActivity : ComponentActivity() {
     engine.bedside.cameraSource=if(physical || datCamera) "dat-camera" else "injected-camera"
     speechInput=DatSpeechInput(lifecycleScope,
       window={SpeechWindow(engine.card,renderedCard==engine.card,eligible)},
-      result={route,text->when(route){SpeechRoute.WAKE->engine.wake();SpeechRoute.COMMAND->engine.transcript(text);else->Unit};publish()},
+      result={route,text->when(route){SpeechRoute.WAKE->engine.wake();SpeechRoute.COMMAND->engine.transcript(text);SpeechRoute.DRAFT->engine.proposeTranscript(text);else->Unit};publish()},
       status={active,note->
         if(!active && glassesVoice && engine.card.microphone)engine.transcript("cancel")
         glassesVoice=active
         if(note.isNotEmpty())voiceStatus=if(physical)note else note.replace("Glasses voice", "Simulated SDK voice").replace("Glasses microphone", "Simulated SDK microphone")
         lastCard=null;publish()
       },
-      listening={listeningWindow=it;lastCard=null;publish()})
+      listening={listeningWindow=it;lastCard=null;publish()},
+      diagnostic={speechDiagnostic=it})
     connect()
-    lifecycleScope.launch { while(isActive) { delay(100); engine.tick(); if(physical)engine.offerIncoming(); publish(); if(physical && SystemClock.elapsedRealtime()-motionReportAt>1000){motionReportAt=SystemClock.elapsedRealtime();report(engine.card,renderedCard==engine.card)} } }
+    lifecycleScope.launch { while(isActive) { delay(100); engine.tick(); if(engine.quietMode)engine.offerIncoming(); publish(); if(physical && SystemClock.elapsedRealtime()-motionReportAt>1000){motionReportAt=SystemClock.elapsedRealtime();report(engine.card,renderedCard==engine.card)} } }
     setContent {
       MaterialTheme(colorScheme=darkColorScheme()) {
         Column(Modifier.fillMaxSize().background(Color(0xFF10191B)).padding(20.dp)) {
@@ -160,10 +181,11 @@ class HandsFreePreviewActivity : ComponentActivity() {
           Spacer(Modifier.height(16.dp))
           Text(motionStatus)
           Text(voiceStatus)
+          if(speechDiagnostic.isNotBlank())Text(speechDiagnostic,style=MaterialTheme.typography.bodySmall)
           Text("Listening stays on until stopped, the app leaves the foreground, or the glasses disconnect.",style=MaterialTheme.typography.bodySmall)
           Button(enabled=displayReady && !computerVoice && !glassesVoice,onClick={startGlassesVoice()}){Text("Enable glasses voice")}
           Button(enabled=glassesVoice,onClick={stopGlassesVoice()}){Text("Stop glasses microphone")}
-          Text("Keep this screen open and USB connected. Say Hey Lumi, pause for Listening, then speak. Review before confirming. Computer voice and glasses voice are separate inputs. Incoming requests support a deliberate physical nod.",style=MaterialTheme.typography.bodySmall)
+          Text("Keep this screen open and USB connected. Say Hey Lumi, pause for Listening, then speak. Review before confirming. Computer voice and glasses voice are separate inputs. Tilt right to accept; tilt left to go back.",style=MaterialTheme.typography.bodySmall)
         }
       }
     }
@@ -200,7 +222,6 @@ class HandsFreePreviewActivity : ComponentActivity() {
       lifecycleScope.launch {motion.state.collect{motionState=it.toString()}}
       lifecycleScope.launch {motion.errors.collect { e->if(e!=null)motionStatus="Head motion error: ${e.description}"}}
       lifecycleScope.launch {
-        val tilt=PhysicalTiltDetector()
         motion.samples.collect { sample ->
           motionSamples++;motionLastAt=SystemClock.elapsedRealtime();motionSource=sample.source.toString()
           val c=engine.card
@@ -210,13 +231,13 @@ class HandsFreePreviewActivity : ComponentActivity() {
           if(eligible && renderedCard==c && c.phase !in setOf("quiet","offline","saving","sending","reconciling") && sample.source==MotionSource.GLASSES && g!=null){
             val gravity=sample.accelerometer
             val speed=kotlin.math.sqrt((g.x*g.x+g.y*g.y+g.z*g.z).toDouble())
-            if(gravity==null)tilt.reset() else {
-              val action=tilt.sample("${c.phase}:${c.promptId}:${c.title}",sample.timestampNs,gravity.x.toDouble(),gravity.y.toDouble(),gravity.z.toDouble(),speed)
-              motionStatus="Tilt ${tilt.degrees.toInt()}° · ${tilt.status}"
-              if(action!=null){if(action==TiltAction.BACK)engine.dismissScreen() else engine.physicalAccept(c.promptId);motionStatus=if(action==TiltAction.BACK)"Left tilt · back" else "Right tilt · ${engine.card.title}";publish();return@collect}
+            if(gravity==null)tiltFeedback.reset() else {
+              val action=tiltFeedback.sample(c,sample.timestampNs,now,gravity.x.toDouble(),gravity.y.toDouble(),gravity.z.toDouble(),speed)
+              motionStatus="Tilt ${tiltFeedback.degrees.toInt()}° · ${tiltFeedback.status}"
+              if(action!=null){if(action==TiltAction.BACK)engine.physicalBack(c.promptId) else engine.physicalAccept(c.promptId);motionStatus=if(action==TiltAction.BACK)"Left tilt applied" else "Right tilt · ${engine.card.title}";publish();return@collect}
             }
-          }else tilt.reset()
-
+          }else tiltFeedback.reset()
+          publish()
         }
       }
       motion.start()
@@ -248,21 +269,22 @@ class HandsFreePreviewActivity : ComponentActivity() {
         val obs=m.optJSONArray("observations")
         val saved=if(obs==null)emptyList()else (0 until obs.length()).map{obs.getJSONObject(it).let{o->val v=o.getJSONObject("values");SavedReading(o.getString("id"),o.getString("patientId"),Reading(v.getInt("systolic"),v.getInt("diastolic"),v.getInt("pulse")),o.getString("capturedAt"),o.getJSONArray("corrected").length()>0)}}
         val notes=m.optJSONArray("notes")
-        val savedNotes=if(notes==null)emptyList()else (0 until notes.length()).map{notes.getJSONObject(it).let{SavedNote(it.getString("id"),it.getString("patientId"),it.getString("text"),it.getString("savedAt"))}}
+        val savedNotes=if(notes==null)emptyList()else (0 until notes.length()).map{notes.getJSONObject(it).let{SavedNote(it.getString("id"),it.getString("patientId"),it.getString("text"),it.getString("savedAt"),it.optString("author","Not supplied"))}}
         engine.bedside.snapshot(assigned,staff,context(m.optJSONObject("context")),saved,savedNotes)
-        engine.snapshot(staff,tasks,mail)
+        val emergencies=m.optJSONArray("emergencies")
+        engine.snapshot(staff,tasks,mail,if(emergencies==null)emptyList()else(0 until emergencies.length()).mapNotNull{WardSnapshot.emergency(jsonMap(emergencies.getJSONObject(it)))})
         if(eligible) for(t in tasks) if(t.to==actor && t.status=="sent" && delivered.add(t.id)) socket?.send(JSONObject().put("id",UUID.randomUUID().toString()).put("type","request.delivered").put("taskId",t.id).put("revision",t.revision).toString())
       }
-      "command.status" -> {val ack=m.optJSONObject("ack");engine.reconciled(m.getString("commandId"),if(m.optBoolean("found"))ack?.optBoolean("ok") else null,ack?.optString("taskId")?.takeIf{it.isNotEmpty()},ack?.optString("reason")?.takeIf{it.isNotEmpty()})}
+      "command.status" -> {val ack=m.optJSONObject("ack");engine.reconciled(m.getString("commandId"),if(m.optBoolean("found"))ack?.optBoolean("ok") else null,ack?.optString("taskId")?.takeIf{it.isNotEmpty()},ack?.optString("reason")?.takeIf{it.isNotEmpty()},ack?.optString("emergencyId")?.takeIf{it.isNotEmpty()})}
       "sim.query" -> { lastCard=null }
-      "ack" -> engine.acknowledgement(m.getString("id"),m.getBoolean("ok"),m.optString("taskId").takeIf {it.isNotEmpty()},m.optString("reason").takeIf {it.isNotEmpty()},context(m.optJSONObject("context")),m.optString("observationId").takeIf{it.isNotEmpty()})
+      "ack" -> engine.acknowledgement(m.getString("id"),m.getBoolean("ok"),m.optString("taskId").takeIf {it.isNotEmpty()},m.optString("reason").takeIf {it.isNotEmpty()},context(m.optJSONObject("context")),m.optString("observationId").takeIf{it.isNotEmpty()},m.optString("emergencyId").takeIf{it.isNotEmpty()})
       "sim.input" -> {
         val input=m.getJSONObject("input")
         when(input.getString("kind")) {
           "camera" -> {cameraSeed=input.getInt("seed");cameraScenario=input.getString("scenario")}
           "voice-session" -> {if(input.getBoolean("active"))stopGlassesVoice();computerVoice=input.getBoolean("active");voiceStatus=if(computerVoice)"Computer microphone on" else "Microphone off";lastCard=null}
           "sdk-voice" -> if(!physical){if(input.getBoolean("active"))startGlassesVoice()else stopGlassesVoice()}
-          "sdk-transcript" -> if(!physical)mock?.services?.speech?.simulateTranscription(input.getString("text"),input.optBoolean("final",true),0.95f)
+          "sdk-transcript" -> if(!physical)mock?.services?.speech?.simulateTranscription(input.getString("text"),input.optBoolean("final",true),input.optDouble("confidence",0.95).toFloat())
           "wake" -> if(eligible && !glassesVoice)engine.wake()
           "transcript" -> if(eligible && !glassesVoice)engine.transcript(input.getString("text"),input.optBoolean("final",true))
           "gesture" -> if(eligible)simulateGesture(input.getString("value"))
@@ -275,6 +297,30 @@ class HandsFreePreviewActivity : ComponentActivity() {
   }
   private fun simulateGesture(kind:String) {
     gestureJob?.cancel()
+    if(kind.startsWith("left-") || kind.startsWith("right-")){
+      val expected=engine.card
+      tiltFeedback.reset()
+      gestureJob=lifecycleScope.launch {
+        val sign=if(kind.startsWith("left-"))1.0 else -1.0
+        val trace=when(kind.substringAfter('-')){
+          "partial"->List(60){12.0}+listOf(10.0,8.0,6.0,4.0,0.0)+List(15){0.0}
+          "cancel"->List(5){22.0}+listOf(16.0,12.0,8.0,4.0,0.0)+List(15){0.0}
+          "held"->List(60){22.0}
+          else->List(15){22.0}
+        }
+        val values=List(15){0.0}+trace.map{it*sign}
+        val traceStart=SystemClock.elapsedRealtimeNanos()
+        try { for((index,degrees) in values.withIndex()){
+          if(!eligible || engine.card!=expected || renderedCard!=expected)return@launch
+          val rad=degrees*kotlin.math.PI/180
+          val action=tiltFeedback.sample(expected,traceStart+index*33_000_000L,SystemClock.elapsedRealtime(),9.81*kotlin.math.sin(rad),9.81*kotlin.math.cos(rad),0.0,0.0)
+          if(action!=null){if(action==TiltAction.BACK)engine.physicalBack(expected.promptId)else engine.physicalAccept(expected.promptId);publish()}
+          else publish()
+          delay(33)
+        }} finally {if(engine.card==expected)tiltFeedback.reset();publish()}
+      }
+      return
+    }
     val prompt=engine.card.promptId
     val nod=listOf(0.0,0.0,0.0,0.0,0.0,8.0,16.0,8.0,0.0,8.0,16.0,8.0,0.0)
     val shake=listOf(0.0,0.0,0.0,0.0,0.0,8.0,16.0,8.0,0.0,-8.0,-16.0,-8.0,0.0)
@@ -290,26 +336,48 @@ class HandsFreePreviewActivity : ComponentActivity() {
     persistPending()
     shown=engine.card
     val card=shown
-    if(card==lastCard){if(reportedSpeechListening!=(mock?.services?.speech?.isListening ?: false))report(card,renderedCard==card);return}
-    lastCard=card
+    tiltFeedback.sync(card,tiltEligible(card),SystemClock.elapsedRealtime())
+    val feedback=currentTilt()
+    val sameCard=card==lastCard
+    if((card.phase in setOf("emergency-alert","emergency-briefing") || (physical && glassesVoice && card.phase in setOf("listening","dictating-message","dictating-note"))) && SystemClock.elapsedRealtime()>=listeningDisplayRefreshAt){
+      listeningDisplayRefreshAt=SystemClock.elapsedRealtime()+5000
+      lastCard=null
+    }
+    if(card==lastCard && feedback==lastTilt){if(reportedSpeechListening!=(mock?.services?.speech?.isListening ?: false))report(card,renderedCard==card);return}
+    if(sameCard && feedback!=lastTilt && SystemClock.elapsedRealtime()<nextFeedbackRender)return
+    nextFeedbackRender=SystemClock.elapsedRealtime()+80
+    lastCard=card;lastTilt=feedback
     report(card)
     if(SystemClock.elapsedRealtime()<nextRenderAt){lastCard=null;return}
     lifecycleScope.launch { lock.withLock {
       if(card!=engine.card || !displayReady)return@withLock
+      if(feedback!=currentTilt()){lastCard=null;return@withLock}
       if(card.phase=="quiet"){
-        display?.clearDisplay()?.onSuccess {if(card==engine.card){renderedCard=card;report(card,true)}}?.onFailure{e,_->error=e.description;renderedCard=null;lastCard=null;nextRenderAt=SystemClock.elapsedRealtime()+1000}
+        display?.clearDisplay()?.onSuccess {if(card==engine.card){error="";renderedCard=card;renderedTilt=TiltProgress();report(card,true)}}?.onFailure{e,_->error=e.description;renderedCard=null;lastCard=null;nextRenderAt=SystemClock.elapsedRealtime()+1000}
         return@withLock
       }
-      display?.sendContent {
+      val leftColor=if(engine.tiltBackLabel=="decline")TiltRail.CORAL else TiltRail.NEUTRAL
+      val microphoneLabel=if(glassesVoice) {if(listeningWindow?.card!=card) "Preparing microphone…" else if(!physical) "SDK speech · simulated" else if(card.microphone) "Glasses mic · listening" else "Glasses mic · say Hey Lumi"} else if(computerVoice) {if(card.microphone) "Computer mic · listening" else "Computer mic · wake phrase only"} else if(card.microphone) "Simulated input window" else "Microphone off"
+      val hint=cardHint(card)
+      // DAT encoding/transport must not block sensor delivery or the UI thread.
+      withContext(Dispatchers.IO) { display?.sendContent {
         flexBox(direction=Direction.COLUMN,alignment=Alignment.END,crossAlignment=Alignment.STRETCH,gap=10,padding=18) {
-          flexBox(direction=Direction.COLUMN,gap=7,padding=16,background=FlexBoxBackground.CARD) {
-            text(if(glassesVoice) {if(listeningWindow?.card!=card) "Preparing microphone…" else if(!physical) "SDK speech · simulated" else if(card.microphone) "Glasses mic · listening" else "Glasses mic · say Hey Lumi"} else if(computerVoice) {if(card.microphone) "Computer mic · listening" else "Computer mic · wake phrase only"} else if(card.microphone) "Simulated input window" else "Microphone off",style=TextStyle.BODY,color=TextColor.SECONDARY)
+          flexBox(direction=Direction.ROW,crossAlignment=Alignment.STRETCH,gap=0,padding=0,paddingStart=8,paddingEnd=8,paddingTop=16,paddingBottom=16,background=FlexBoxBackground.CARD) {
+            flexBox(direction=Direction.COLUMN,alignment=Alignment.END,flexGrow=1f,flexShrink=0f) {
+              image(bitmap=TiltRail.bitmap(feedback.left,leftColor),sizePreset=ImageSize.FILL)
+            }
+            flexBox(direction=Direction.COLUMN,gap=7,paddingStart=4,paddingEnd=4,flexGrow=92f,flexShrink=1f) {
+            text(microphoneLabel,style=TextStyle.BODY,color=TextColor.SECONDARY)
             text(card.title,style=TextStyle.HEADING)
             card.body.split("\n").forEach{line->text(line,style=TextStyle.BODY)}
-            text(cardHint(card),style=TextStyle.BODY,color=TextColor.SECONDARY)
+            text(hint,style=TextStyle.BODY,color=TextColor.SECONDARY)
+            }
+            flexBox(direction=Direction.COLUMN,alignment=Alignment.END,flexGrow=1f,flexShrink=0f) {
+              image(bitmap=TiltRail.bitmap(feedback.right,TiltRail.GREEN),sizePreset=ImageSize.FILL)
+            }
           }
         }
-      }?.onSuccess { if(card==engine.card)renderedCard=card
+      }}?.onSuccess { if(card==engine.card){error="";renderedCard=card;renderedTilt=feedback}
         if(card==engine.card)engine.reviewDisplayed(card.promptId)
         if(card==engine.card){report(card,true);if(card.phase=="camera")startCamera();if(card.phase=="camera-qr")startQrCamera()} }?.onFailure { e,_ -> error=e.description;renderedCard=null;lastCard=null;nextRenderAt=SystemClock.elapsedRealtime()+1000 }
     } }
@@ -320,7 +388,7 @@ class HandsFreePreviewActivity : ComponentActivity() {
   }
   private fun report(card:Card,rendered:Boolean=false){
     reportedSpeechListening=mock?.services?.speech?.isListening ?: false
-    socket?.send(JSONObject().put("type","sim.state").put("connectionError",error).put("motion",JSONObject().put("raw",motionRaw).put("samples",motionSamples).put("ageMs",if(motionLastAt==0L)-1 else SystemClock.elapsedRealtime()-motionLastAt).put("source",motionSource).put("state",motionState).put("status",motionStatus).put("eligible",eligible).put("rendered",renderedCard==card)).put("glassesVoice",glassesVoice).put("sdkReady",listeningWindow==SpeechWindow(engine.card,renderedCard==engine.card,eligible)).put("sdkListening",mock?.services?.speech?.isListening ?: false).put("renderedPromptId",if(rendered)card.promptId else 0).put("card",JSONObject().put("phase",card.phase).put("title",card.title).put("body",card.body).put("hint",cardHint(card)).put("microphone",card.microphone).put("promptId",card.promptId)).toString())
+    socket?.send(JSONObject().put("type","sim.state").put("tilt",JSONObject().put("detector",tiltFeedback.status).put("degrees",tiltFeedback.degrees).put("left",currentTilt().left).put("right",currentTilt().right).put("renderedLeft",if(renderedCard==card)renderedTilt.left else 0.0).put("renderedRight",if(renderedCard==card)renderedTilt.right else 0.0).put("leftRole",engine.tiltBackLabel).put("promptId",card.promptId)).put("connectionError",error).put("motion",JSONObject().put("raw",motionRaw).put("samples",motionSamples).put("ageMs",if(motionLastAt==0L)-1 else SystemClock.elapsedRealtime()-motionLastAt).put("source",motionSource).put("state",motionState).put("status",motionStatus).put("eligible",eligible).put("rendered",renderedCard==card)).put("glassesVoice",glassesVoice).put("sdkReady",listeningWindow==SpeechWindow(engine.card,renderedCard==engine.card,eligible)).put("sdkListening",mock?.services?.speech?.isListening ?: false).put("renderedPromptId",if(rendered)card.promptId else 0).put("card",JSONObject().put("phase",card.phase).put("title",card.title).put("body",card.body).put("hint",cardHint(card)).put("microphone",card.microphone).put("promptId",card.promptId)).toString())
   }
   private fun cardHint(card:Card):String = if(!physical)card.hint else when(card.phase){
     "browse" -> "Say next or previous · tilt right to open · left to back"
@@ -394,7 +462,7 @@ class HandsFreePreviewActivity : ComponentActivity() {
       eligible=ready
       // Invalidate the controller before sensor-stop callbacks can publish another card.
       engine.connection(ready)
-      if(!ready){renderedCard=null;speechInput?.stop();gestureJob?.cancel();cameraJob?.cancel();delivered.clear()}
+      if(!ready){tiltFeedback.reset();renderedTilt=TiltProgress();renderedCard=null;speechInput?.stop();gestureJob?.cancel();cameraJob?.cancel();delivered.clear()}
     }
     if(authReady && reportedReady!=ready){reportedReady=ready;socket?.send(JSONObject().put("type","device.state").put("ready",ready).toString())}
   }

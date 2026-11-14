@@ -1,3 +1,4 @@
+import { emergencyRecordSchema } from "./emergencies.ts";
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync, chmodSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -34,6 +35,7 @@ const stateSchema = z
           .passthrough(),
       )
       .max(500),
+    emergencies: z.array(emergencyRecordSchema).max(100).optional(),
     notes: z.array(patientNoteSchema).max(500).optional(),
     availability: z
       .record(z.string(), z.enum(["available", "busy"]))
@@ -105,6 +107,7 @@ export class DurableWard extends HandsFreeWard {
     this.messages = state.messages;
     this.observations.records = state.observations as Observation[];
     this.patientNotes.records = state.notes ?? [];
+    this.emergencies.records = state.emergencies ?? [];
   }
   private body() {
     return JSON.stringify({
@@ -116,6 +119,7 @@ export class DurableWard extends HandsFreeWard {
       messages: this.messages,
       observations: this.observations.records,
       notes: this.patientNotes.records,
+      emergencies: this.emergencies.records,
     });
   }
   /** Only the authenticated actor's result is returned. This is a read, never a retry. */

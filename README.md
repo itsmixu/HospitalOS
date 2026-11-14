@@ -425,3 +425,44 @@ Confirm a synthetic patient first, then say **“Save to patient records that I 
 DAT speech now collects finalized segments until an 850 ms quiet gap rather than stopping at the first finalized fragment. Cumulative finals are deduplicated, unfinished partial results cannot commit, oversize content is not truncated, and every result remains bound to its original displayed card. This is a segmentation improvement, not evidence of improved physical recognition accuracy. Existing continuous user-enabled Hey Lumi listening and manual stop remain; no new cloud recognizer or model dependency.
 
 Validation for this slice: **54/54 server tests pass**, including six manual-note durability/authorization/idempotency/provenance tests; **13 new Android dictation/note/buffer tests pass**, and the scoped controller/speech/bedside test build plus debug assembly and release Kotlin compile pass. TypeScript and demo-page script syntax checks pass. A concurrent full Android run had three failures in capture-owned MonitorReaderTest (frozen evaluation, bad-frame agreement, temporal consensus); combined camera validation is assigned to the camera/hardware chats. No phone installation or shared server restart was performed by this slice, and it has not yet been tested as a complete physical dictation flow.
+
+### Guided Lumi film (local, unpublished)
+
+From `handsfree/web-demo`, run `npm install`, `npm run build`, then `npm run dev`. Open `http://127.0.0.1:8800/`. Play runs the 1:55 guided 3D sequence. Previous/next or the timeline lets the presenter control narration pace; **C** switches to a clean recording view, **Escape** exits it, **Space** plays/pauses. The Narration panel contains the scene script and scope distinctions. The earlier playable ward remains at `/playground.html`.
+
+The film uses procedural models, a wrist-mounted QR texture and Meta UI toolkit styles. All scans, records, speech, gestures, alerts and responses are scripted synthetic content; richer patient records and emergency ISBAR are product-vision scenes, not implemented EHR or emergency-service integration. No image-generation assets are used. Netlify configuration is ready, but publication is intentionally postponed.
+
+### Patient information and Code Blue (integration build)
+
+The `handsfree/` Android app now opens the patient overview after wristband/selection confirmation: admission reason, allergies, prescriptions and authored care history. Say **Next / Previous** to page, **Capture reading** for the supported HOS-BP-1 monitor, or **Save to patient records that …** for an exact, reviewed note. Reading and note writes still require explicit confirmation.
+
+On the local demo desk, **Code Blue · room 8** sends Ben's synthetic emergency to connected colleagues, including busy staff. **Right tilt** acknowledges and opens the staff-written ISBAR; **left tilt** declines an incoming alert. In the briefing, right advances and left closes. **Hey Lumi → Show ISBAR** reopens an active briefing. **Resolve Code Blue** is the reporter's separate action; closing a briefing never resolves the emergency. Alerts expose no ISBAR before acknowledgement and do not grant full patient-record access.
+
+Rehearsal: start an isolated ward with `ENABLE_SIMULATION=1 HF_PORT=8793 HF_DB_PATH=/tmp/lumi-video-rehearsal.sqlite npm run dev` from `handsfree/`, reverse the same port to the emulator, and launch `HandsFreePreviewActivity` with `wardPort=8793`, `datCamera=true`, `wearableDemo=true`, `actor=aino`. Run `HF_URL=ws://127.0.0.1:8793 node --import tsx server/test/rehearse-video.ts`. This exercises the real Kotlin controller and official DAT mock services using synthetic speech, head traces and camera pixels; it does not validate physical glasses or hospital use.
+
+### Tilt-progress feedback
+
+Actual DAT cards now show fixed edge rails: green right for the available action, coral left for declining an incoming request, neutral left for back/later. Progress follows measured head roll from the existing 8° neutral boundary to the 18° threshold; the existing stable hold and upright rearm still govern actions. Returning upright retreats without acting. Prompt changes, stale samples and disconnects clear feedback.
+
+In the demo desk's **Simulator → Tilt feedback checks**, use partial-right/left, brief-right/left cancellation and held-right traces. These feed the same detector used by physical glasses. For the automated SDK rehearsal, launch the Android mock display against an isolated ward, then run from `handsfree/`:
+
+```sh
+HF_URL=ws://127.0.0.1:8796 node --import tsx server/test/rehearse-tilt-feedback.ts
+```
+
+Optionally set `ADB` to the local adb executable to capture green/coral/neutral screenshots from emulator-5554 in `/tmp/lumi-*-progress.png`. The rehearsal creates synthetic requests; use an isolated test database. Current verification: 191 Android tests, 69 server tests, TypeScript checking, APK assembly, release Kotlin compilation and the complete DAT tilt rehearsal pass. This is simulator evidence; physical glasses remain a separate check.
+## Lumi video and guided-demo handoff
+
+The current filmed reference is [Lumi v6](demo-video/lumi-demo-v6.mp4), a silent 89-second hackathon role-play with composited Display cards. Run `git lfs pull` after checkout to download the video assets. The final export, silent source footage, transparent overlay and three-second intro live in `demo-video/`; earlier local exports remain outside Git.
+
+- [Visual preview](demo-video/preview.jpg)
+- [Final 89-second scene timings](prototype/demo-data/lumi-video-final-v6.json)
+- [Exact cards, original-footage timings and word reveals](prototype/demo-data/lumi-video-v6.json)
+- [Narration and nurse-dialogue cues](demo-video/voiceover-v6.json)
+- [Deterministic overlay renderer](demo-video/render_overlay.py)
+
+The intro reads **Your hands save lives. Keep them free.** The outro reads **Lumi — Focusing on the patient.** One patient overview stays visible after QR confirmation; it has no page counter. Medication wording is **40mg Orion Furosemide 1x tab**. The log reveals words inside a fixed-size card. Right tilt confirms, accepts or saves; left declines a request and otherwise goes back. Filmed bars are editorially aligned to the head movements, not recorded sensor telemetry.
+
+For editing, place `demo-video/source-silent.mp4` and `demo-video/lumi-overlay-v6.mov` at 00:03 after `demo-video/intro.mp4`. The alpha track provides the closing fade/title. To regenerate the 86-second body on macOS, install Python Pillow, NumPy and OpenCV plus ffmpeg, then run `python3 demo-video/render_overlay.py --output /tmp/lumi-body.mp4`; use `--alpha` for an editable MOV. The renderer currently uses macOS Arial fonts. Prepend the three-second intro for the final 89-second version. No location audio is included.
+
+The existing `handsfree/web-demo/` contains a procedural 3D guided film and a separate interactive playground, with vendored Meta UI styles and their notices. Its older ECG storyline is **not yet the new blood-pressure video flow**. The next guided interactive demo should follow the current brief at the end of SPEC.md. Netlify configuration is present; publishing remains deferred until the user explicitly requests it.

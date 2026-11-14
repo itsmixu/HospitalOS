@@ -63,6 +63,9 @@ const server = createServer(async (req, res) => {
     res.end(await readFile(new URL("../public" + req.url, import.meta.url)));
     return;
   }
+  if (simulation && req.url === "/emergency-scenario") {
+    res.setHeader("Content-Type","application/json");res.end(await readFile(new URL("../../../prototype/demo-data/handsfree-code-blue.json",import.meta.url)));return;
+  }
   if ((req.url === "/" || req.url === "/monitor" || req.url === "/patients") && simulation) {
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.setHeader(
@@ -106,7 +109,8 @@ const simInput = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("sdk-voice"), active: z.boolean() }),
   z.object({
     kind: z.literal("sdk-transcript"),
-    text: z.string().min(1).max(200),
+    confidence: z.number().min(0).max(1).optional(),
+    text: z.string().max(200),
     final: z.boolean().default(true),
   }),
   z.object({
@@ -116,7 +120,7 @@ const simInput = z.discriminatedUnion("kind", [
   }),
   z.object({
     kind: z.literal("gesture"),
-    value: z.enum(["nod", "shake", "single-nod", "walking", "mixed"]),
+    value: z.enum(["left-tilt", "right-tilt", "left-partial", "right-partial", "left-cancel", "right-cancel", "right-held", "nod", "shake", "single-nod", "walking", "mixed"]),
   }),
   z.object({ kind: z.literal("device-lost") }),
   z.object({ kind: z.literal("device-ready") }),

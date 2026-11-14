@@ -157,12 +157,15 @@ class WardNavigator(private val me: String, private val bedside: BedsideControll
     val p = bedside.currentPatient?.takeIf { it.id == v.id } ?: return listOf("Confirm this patient again to view details")
     val header = "${p.name} · ${p.id}"
     return when (v.kind) {
-      "patient" -> listOf("$header\nRoom ${p.room} · synthetic") +
+      "patient" -> listOf("$header\nRoom ${p.room} · synthetic"+(p.admissionReason?.let{"\nAdmitted: $it"}?:"")) +
+        (if(p.allergies.isNotEmpty())textPages("$header\nAllergies",p.allergies.joinToString("\n"))else emptyList()) +
+        p.medications.flatMap{m->textPages("$header\nPrescribed medication","${m.name} ${m.dose} · ${m.route}\n${m.schedule}\n${m.prescribedBy} · ${m.prescribedAt}")} +
+        p.careHistory.sortedByDescending{it.at}.flatMap{e->textPages("$header\n${e.kind.replaceFirstChar{it.uppercase()}}","${e.description}\n${e.at} · ${e.author}")} +
         textPages("$header\nWarning", p.warning ?: "No warning supplied") +
         textPages("$header\nPatient reported", p.reported ?: "No reported information supplied") +
-        (bedside.latestNote(p.id)?.let { textPages("$header\nLatest author-reported note", it.text) + "$header\nRecorded ${it.savedAt}\nEvent time not verified" } ?: listOf("$header\nNo permitted saved note"))
+        (bedside.latestNote(p.id)?.let { textPages("$header\nLatest author-reported note", it.text) + "$header\nRecorded ${it.savedAt}\nAuthor: ${it.author}\nEvent time not verified" } ?: listOf("$header\nNo permitted saved note"))
       "note" -> bedside.latestNote(p.id)?.let {
-        textPages("$header\nAuthor-reported note", it.text) + "$header\nRecorded ${it.savedAt}\nEvent time not verified"
+        textPages("$header\nAuthor-reported note", it.text) + "$header\nRecorded ${it.savedAt}\nAuthor: ${it.author}\nEvent time not verified"
       } ?: listOf("$header\nNo permitted saved note")
       "reading" -> bedside.latestReading(p.id)?.let {
         listOf("$header\n${it.values.display()}", "$header\nCaptured ${it.capturedAt}\nFreshness unknown\n${if (it.corrected) "Manually corrected" else "Reviewed extraction"}")

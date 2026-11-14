@@ -272,6 +272,8 @@
           Send request · room 7</button
         ><button id="ben-message" disabled>Send a message</button>
       </div>
+      <div class="buttons"><button id="code-blue" disabled>Code Blue · room 8</button><button id="resolve-blue" disabled>Resolve Code Blue</button></div>
+      <p id="emergency-status" role="status">No active Code Blue.</p>
       <label for="ben-message-text">Ben’s message (up to 160 characters)</label
       ><input
         id="ben-message-text"
@@ -283,8 +285,7 @@
       <p class="muted">
         Request: “Bring the transfer belt.” Read the card, hold still briefly,
         then tilt right and hold briefly to accept. No activation phrase needed.
-        Tilt your head toward your left shoulder to close the card without
-        declining.
+        Tilt toward your left shoulder to decline; Ben sees your response.
       </p>
       <p class="muted">
         Message: “Can you bring the transfer belt?” Tilt right to open it, or
@@ -307,7 +308,8 @@
     </section>
   </div>
   <section style="margin-top: 18px">
-    <h2>Recent requests</h2>
+    <h2>Simulator controls</h2><p>Injected head traces use the same tilt detector as the glasses.</p><button data-gesture="left-tilt">Left tilt · back</button><button data-gesture="right-tilt">Right tilt · accept / open</button>
+    <details><summary>Tilt feedback checks</summary><button data-gesture="right-partial">Partial right · return upright</button><button data-gesture="left-partial">Partial left · return upright</button><button data-gesture="right-cancel">Brief right · cancel</button><button data-gesture="left-cancel">Brief left · cancel</button><button data-gesture="right-held">Hold right · act once</button></details><p><a href="http://127.0.0.1:9000/" target="_blank" rel="noopener">Open Meta Display simulator in Chrome</a></p><h2>Recent requests</h2>
     <div id="tasks"><p>No requests loaded.</p></div>
     <p class="muted">
       Delivered means received by the device. Accepted means the wearer
@@ -344,7 +346,7 @@
         time does not prove measurement freshness.
       </p>
       <p><a href="/patients" target="_blank" rel="noopener">Open synthetic patient QR codes</a> · Say “Scan patient”, review the name, then tilt right to confirm. Voice selection remains available.</p>
-      <h3>Manual patient notes</h3>
+      <h3>Patient information</h3><div id="patient-records"></div><h3>Manual patient notes</h3>
       <p>
         Confirm the patient, then say “Save to patient records that I gave 400mg
         of ibuprofen at 12:00.” Read the exact statement, then say “Save note”
@@ -395,8 +397,8 @@
           />
           <div class="buttons">
             <button id="speak">Inject command</button
-            ><button data-gesture="nod">Simulate double nod</button
-            ><button data-gesture="shake">Simulate head shake</button>
+            ><button data-gesture="right-tilt">Simulate right tilt · accept</button
+            ><button data-gesture="left-tilt">Simulate left tilt · back</button>
           </div>
         </div>
       </details>
@@ -451,7 +453,25 @@
       $(id).textContent = label;
       $(id).className = "status " + (ready ? "ok" : "");
     }
+    let activeEmergency=null, emergencyScenario=null;
+    fetch('/emergency-scenario').then(r=>{if(!r.ok)throw Error('Code Blue fixture unavailable');return r.json()}).then(s=>{emergencyScenario=s;paint()}).catch(e=>{$('error').textContent=e.message});
+    $('code-blue').onclick=()=>{if(emergencyScenario&&!activeEmergency)sendDemo({type:'emergency.create',...emergencyScenario})};
+    $('resolve-blue').onclick=()=>{if(activeEmergency)sendDemo({type:'emergency.resolve',emergencyId:activeEmergency.id,revision:activeEmergency.revision})};
+    function renderEmergencies(events){
+      activeEmergency=events.find(e=>e.from==='ben'&&e.status==='active')||null;
+      $('emergency-status').textContent=activeEmergency?`Code Blue · room ${activeEmergency.room} · `+activeEmergency.recipients.map(id=>`${id}: ${activeEmergency.responses[id]||'awaiting response'}`).join(' · '):'No active Code Blue.';
+    }
+    function renderPatients(patients){
+      $('patient-records').replaceChildren();
+      for(const p of patients){const d=document.createElement('details'),title=document.createElement('summary');title.textContent=`${p.name} · ${p.id} · room ${p.room}`;d.append(title);
+        const lines=[p.admissionReason||'Admission reason not supplied',`Allergies: ${(p.allergies||[]).join('; ')||'Not supplied'}`,...(p.medications||[]).map(m=>`Prescription: ${m.name} ${m.dose} · ${m.route} · ${m.schedule} · ${m.prescribedBy} · ${m.prescribedAt}`),...(p.careHistory||[]).map(e=>`${e.description} · ${e.author} · ${e.at}`)];
+        for(const line of lines){const row=document.createElement('p');row.textContent=line;d.append(row)}$('patient-records').append(d);
+      }
+    }
     function paint() {
+      if(headsetReady && $("error").textContent==="Connect exactly one simulated headset for this account")$("error").textContent="";
+      $('code-blue').disabled=!(benReady&&headsetReady&&emergencyScenario)||!!pending||!!activeEmergency;
+      $('resolve-blue').disabled=!benReady||!activeEmergency||!!pending;
       $("broadcast").disabled=!(wardReady&&benReady&&headsetReady)||!!pending;
       badge(
         "ward-status",
@@ -648,6 +668,7 @@
         if (m.type === "error") $("error").textContent = m.reason;
         if (m.type === "snapshot") {
           renderNotes(m.notes || []);
+          renderPatients(m.patients||[]);
           wardReady = true;
           headsetReady = !!m.staff.find((s) => s.id === "aino")?.reachable;
           if (!headsetReady) {
@@ -670,7 +691,7 @@
           $("hint").textContent = m.card.hint
             .replace(/Wake|wake/g, "Say “Hey Lumi”")
             .replace(
-              "Double nod or say ‘accept request’ · shake to decline",
+              "Tilt right to accept · tilt left for later",
               "Tilt right to accept · tilt left to close",
             );
           if (m.glassesVoice || voice.isActive())
@@ -692,6 +713,7 @@
         const m = JSON.parse(e.data);
         if (m.type === "snapshot") {
           benReady = true;
+          renderEmergencies(m.emergencies||[]);
           for (const t of m.tasks)
             if (t.to === "ben" && t.status === "sent")
               command({

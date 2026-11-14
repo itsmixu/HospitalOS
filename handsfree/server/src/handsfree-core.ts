@@ -1,3 +1,4 @@
+import { Emergencies, emergencyCommandSchema } from "./emergencies.ts";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { PatientNotes, noteCommandSchema } from "./patient-notes.ts";
@@ -102,6 +103,7 @@ const schema = z.union([
   read,
   observationSchema,
   noteCommandSchema,
+  emergencyCommandSchema,
 ]);
 export type Ack = {
   type: "ack";
@@ -113,6 +115,7 @@ export type Ack = {
   observationId?: string;
   noteId?: string;
   messageId?: string;
+  emergencyId?: string;
 };
 
 /** Isolated synthetic ward. Volatile by design in HF1; no patient records or cloud route. */
@@ -142,6 +145,7 @@ export class HandsFreeWard {
   ];
   observations = new Observations();
   patientNotes = new PatientNotes();
+  emergencies = new Emergencies();
   tasks: Task[] = [];
   messages: {
     id: string;
@@ -154,6 +158,7 @@ export class HandsFreeWard {
   private dedup = new Map<string, { payload: string; ack: Ack }>();
   snapshot(actor: string, session = actor) {
     return {
+      emergencies: this.emergencies.snapshot(actor,e=>!!this.observations.assigned(e.from,e.patientId)?.encounterId && this.observations.assigned(e.from,e.patientId)?.encounterId===e.encounterId),
       patients: patients
         .filter((p) => p.staff.includes(actor))
         .map(({ staff, ...p }) => p),
@@ -211,6 +216,16 @@ export class HandsFreeWard {
         ? previous.ack
         : fail("Command identifier already used");
     const execute = (): Ack => {
+      if(c.type==="emergency.create"){
+        const p=this.observations.assigned(actor,c.patientId);if(!p||p.encounterId!==c.encounterId)return fail("Emergency patient not assigned");
+        const e=this.emergencies.create(actor,p,this.staff.filter(s=>s.id!==actor&&s.reachable).map(s=>s.id),c.isbar,this.clock());
+        return typeof e==="string"?fail(e):{type:"ack",id,ok:true,emergencyId:e.id};
+      }
+      if("emergencyId" in c){
+        const current=this.emergencies.records.find(e=>e.id===c.emergencyId);
+        if(c.type!=="emergency.resolve"&&(!current||this.observations.assigned(current.from,current.patientId)?.encounterId!==current.encounterId))return fail("Emergency encounter unavailable");
+        const e=this.emergencies.change(actor,c,this.clock());return typeof e==="string"?fail(e):{type:"ack",id,ok:true,emergencyId:e.id};
+      }
       if(c.type==="request.broadcast"){
         const recipients=this.staff.filter(p=>p.id!==actor&&p.reachable&&(p.status??"available")==="available").map(p=>p.id);
         if(!recipients.length)return fail("No available nurses connected");

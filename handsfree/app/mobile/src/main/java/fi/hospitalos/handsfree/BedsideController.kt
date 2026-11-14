@@ -6,11 +6,13 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-data class Patient(val id:String,val name:String,val encounterId:String,val room:String,val warning:String?=null,val reported:String?=null)
+data class Medication(val name:String,val dose:String,val route:String,val schedule:String,val prescribedBy:String,val prescribedAt:String)
+data class CareEvent(val kind:String,val description:String,val at:String,val author:String)
+data class Patient(val id:String,val name:String,val encounterId:String,val room:String,val warning:String?=null,val reported:String?=null,val admissionReason:String?=null,val allergies:List<String> = emptyList(),val medications:List<Medication> = emptyList(),val careHistory:List<CareEvent> = emptyList())
 data class PatientContext(val patientId:String,val encounterId:String,val contextRevision:Int)
 data class CaptureTicket(val id:String,val context:PatientContext,val started:Long,val capturedAt:String,val source:String)
 data class SavedReading(val id:String,val patientId:String,val values:Reading,val capturedAt:String,val corrected:Boolean)
-data class SavedNote(val id:String,val patientId:String,val text:String,val savedAt:String)
+data class SavedNote(val id:String,val patientId:String,val text:String,val savedAt:String,val author:String="Not supplied")
 data class Candidate(val ticket:CaptureTicket,val original:Reading,val values:Reading)
 
 /** Pure local bedside state. Display acceptance gates both camera activation and every mutation. */
@@ -35,6 +37,8 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
   fun latestReading(patientId:String) = records.filter { it.patientId == patientId }.maxByOrNull { it.capturedAt }
   var cameraSource="injected-camera"
   private var lastCaptureIssue="No stable complete reading"
+  val hasPending get()=pending!=null
+  fun interruptForEmergency(){if(pending==null){invalidate("Interrupted by emergency",false);card=null}}
   val blocksCommunication get()=card?.phase in setOf("review","camera","camera-qr","saving","dictating-note")
   fun snapshot(list:List<Patient>,staff:List<Colleague>,active:PatientContext?,saved:List<SavedReading> = records, savedNotes:List<SavedNote> = this.savedNotes) {
     this.savedNotes=savedNotes
@@ -51,7 +55,7 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
   private fun invalidate(reason:String,notify:Boolean=true){qrScanId=null;noteText=null;noteDraftId=null;noteSaved=false;ticket=null;candidate=null;savedId=null;context=null;selected=null;draft=null;pending=null;pendingAction=null;gesture.disarm();deadline=0;visible=false;if(notify && online)send(UUID.randomUUID().toString(),Action("context.clear"));show("Stopped",reason)}
   fun dismiss(){qrScanId=null;noteText=null;noteDraftId=null;noteSaved=false;card=null;ticket=null;candidate=null;draft=null;deadline=0;gesture.disarm()}
   fun wake(){tick();if(!online || pending!=null || blocksCommunication)return;deadline=clock()+12000;card=(card?:Card("ready","Select a patient","Say select patient demo-a","",true)).copy(microphone=true,hint="Say capture reading, select patient, or done")}
-  fun handles(raw:String):Boolean {val s=raw.lowercase().trim().replace(Regex("[.!?]+$"),"");return blocksCommunication || s in setOf("scan patient","scan patient qr","scan qr code") || s.startsWith("save to patient records that ") || s.startsWith("add note ") || s in setOf("add patient note","save note","check saved notes") || s.startsWith("select patient ") || s in setOf("capture reading","retry","save reading","confirm patient","share reading","send attachment","done","check saved readings") || s.startsWith("share reading with ") || s.startsWith("correct ") || (card!=null && s in setOf("cancel","stop"))}
+  fun handles(raw:String):Boolean {val s=raw.lowercase().trim().replace(Regex("[.!?]+$"),"");return blocksCommunication || s in setOf("scan patient","scan patient qr","scan qr code") || s.startsWith("save to patient records that ") || s.startsWith("add note ") || s.startsWith("add patient note ") || s.startsWith("add patient note.") || s.startsWith("add patient note:") || s in setOf("add patient note","save note","check saved notes") || s.startsWith("select patient ") || s in setOf("capture reading","retry","save reading","confirm patient","share reading","send attachment","done","check saved readings") || s.startsWith("share reading with ") || s.startsWith("correct ") || (card!=null && s in setOf("cancel","stop"))}
   fun transcript(raw:String,final:Boolean=true) {
     tick();if(!online || !final || card?.microphone==false || pending!=null)return
     val s=raw.trim().replace(Regex("[.!?]+$"),"").lowercase()
@@ -100,7 +104,7 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
     }
     if(s=="save note" && noteSaved)return
     if(s=="add patient note"){beginNote();return}
-    Regex("(?:save to patient records that|add note) (.+)",RegexOption.IGNORE_CASE).matchEntire(raw.trim())?.let{reviewNote(it.groupValues[1]);return}
+    Regex("(?:save to patient records that|add (?:patient )?note)[ .:]+(.+)",RegexOption.IGNORE_CASE).matchEntire(raw.trim())?.let{reviewNote(it.groupValues[1]);return}
     if(s=="check saved notes"){
       val last=savedNotes.lastOrNull{context==null || it.patientId==context?.patientId}
       show("Saved manual note · synthetic",last?.let{"${it.patientId}\n${it.text}\nRecorded ${it.savedAt}"}?:"No saved notes loaded",false,"Author-reported · not clinically verified");return
@@ -176,7 +180,7 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
     review(Action("observation.save",fields=binding(c.ticket.context)+mapOf("captureId" to c.ticket.id,"capturedAt" to c.ticket.capturedAt,"profile" to MonitorReader.PROFILE,"values" to values(c.values),"original" to values(c.original),"units" to mapOf("pressure" to "mmHg","pulse" to "bpm"),"corrected" to c.values.changes(c.original),"source" to c.ticket.source)),"Review reading",summary(c),"save reading")
   }
   private fun values(r:Reading)=mapOf("systolic" to r.systolic,"diastolic" to r.diastolic,"pulse" to r.pulse)
-  private fun review(a:Action,title:String,body:String,phrase:String){draft=a;visible=false;gesture.disarm();deadline=clock()+8000;card=Card("review",title,body,if(a.type=="observation.save")"Say $phrase · correct field digits · retry · cancel" else "Say $phrase · double nod / shake",true,++sequence)}
+  private fun review(a:Action,title:String,body:String,phrase:String){draft=a;visible=false;gesture.disarm();deadline=clock()+8000;card=Card("review",title,body,if(a.type=="observation.save")"Say $phrase · correct field digits · retry · cancel" else "Tilt right or say $phrase · left to cancel",true,++sequence)}
   val tiltActionLabel:String? get()=if(card?.phase=="review")when(draft?.type){"patient.confirm"->"confirm patient";"observation.save"->"save reading";"observation.share"->"send attachment";"note.save"->"save note";else->null}else null
   fun physicalAccept(prompt:Int){tick();if(card?.promptId==prompt && card?.phase=="review")confirm(true)}
   fun motion(sample:HeadSample){tick();gesture.sample(sample,clock())?.let{confirm(it)}}

@@ -1,0 +1,183 @@
+{
+  "video": "lumi-demo-v6.mp4",
+  "duration": 89,
+  "audio_in_video": false,
+  "cues": [
+    {
+      "start": 0.2,
+      "end": 2.85,
+      "speaker": "NARRATOR",
+      "text": "Your hands save lives. Keep them free.",
+      "notes": []
+    },
+    {
+      "start": 3.9,
+      "end": 5.8,
+      "speaker": "NURSE",
+      "text": "Hey Lumi, scan patient.",
+      "notes": [
+        "Pause briefly after “Hey Lumi.” Scanning begins at 00:06.00."
+      ]
+    },
+    {
+      "start": 6.1,
+      "end": 9.0,
+      "speaker": "NARRATOR",
+      "text": "Scan the wristband. Confirm with a tilt.",
+      "notes": [
+        "Leave the right tilt at 00:09.63–00:10.37 unspoken."
+      ]
+    },
+    {
+      "start": 10.6,
+      "end": 17.4,
+      "speaker": "NARRATOR",
+      "text": "Patient details, why they’re here, allergies, and prescribed medication. Right in your field of view.",
+      "notes": []
+    },
+    {
+      "start": 19.0,
+      "end": 22.2,
+      "speaker": "NURSE, TO PATIENT",
+      "text": "I’m going to check your blood pressure.",
+      "notes": []
+    },
+    {
+      "start": 24.1,
+      "end": 26.1,
+      "speaker": "NARRATOR",
+      "text": "Help needed. Room twelve.",
+      "notes": [
+        "The request appears at 00:24.00; the left tilt runs from 00:25.83 to 00:26.50."
+      ]
+    },
+    {
+      "start": 26.65,
+      "end": 30.2,
+      "speaker": "NARRATOR",
+      "text": "Hands occupied? Tilt left to decline.",
+      "notes": []
+    },
+    {
+      "start": 31.0,
+      "end": 32.85,
+      "speaker": "NURSE",
+      "text": "Hey Lumi, capture reading.",
+      "notes": [
+        "Pause briefly after “Hey Lumi.” Capture begins at 00:33.00."
+      ]
+    },
+    {
+      "start": 34.8,
+      "end": 38.4,
+      "speaker": "NARRATOR",
+      "text": "The reading is captured, ready for your review.",
+      "notes": []
+    },
+    {
+      "start": 40.3,
+      "end": 43.0,
+      "speaker": "NURSE, TO PATIENT",
+      "text": "Here is your prescribed medication.",
+      "notes": []
+    },
+    {
+      "start": 43.1,
+      "end": 46.0,
+      "speaker": "NARRATOR",
+      "text": "Then document it, without touching a screen.",
+      "notes": []
+    },
+    {
+      "start": 46.3,
+      "end": 49.3,
+      "speaker": "NURSE",
+      "text": "Hey Lumi, add patient note.",
+      "notes": [
+        "Pause after the wake phrase. The listening card appears at 00:47.00."
+      ]
+    },
+    {
+      "start": 49.85,
+      "end": 53.1,
+      "speaker": "NURSE, DICTATING",
+      "text": "Forty milligrams Orion Furosemide, one tablet,",
+      "notes": [
+        "On-screen wording: “40mg Orion Furosemide 1x tab”."
+      ]
+    },
+    {
+      "start": 53.5,
+      "end": 56.1,
+      "speaker": "NURSE, CONTINUING",
+      "text": "given to Mark Pokidko,",
+      "notes": []
+    },
+    {
+      "start": 57.0,
+      "end": 61.4,
+      "speaker": "NURSE, CONTINUING",
+      "text": "by nurse Jooyeon Lee at fifteen thirty,",
+      "notes": []
+    },
+    {
+      "start": 62.3,
+      "end": 64.6,
+      "speaker": "NURSE, CONTINUING",
+      "text": "for high blood pressure.",
+      "notes": [
+        "Read the four dictation blocks as one sentence, with natural pauses at the indicated breaks. Each time range is a recording window; follow the word reveals without chopping speech into individual words."
+      ]
+    },
+    {
+      "start": 65.0,
+      "end": 66.8,
+      "speaker": "NARRATOR",
+      "text": "You review. You authorize.",
+      "notes": []
+    },
+    {
+      "start": 67.1,
+      "end": 69.7,
+      "speaker": "NARRATOR",
+      "text": "A right tilt saves the record.",
+      "notes": [
+        "The tilt runs from 01:09.00 to 01:10.00. Saved confirmation appears at 01:10.00. Leave 01:10.00–01:13.00 quiet."
+      ]
+    },
+    {
+      "start": 73.1,
+      "end": 75.2,
+      "speaker": "NARRATOR",
+      "text": "Code Blue. Room eight.",
+      "notes": []
+    },
+    {
+      "start": 75.5,
+      "end": 79.0,
+      "speaker": "NARRATOR",
+      "text": "One tilt. The handover is already in view.",
+      "notes": [
+        "Acceptance is at 01:17.27; the ISBAR card appears immediately. Let viewers read the handover instead of rushing through every detail aloud."
+      ]
+    },
+    {
+      "start": 79.5,
+      "end": 81.8,
+      "speaker": "NARRATOR",
+      "text": "Because every second matters.",
+      "notes": [
+        "The footage fades from 01:20.35 to 01:22.10."
+      ]
+    },
+    {
+      "start": 83.3,
+      "end": 86.3,
+      "speaker": "NARRATOR",
+      "text": "Lumi. Focusing on the patient.",
+      "notes": [
+        "Pause after “Lumi.” Let the closing card breathe; no further speech before the end at 01:29.00."
+      ]
+    }
+  ]
+}

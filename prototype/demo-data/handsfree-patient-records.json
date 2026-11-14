@@ -1,0 +1,42 @@
+{
+  "demo-a": {
+    "admissionReason": "Blood-pressure observation after elevated readings.",
+    "allergies": ["Penicillin — reported rash"],
+    "medications": [
+      {
+        "name": "Amlodipine",
+        "dose": "5 mg",
+        "route": "Oral",
+        "schedule": "Once daily",
+        "prescribedBy": "Dr Demo",
+        "prescribedAt": "2026-11-14T06:30:00Z"
+      }
+    ],
+    "careHistory": [
+      {
+        "kind": "medication",
+        "description": "Prescribed amlodipine 5 mg given orally",
+        "at": "2026-11-14T07:10:00Z",
+        "author": "Aino K."
+      },
+      {
+        "kind": "procedure",
+        "description": "Blood pressure measured: 124/82 mmHg, pulse 72 bpm",
+        "at": "2026-11-14T07:20:00Z",
+        "author": "Ben L."
+      }
+    ]
+  },
+  "demo-b": {
+    "admissionReason": "Post-procedure observation.",
+    "allergies": ["No known allergies recorded"],
+    "medications": [],
+    "careHistory": []
+  },
+  "demo-c": {
+    "admissionReason": "Cardiac observation.",
+    "allergies": ["ASA medication"],
+    "medications": [],
+    "careHistory": []
+  }
+}

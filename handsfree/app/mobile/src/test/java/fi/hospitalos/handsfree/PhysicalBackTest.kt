@@ -1,0 +1,17 @@
+package fi.hospitalos.handsfree
+import org.junit.Assert.*
+import org.junit.Test
+class PhysicalBackTest {
+ private var now=1000L
+ private val sent=mutableListOf<Pair<String,Action>>()
+ private val people=listOf(Colleague("aino","Aino",true),Colleague("ben","Ben",true))
+ private val request=Request("r1","ben","aino","12","Help with transfer","delivered",1)
+ private fun engine()=HandsFreeEngine("aino",{now}){id,a->sent.add(id to a)}.also{it.quietMode=true;it.connection(true);it.snapshot(people,listOf(request));it.offerIncoming()}
+ @Test fun leftTiltDeclinesExactRenderedRequestOnce(){val e=engine();val prompt=e.card.promptId;assertTrue(e.tiltHint.contains("left to decline"));assertTrue(e.card.hint.contains("left to decline"));e.reviewDisplayed(prompt);e.physicalBack(prompt);e.physicalBack(prompt);assertEquals(1,sent.size);assertEquals("request.decline",sent.single().second.type);assertEquals("r1",sent.single().second.taskId);assertEquals(1,sent.single().second.revision);assertEquals("sending",e.card.phase);e.snapshot(people,listOf(request.copy(status="declined",revision=2)));e.acknowledgement(sent.single().first,true,"r1",null);assertEquals("Declined · Ben notified",e.card.title)}
+ @Test fun failedRenderAndStaleTiltCannotDecline(){val e=engine();val prompt=e.card.promptId;e.physicalBack(prompt);assertTrue(sent.isEmpty());e.reviewDisplayed(prompt);e.physicalBack(prompt+1);assertTrue(sent.isEmpty());assertEquals("review",e.card.phase)}
+ @Test fun broadcastDeclineShowsOwnResponse(){val e=HandsFreeEngine("aino",{now}){id,a->sent.add(id to a)};e.connection(true);val group=request.copy(required=2);e.snapshot(people,listOf(group));e.offerIncoming();e.reviewDisplayed(e.card.promptId);e.physicalBack(e.card.promptId);assertEquals("request.decline",sent.single().second.type);e.snapshot(people,listOf(group.copy(status="declined",revision=2)));e.acknowledgement(sent.single().first,true,"r1",null);assertEquals("Declined · Ben notified",e.card.title)}
+ @Test fun expiredOrChangedReviewCannotDecline(){val e=engine();val prompt=e.card.promptId;e.reviewDisplayed(prompt);now+=20001;e.physicalBack(prompt);assertTrue(sent.isEmpty());val fresh=engine();val next=fresh.card.promptId;fresh.reviewDisplayed(next);fresh.snapshot(people,listOf(request.copy(status="cancelled",revision=2)));fresh.physicalBack(next);assertTrue(sent.isEmpty())}
+ @Test fun disconnectedOrOrdinarilyDismissedRequestDoesNotDecline(){val e=engine();val prompt=e.card.promptId;e.reviewDisplayed(prompt);e.connection(false);e.physicalBack(prompt);assertTrue(sent.isEmpty());val fresh=engine();fresh.reviewDisplayed(fresh.card.promptId);fresh.dismissScreen();assertTrue(sent.isEmpty());assertEquals("quiet",fresh.card.phase)}
+ @Test fun leftTiltCancelsOutgoingDraftWithoutSending(){val e=engine();e.dismissScreen();e.wake();e.transcript("Message Ben please bring the belt");val prompt=e.card.promptId;e.reviewDisplayed(prompt);e.physicalBack(prompt);assertTrue(sent.isEmpty());assertEquals("quiet",e.card.phase)}
+ @Test fun leftTiltSavesMessageForLaterWithoutMarkingRead(){val e=HandsFreeEngine("aino",{now}){id,a->sent.add(id to a)};e.quietMode=true;e.connection(true);e.snapshot(people,emptyList());e.dismissScreen();e.snapshot(people,emptyList(),listOf(WardMessage("m1","ben","aino","Please call me")));e.offerIncoming();assertEquals("message-notice",e.card.phase);e.reviewDisplayed(e.card.promptId);e.physicalBack(e.card.promptId);assertTrue(sent.isEmpty());assertEquals("quiet",e.card.phase)}
+}

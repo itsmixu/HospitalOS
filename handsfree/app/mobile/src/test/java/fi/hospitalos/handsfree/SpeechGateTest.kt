@@ -14,4 +14,21 @@ class SpeechGateTest {
   @Test fun normalizerDoesNotGuessRecipientsOrRewriteMessages(){assertEquals("select patient demo-a",SpeechGate.normalize("Select patient demo A."));for(text in listOf("ask them to come","tell Ben patient demo a is ready","do not send request"))assertEquals(text,SpeechGate.normalize(text))}
   @Test fun staleWakeAndDuplicateWakeDoNotChangeReview(){assertEquals(SpeechRoute.STALE,SpeechGate.route("hospital",idle,review));assertEquals(SpeechRoute.IGNORE,SpeechGate.route("hospital",review,review))}
  @Test fun practicalActivationPhrase(){for(t in listOf("Hey Lumi","Hey, Lumi!","HEY LUMI"))assertEquals(SpeechRoute.WAKE,SpeechGate.route(t,idle,idle));for(t in listOf("nurse","tell the nurse","hey lumi send request"))assertEquals(SpeechRoute.IGNORE,SpeechGate.route(t,idle,idle));assertEquals(SpeechRoute.IGNORE,SpeechGate.route("Hey Lumi",review,review))}
+  @Test fun partialWakeOnlyRevealsScreenWithExactConfidentCurrentPhrase(){
+    val quiet=idle.copy(card=Card("quiet","Display hidden","","",false))
+    assertEquals(SpeechRoute.WAKE,SpeechGate.partialWake("Hey lumi.",quiet,quiet,1f))
+    for(text in listOf("Hey lumi send request","send request","save reading","yes","they said hey lumi"))
+      assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake(text,quiet,quiet,1f))
+    for(score in listOf(-1f,0f,0.59f,Float.NaN))
+      assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey lumi",quiet,quiet,score))
+    assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey lumi",quiet,quiet.copy(rendered=false),1f))
+    assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey lumi",quiet,quiet.copy(ready=false),1f))
+    assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey lumi",quiet,review,1f))
+    assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey lumi",review,review,1f))
+  }
+ @Test fun wakeCanRestartListeningButNeverInterruptDraftReview(){
+   val listening=idle.copy(card=Card("listening","Listening","","",true,4))
+   assertEquals(SpeechRoute.WAKE,SpeechGate.partialWake("Hey Lumi",listening,listening,.8f))
+   assertEquals(SpeechRoute.IGNORE,SpeechGate.partialWake("Hey Lumi",review,review,1f))
+ }
 }

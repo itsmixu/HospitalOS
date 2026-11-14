@@ -26,3 +26,7 @@ captures/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Integration symlink and hosting-local identity
+handsfree/node_modules
+.netlify/

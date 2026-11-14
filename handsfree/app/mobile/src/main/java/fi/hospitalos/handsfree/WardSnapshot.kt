@@ -60,6 +60,13 @@ object WardSnapshot {
   fun patient(p: Map<*, *>): Patient? { return Patient(
     p.text("id") ?: return null, p.text("name") ?: return null,
     p.text("encounterId") ?: return null, p.text("room") ?: return null,
-    p.text("warning"), p.text("reported"),
+    p.text("warning"), p.text("reported"),p.text("admissionReason"),p.strings("allergies"),
+    (p["medications"] as? List<*>)?.mapNotNull{v->val m=v as? Map<*,*>?:return@mapNotNull null;Medication(m.text("name")?:return@mapNotNull null,m.text("dose")?:return@mapNotNull null,m.text("route")?:return@mapNotNull null,m.text("schedule")?:return@mapNotNull null,m.text("prescribedBy")?:return@mapNotNull null,m.instant("prescribedAt")?:return@mapNotNull null)}?:emptyList(),
+    (p["careHistory"] as? List<*>)?.mapNotNull{v->val e=v as? Map<*,*>?:return@mapNotNull null;CareEvent(e.text("kind")?:return@mapNotNull null,e.text("description")?:return@mapNotNull null,e.instant("at")?:return@mapNotNull null,e.text("author")?:return@mapNotNull null)}?:emptyList(),
   ) }
+  fun emergency(e:Map<*,*>):Emergency?{
+    val r=e["isbar"] as? Map<*,*>;val report=r?.let{val fields=listOf("identify","situation","background","assessment","recommendation").map{k->it.text(k)?.takeIf{t->t.isNotBlank()&&t.length<=240}?:return@let null};Isbar(fields[0],fields[1],fields[2],fields[3],fields[4])}
+    if(e.text("kind")!="code-blue")return null
+    return Emergency(e.text("id")?:return null,e.text("from")?:return null,e.text("room")?:return null,e.text("status")?.takeIf{it in setOf("active","resolved")}?:return null,e.number("revision")?.takeIf{it>0}?:return null,e.instant("createdAt")?:return null,e.instant("updatedAt")?:return null,e.text("response")?.takeIf{it in setOf("pending","acknowledged","declined")}?:return null,report,e["briefingUnavailable"]==true)
+  }
 }

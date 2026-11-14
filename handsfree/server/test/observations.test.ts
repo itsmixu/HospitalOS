@@ -24,7 +24,7 @@ test('recipient briefing preserves the exact corrected attachment through snapsh
   assert.equal(snapshot.patients[0].warning, patients[0].warning);
   assert.equal(snapshot.patients[0].reported, patients[0].reported);
   assert.equal(snapshot.notes.length, 0);
-  assert.equal(w.snapshot('sara').patients.length, 0);
+  assert.equal(w.snapshot('sara').patients.some(p=>p.id==='demo-a'), false);
   assert.equal(w.snapshot('sara').tasks.length, 0);
 });
 
@@ -36,7 +36,7 @@ test('assignment revocation redacts patient details without changing or deleting
   try {
     p.staff = ['aino'];
     const ben = w.snapshot('ben');
-    assert.equal(ben.patients.length, 0);
+    assert.equal(ben.patients.some(p=>p.id==='demo-a'), false);
     assert.equal(ben.tasks[0].id, shared.taskId);
     assert.equal(ben.tasks[0].attachment, undefined);
     assert.equal(ben.tasks[0].attachmentUnavailable, true);

@@ -4,3 +4,6 @@
 *.sqlite-wal
 *.sqlite-shm
 *.sqlite-journal
+
+# Local Netlify folder
+.netlify

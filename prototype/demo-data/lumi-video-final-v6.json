@@ -1,0 +1,106 @@
+{
+  "duration": 89,
+  "overlay_offset_seconds": 3,
+  "intro": {
+    "start": 0,
+    "end": 3,
+    "text": "Your hands save lives. Keep them free."
+  },
+  "events": [
+    {
+      "id": "scan",
+      "start": 6,
+      "end": 7.1
+    },
+    {
+      "id": "patient-confirm",
+      "start": 7.1,
+      "end": 10.366666666666667
+    },
+    {
+      "id": "patient-info",
+      "start": 10.366666666666667,
+      "end": 18
+    },
+    {
+      "id": "request",
+      "start": 24.0,
+      "end": 26.5
+    },
+    {
+      "id": "declined",
+      "start": 26.5,
+      "end": 28.1
+    },
+    {
+      "id": "capture",
+      "start": 33,
+      "end": 34.5
+    },
+    {
+      "id": "reading",
+      "start": 34.5,
+      "end": 38.5
+    },
+    {
+      "id": "transcription",
+      "start": 47,
+      "end": 67
+    },
+    {
+      "id": "review",
+      "start": 67,
+      "end": 70
+    },
+    {
+      "id": "saved",
+      "start": 70,
+      "end": 72.4
+    },
+    {
+      "id": "code-blue",
+      "start": 73,
+      "end": 77.26666666666667
+    },
+    {
+      "id": "isbar",
+      "start": 77.26666666666667,
+      "end": 82.146667
+    }
+  ],
+  "transcription_word_times": [
+    50.0,
+    50.45,
+    50.9,
+    51.35,
+    52.2,
+    53.5,
+    54.0,
+    54.6,
+    55.4,
+    57.0,
+    57.5,
+    58.1,
+    59.1,
+    60.0,
+    60.5,
+    62.3,
+    62.8,
+    63.4,
+    64.0
+  ],
+  "medication_text": "40mg Orion Furosemide 1x tab",
+  "outro": {
+    "fade_start": 80.35,
+    "fade_end": 82.1,
+    "title_start": 82.5,
+    "title_full": 83.3,
+    "title_fade": 88.3,
+    "end": 89.0,
+    "lines": [
+      "Lumi",
+      "Focusing on the patient"
+    ],
+    "style": "brand"
+  }
+}

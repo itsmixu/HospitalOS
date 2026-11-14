@@ -12,14 +12,20 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   private var visibleSince=0L
   private var previousVisible:Card?=null
   private val notifiedMessages=mutableSetOf<String>()
+  private var messageBaselineLoaded=false
   val bedside = BedsideController(clock, System::currentTimeMillis) { id, action ->
     // A note save uses the same opaque-ID recovery contract as communication.
-    if(action.type=="note.save"){pending=id;deadline=clock()+5000}
+    if(action.type in setOf("note.save","observation.save","observation.share")){pending=id;pendingKind=action.type;deadline=clock()+5000}
     send(id,action)
   }
   private val navigator = WardNavigator(me, bedside)
   private var draftContext: PatientContext? = null
-  val card get() = bedside.card ?: communicationCard
+  val emergency = EmergencyController(me,clock,{pending!=null || uncertainId!=null || bedside.hasPending},{
+    bedside.interruptForEmergency();navigator.clear();draftContext=null;draft=null;composeTo=null;openedMessage=null;noticeMessage=null;trackedTask=null;reviewVisible=false;gesture.disarm()
+    if(pending==null && uncertainId==null)deadline=0
+    communicationCard=Card("quiet","Display hidden","Say Hey Lumi","")
+  },{idle()},{submit(it)})
+  val card get() = emergency.card ?: bedside.card ?: communicationCard
   var communicationCard = Card("offline", "Not connected", "Nothing will be sent", "Reconnect to the local ward")
     private set
   private var online = false
@@ -43,6 +49,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   val microphoneActive get() = card.microphone
 
   fun connection(connected: Boolean) {
+    emergency.connection(connected)
     val hadBedside=bedside.card!=null || bedside.context!=null
     bedside.connection(connected)
     if(!connected && (!hadBedside || pending!=null || uncertainId!=null))bedside.dismiss()
@@ -61,10 +68,16 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     } else if (communicationCard.phase == "offline") idle()
   }
 
-  fun snapshot(people: List<Colleague>, requests: List<Request>, incomingMessages: List<WardMessage> = messages) {
+  fun snapshot(people: List<Colleague>, requests: List<Request>, incomingMessages: List<WardMessage> = messages, emergencies:List<Emergency>?=null) {
     val priorTasks = tasks
+    // The first snapshot is saved inbox history, not newly arriving notifications.
+    if(!messageBaselineLoaded){
+      notifiedMessages.addAll(incomingMessages.map { it.id })
+      messageBaselineLoaded=true
+    }
     staff = people; tasks = requests; messages=incomingMessages
     navigator.snapshot(staff, tasks, messages)
+    if(emergencies!=null)emergency.snapshot(emergencies) else emergency.refresh()
     val a = draft
     if (a != null && ((a.taskId.isNotEmpty() && tasks.none { it.id == a.taskId && it.revision == a.revision && it == priorTasks.find { old -> old.id == a.taskId } }) ||
           (a.to.isNotEmpty() && staff.none { it.id == a.to && it.reachable }))) {
@@ -77,7 +90,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(communicationCard.phase=="status" && trackedTask==null && notifications().isNotEmpty())communicationCard=communicationCard.copy(hint=notifications()+" · wake to review")
     if (communicationCard.phase == "status" && trackedTask != null) {
       tasks.find { it.id == trackedTask }?.let { t ->
-        if(t.required>0){communicationCard=Card("status",if(t.to==me&&t.status=="accepted")"Accepted · ${name(t.from)} notified" else "${t.acceptedBy.size}/${t.required} nurses confirmed", "Room ${t.room} · ${t.status}\n"+t.acceptedBy.joinToString { name(it) },"Say check requests for updates");return@let}
+        if(t.required>0){communicationCard=Card("status",if(t.to==me&&t.status=="accepted")"Accepted · ${name(t.from)} notified" else if(t.to==me&&t.status=="declined")"Declined · ${name(t.from)} notified" else "${t.acceptedBy.size}/${t.required} nurses confirmed", "Room ${t.room} · ${t.status}\n"+t.acceptedBy.joinToString { name(it) },"Say check requests for updates");return@let}
         communicationCard = Card("status", when(t.status) { "accepted" -> if(t.to == me) "Accepted · ${name(t.from)} notified" else "${name(t.to)} is coming"; "completed" -> "Marked complete"; "delivered" -> "Delivered to ${name(t.to)}"; "declined" -> if(t.to==me) "Declined · ${name(t.from)} notified" else "${name(t.to)} declined"; "expired" -> "Request expired"; "cancelled" -> "Request cancelled"; else -> "Request ${t.status}" },
           "Room ${t.room} · ${t.text}", if(tasks.any { it.to == me && it.status in setOf("sent", "delivered") }) "Request waiting · wake and say review request" else if(t.status == "delivered") "Delivery does not mean acceptance" else "Wake to give another command")
       }
@@ -86,6 +99,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
 
   private val offeredIncoming = mutableSetOf<String>()
   fun dismissScreen() {
+    if(emergency.active){emergency.command("back");return}
     if(pending!=null || card.phase in setOf("saving","sending","reconciling"))return
     if(navigator.active && communicationCard.phase in setOf("browse", "details", "message")) { navigationResult(if(card.phase=="message") WardNavigator.Result.Changed else navigator.command("back")); return }
     navigator.clear();draftContext=null
@@ -94,6 +108,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     communicationCard=Card("quiet","Display hidden","Say Hey Lumi with glasses voice enabled","",false)
   }
   fun offerIncoming() {
+    emergency.refresh();if(emergency.active)return
     if(!online || draft!=null || pending!=null || bedside.card!=null || communicationCard.phase !in setOf("idle","quiet","status","notice"))return
     val next=tasks.firstOrNull{it.to==me && it.status=="delivered" && it.id !in offeredIncoming}
     if(next==null){
@@ -116,7 +131,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     }
     if(card.phase=="review" && card.promptId==promptId && draft?.type=="request.accept")confirm(true)
   }
-  val tiltActionLabel:String? get()=if(bedside.card!=null)bedside.tiltActionLabel else when {
+  val tiltActionLabel:String? get()=if(emergency.active)when(card.phase){"emergency-alert"->"respond";"emergency-briefing"->"next";else->null}else if(bedside.card!=null)bedside.tiltActionLabel else when {
     card.phase=="browse" -> if(navigator.canOpen) "open" else null
     card.phase=="message-notice" && noticeMessage!=null -> "open"
     card.phase=="review" -> when(draft?.type){
@@ -127,13 +142,24 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   }
   fun physicalAccept(promptId:Int){
     tick();if(!online || card.promptId!=promptId)return
+    if(emergency.active){emergency.right(promptId);return}
     if(bedside.card!=null){bedside.physicalAccept(promptId);return}
     if(card.phase=="browse" && reviewVisible){navigationResult(navigator.command("open"));return}
     if(card.phase=="message-notice"){physicalNod(promptId);return}
     if(card.phase=="review")confirm(true)
   }
-  val tiltHint:String get()=listOfNotNull(tiltActionLabel?.let{"Tilt right to $it"},
-    if(card.phase !in setOf("saving","sending","reconciling","offline","quiet"))"Tilt left to back / later" else null).joinToString(" · ")
+  /** Incoming request review: decline. All other cards: back/cancel/later. */
+  fun physicalBack(promptId:Int){
+    tick();if(!online || card.promptId!=promptId)return
+    if(emergency.active){emergency.left(promptId);return}
+    if(bedside.card==null && card.phase=="review" && draft?.type=="request.accept"){
+      confirm(false);return
+    }
+    dismissScreen()
+  }
+  val tiltBackLabel:String get()=if(card.phase=="emergency-alert")"decline" else if(bedside.card==null && card.phase=="review" && draft?.type=="request.accept")"decline" else "back / later"
+  val tiltHint:String get()=if(emergency.active)card.hint else listOfNotNull(tiltActionLabel?.let{"Tilt right to $it"},
+    if(card.phase !in setOf("saving","sending","reconciling","offline","quiet"))"Tilt left to $tiltBackLabel" else null).joinToString(" · ")
   fun notifications():String {
     val requests=tasks.count{it.to==me && it.status in setOf("sent","delivered")}
     val unread=messages.count{it.to==me && !it.read}
@@ -142,17 +168,27 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
 
   fun wake() {
     tick()
+    if(emergency.active){emergency.refresh();return}
     if (!online || pending != null || draft != null || bedside.blocksCommunication) return
     if(navigator.active && card.phase in setOf("browse","details")){deadline=clock()+20000;renderNavigation();return}
     if(bedside.card!=null){bedside.wake();return}
-    openedMessage=null;composeTo=null; gesture.disarm(); deadline = clock() + (if(quietMode)20_000 else 12_000)
-    communicationCard = Card("listening", "Listening", "Ask Ben to bring the hoist to room 12", "Say cancel to stop", true)
+    openedMessage=null;composeTo=null; gesture.disarm(); deadline = if(quietMode)0 else clock()+12_000
+    communicationCard = Card("listening", "Listening", "Ask Ben to bring the hoist to room 12", "Say cancel to stop", true, ++sequence)
+  }
+
+  /** Stable SDK partials can compose a draft, never confirm a displayed action. */
+  fun proposeTranscript(raw:String) {
+    if(card.phase !in setOf("listening","dictating-message","dictating-note") || draft!=null || pending!=null)return
+    transcript(raw)
   }
 
   fun transcript(raw: String, final: Boolean = true) {
     tick()
     if (!final || !card.microphone || !online) return
     val command = raw.trim().trimEnd('.', '!', '?').lowercase()
+    if(command=="check outcome" && uncertainId!=null){connection(true);return}
+    if(command in setOf("show emergency","show isbar")){if(!emergency.open())reset("No active emergency","No current briefing available");return}
+    if(emergency.command(command))return
     if(uncertainId!=null && command !in setOf("check outcome","check requests","show requests","show pending requests","show accepted requests","show request history","show all requests","show messages","next","previous","back","show details","what can i say","open")){
       reset("Previous outcome unresolved","Say check outcome before sending another action");return
     }
@@ -384,7 +420,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(uncertainId!=null){reset("Previous outcome unresolved","Say check outcome first");return}
     navigator.clear()
     if(!who.reachable || who.id==me){reset("Colleague unavailable","Nothing sent");return}
-    draft=null;composeTo=who;reviewVisible=false;gesture.disarm();deadline=clock()+30000
+    draft=null;composeTo=who;reviewVisible=false;gesture.disarm();deadline=if(quietMode)0 else clock()+30000
     communicationCard=Card("dictating-message","Message ${who.name}","Say your short message. It will be shown before sending.","Up to 160 characters · say cancel to stop",true,++sequence)
   }
   private fun reviewMessage(who:Colleague,body:String){
@@ -396,23 +432,24 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   }
   private fun reviewIncoming(t: Request) {
     review(Action("request.accept", taskId=t.id, revision=t.revision), if(t.required>0)"${t.required} nurses requested" else "${name(t.from)} needs help", "Room ${t.room} · ${t.text}"+(if(t.required>0)"\n${t.acceptedBy.size}/${t.required} confirmed · from ${name(t.from)}" else "")+(if(t.attachmentUnavailable)"\nPatient details unavailable" else if(t.attachment!=null)"\nReading attached" else ""), "accept request")
-    if(draft!=null)communicationCard=communicationCard.copy(hint="Say show details, accept request or decline request")
+    if(draft!=null)communicationCard=communicationCard.copy(hint="Tilt right to accept · tilt left to decline · say show details")
   }
   private fun review(action: Action, title: String, body: String, phrase: String) {
     if(uncertainId!=null){reset("Previous outcome unresolved","Say check outcome first");return}
     navigator.clear();draftContext=null
     reviewVisible = false; draft = action; deadline = clock() + (if(quietMode)20_000 else 8_000); sequence++
-    communicationCard = Card("review", title, body, "Double nod or say ‘$phrase’ · shake to ${if(action.type == "request.accept") "decline" else "cancel"}", true, sequence)
+    communicationCard = Card("review", title, body, "Tilt right or say ‘$phrase’ · tilt left to ${if(action.type == "request.accept") "decline" else "cancel"}", true, sequence)
     gesture.disarm()
   }
   /** Called after DAT accepts this exact review communicationCard; failed rendering never arms confirmation. */
   fun reviewDisplayed(promptId: Int) {
+    if(emergency.active){emergency.displayed(promptId);return}
     if(card.phase=="browse" && card.promptId==promptId){reviewVisible=true;return}
     if(card.phase=="message-notice" && card.promptId==promptId){reviewVisible=true;return}
     if(bedside.card!=null){bedside.displayAccepted(promptId);return}
     if(draft != null && communicationCard.promptId == promptId && !reviewVisible && clock() < deadline) { reviewVisible=true; gesture.arm(promptId, clock(), deadline) }
   }
-  fun motion(sample: HeadSample) { tick(); if(bedside.card!=null){bedside.motion(sample);return}; gesture.sample(sample, clock())?.let { confirm(it) } }
+  fun motion(sample: HeadSample) { tick(); if(emergency.active)return; if(bedside.card!=null){bedside.motion(sample);return}; gesture.sample(sample, clock())?.let { confirm(it) } }
   private fun confirm(yes: Boolean) {
     val action = draft ?: return
     if(draftContext!=null && draftContext!=bedside.context){reset("Review expired","Patient context changed. Start again.");return}
@@ -429,39 +466,48 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     communicationCard = Card("sending", "Waiting for ward acknowledgement", "No colleague response yet", "Microphone off")
     send(id, execute)
   }
-  fun acknowledgement(id: String, ok: Boolean, taskId: String?, reason: String?, context:PatientContext?=null, observationId:String?=null) {
+  fun acknowledgement(id: String, ok: Boolean, taskId: String?, reason: String?, context:PatientContext?=null, observationId:String?=null, emergencyId:String?=null) {
     if(bedside.acknowledgement(id,ok,context,observationId,reason)) {
-      if(pending==id){pending=null;uncertainId=null;deadline=0}
+      if(pending==id){pending=null;uncertainId=null;pendingKind=null;deadline=0}
+      emergency.refresh()
+      if(ok && context!=null && !emergency.active){bedside.dismiss();navigator.patient("patient",context.patientId);deadline=clock()+20000;renderNavigation()}
       // A shared observation is now a request: use the same live status as communication.
       if(ok && taskId!=null){bedside.dismiss();trackedTask=taskId;deadline=0;communicationCard=Card("status","Request sent","Saved reading attached · awaiting nurse response","Microphone off");snapshot(staff,tasks)}
       return
     }
-    if(pending==null && id==uncertainId){reconciled(id,ok,taskId,reason);return}
+    if(pending==null && id==uncertainId){reconciled(id,ok,taskId,reason,emergencyId);return}
     if(id != pending) return
     pending = null; uncertainId=null; deadline = 0
     trackedTask = if(ok) taskId else null
+    val wasEmergency=pendingKind?.startsWith("emergency.")==true
     val wasMessage=pendingKind=="message.send";pendingKind=null
+    if(wasEmergency){emergency.acknowledged(ok);return}
+    emergency.refresh()
     communicationCard = Card("status", if(ok && wasMessage) "Message saved and sent" else if(ok) "Ward confirmed" else "Not sent", reason ?: if(ok && wasMessage) "Stored in local message history · waiting for recipient to open" else if(ok) "Confirmed by the local ward server" else "Request rejected", "Wake for another command")
     snapshot(staff, tasks)
   }
   /** Restore only an opaque command id, never an unconfirmed draft or patient context. */
   fun restoreUnresolvedCommand(id:String){if(id.length in 1..100)uncertainId=id}
-  fun reconciled(commandId:String,ok:Boolean?,taskId:String?,reason:String?) {
+  fun reconciled(commandId:String,ok:Boolean?,taskId:String?,reason:String?,emergencyId:String?=null) {
     if(commandId!=uncertainId)return
     deadline=0
     if(ok==null){communicationCard=Card("notice","No recorded outcome","Check requests before deliberately trying again","Microphone off · no automatic resend");uncertainId=null;return}
-    uncertainId=null;trackedTask=if(ok)taskId else null
+    uncertainId=null;pendingKind=null;trackedTask=if(ok)taskId else null
+    emergency.acknowledged(ok)
+    if(ok && emergencyId!=null)emergency.open(emergencyId)
     communicationCard=Card("status",if(ok)"Previous action confirmed" else "Previous action rejected",reason ?: "Recovered from the local ward record","Wake to continue")
     snapshot(staff,tasks)
   }
   fun tick() {
     bedside.tick()
+    emergency.refresh()
+    if(emergency.active && pending==null && uncertainId==null)return
     if(quietMode){
       if(card!=previousVisible){previousVisible=card;visibleSince=clock()}
       if(card.phase in setOf("status","notice","message-notice") && clock()-visibleSince>=15000 && pending==null){dismissScreen();return}
     }
     if(deadline == 0L || clock() < deadline) return
-    if(pending!=null)uncertainId=pending
+    if(pending!=null){uncertainId=pending;emergency.outcomeUnknown()}
     val unknown = uncertainId != null
     pending = null
     if(quietMode && !unknown){navigator.clear();dismissScreen();return}

@@ -1,0 +1,11 @@
+{
+  "patientId": "demo-c",
+  "encounterId": "enc-c",
+  "isbar": {
+    "identify": "65-year-old male",
+    "situation": "Cardiac arrest. CPR started immediately.",
+    "background": "Allergy to ASA medication.",
+    "assessment": "One defibrillation delivered. CPR ongoing. IV access established. No adrenaline given yet.",
+    "recommendation": "Join the response team in room 8."
+  }
+}
