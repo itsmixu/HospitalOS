@@ -83,10 +83,10 @@ Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulat
 
 The assistant's "brain" runs **on the phone**: Gemma via Google's MediaPipe LLM Inference (`tasks-genai`). It turns the transcript into one JSON action, which the phone validates against ids the user may see and sends as a normal ward command — so the server's permission checks still apply, and only that command leaves the phone.
 
-The model isn't in the APK (Gemma license + size). Download a MediaPipe `.task` model after accepting the Gemma terms — recommended: `gemma3-1b-it-int4.task` (~550 MB, fast) from Hugging Face `litert-community/Gemma3-1B-IT`; `gemma-3n-E2B` (~3 GB) is smarter but slower — then:
+The model isn't in the APK (Gemma license + size). Download a MediaPipe `.task` model after accepting the Gemma terms — **demo default: `gemma-3n-E2B-it-int4.task`** (~3 GB, from Hugging Face `google/gemma-3n-E2B-it-litert-preview`; 10/10 on the built-in test, ~11–14 s per request). `gemma3-1b-it-int4.task` (~550 MB, `litert-community/Gemma3-1B-IT`) is ~3× faster but 7/10. The app loads the largest `.task` in the folder; rename the other to `.off`. Stage → **Test Gemma** reruns the 10-phrase test — then:
 
 ```sh
-adb push gemma3-1b-it-int4.task /sdcard/Android/data/fi.hospitalos.demo/files/
+adb push gemma-3n-E2B-it-int4.task /sdcard/Android/data/fi.hospitalos.demo/files/
 ```
 
 and tap **Load model** on the Stage tab. If no model is loaded, or Gemma returns nothing usable, the request falls back to the server assistant below.
