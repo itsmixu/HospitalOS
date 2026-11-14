@@ -27,6 +27,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -139,6 +141,17 @@ fun StageScreen(vm: AppViewModel, modifier: Modifier, openConnect: () -> Unit) {
       }
       if (model !is ModelState.Ready && model !is ModelState.Loading) SecondaryButton("Load model", { vm.local.load() })
       brain?.let { Body("Last answer: $it", C.Muted) }
+      // Fixed 10-phrase test: accuracy + speed of the on-phone model.
+      var evalOut by remember { mutableStateOf<String?>(null) }
+      val scope = rememberCoroutineScope()
+      if (model is ModelState.Ready) {
+        SecondaryButton(if (evalOut == "Running…") "Testing…" else "Test Gemma", {
+          val snap = s ?: return@SecondaryButton
+          evalOut = "Running…"
+          scope.launch { evalOut = vm.local.runEval(snap) }
+        }, enabled = evalOut != "Running…" && s != null)
+      }
+      evalOut?.let { Body(it, C.Muted) }
     }
 
     // Demo events.
