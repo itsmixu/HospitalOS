@@ -30,3 +30,7 @@ Thumbs.db
 # Integration symlink and hosting-local identity
 handsfree/node_modules
 .netlify/
+
+# Local video-rendering bytecode
+__pycache__/
+*.py[cod]
