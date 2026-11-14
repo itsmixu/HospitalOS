@@ -1,0 +1,29 @@
+{
+  "patients": [
+    {
+      "id": "p1",
+      "name": "Demo Patient A",
+      "room": "12",
+      "age": 78,
+      "warning": "Penicillin allergy",
+      "summary": "Pneumonia, day 3",
+      "reported": "Patient reports dizziness earlier today."
+    },
+    {
+      "id": "p2",
+      "name": "Demo Patient B",
+      "room": "7",
+      "age": 84,
+      "warning": "On warfarin, bleeding risk",
+      "summary": "Hip surgery 2 days ago",
+      "reported": "Patient requests help finding their glasses."
+    }
+  ],
+  "staff": [
+    { "id": "aino", "name": "Aino", "patients": ["p1", "p2"] },
+    { "id": "ben", "name": "Ben", "patients": ["p1"] },
+    { "id": "sara", "name": "Sara", "patients": ["p1", "p2"] },
+    { "id": "leo", "name": "Leo", "patients": ["p2"] },
+    { "id": "observer", "name": "Ward overview", "patients": [] }
+  ]
+}

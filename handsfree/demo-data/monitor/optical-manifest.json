@@ -1,0 +1,1988 @@
+{
+  "seeds": {
+    "development": 113708,
+    "heldout": 672941
+  },
+  "cases": [
+    {
+      "split": "development",
+      "file": "optical-development/5ccf8219643fbd93.png",
+      "kind": "clear",
+      "values": [
+        915,
+        525,
+        221
+      ],
+      "sha256": "7f832bf1ace7e242b2fe67a26435572cc9f63cd56128c6866156b8fc053bb6fd"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/770d4390d71ad55d.png",
+      "kind": "clear",
+      "values": [
+        142,
+        570,
+        776
+      ],
+      "sha256": "8cc324cb6603ffa7c9c2ee2455a2e6c0af011049ce15c02645b1cfab7c5c4414"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/976d0a3014a8be99.png",
+      "kind": "clear",
+      "values": [
+        803,
+        550,
+        511
+      ],
+      "sha256": "e4afe986f187be305ff747091bf09add1b5326bcb2ac193366ffa50129796fbf"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/f30f41663b49d1e7.png",
+      "kind": "clear",
+      "values": [
+        668,
+        498,
+        763
+      ],
+      "sha256": "5d011fc539c373ae0b39e3511516383ce9405dd20e76a4ac766e76f73b580575"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/46a81eae0df03695.png",
+      "kind": "clear",
+      "values": [
+        832,
+        303,
+        777
+      ],
+      "sha256": "71b4ee8ff7df004135d4e0ac0ad3bc1dada6f78ae900f111060d8fc1063311c1"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/68ce6b2743116356.png",
+      "kind": "clear",
+      "values": [
+        307,
+        143,
+        950
+      ],
+      "sha256": "758b615133d2d95d90d9fe697cdf24117503e291a1016494b0aeb4ec6777e450"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/6ff3ef4ca76e4d00.png",
+      "kind": "clear",
+      "values": [
+        729,
+        668,
+        164
+      ],
+      "sha256": "f095cf3a03610b747170ffe42679e69cf61433e22be140c3593bab9fcfa39e98"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/7fd7be38372932f6.png",
+      "kind": "clear",
+      "values": [
+        841,
+        838,
+        577
+      ],
+      "sha256": "ba8cf31d6bf7542f97eb78c92d39d1e26bbfeb952dc85c5d6ae17fd41a30581a"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/8f0cdcdc82b86ce9.png",
+      "kind": "clear",
+      "values": [
+        439,
+        339,
+        998
+      ],
+      "sha256": "ab96adf4d27292c54b667afc899946bbb4e828af6155872eaae6f32a8304fb5f"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/dde86e42f45ed794.png",
+      "kind": "clear",
+      "values": [
+        562,
+        755,
+        994
+      ],
+      "sha256": "937956439714555fc990f4bf354f0d6be9541097bf3a2163d3913b5e7fc23601"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/852ec1887d28f4d2.png",
+      "kind": "clear",
+      "values": [
+        586,
+        114,
+        223
+      ],
+      "sha256": "affcc56f95a327c4e3d260f03bb8d58f50a7256e282db7fd42b37802399a21b9"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/0f2283334fa2fd3f.png",
+      "kind": "clear",
+      "values": [
+        657,
+        665,
+        572
+      ],
+      "sha256": "36864ea43639b258696f806070133fde7e64f20bf5d37dd93c0b4d6db2cd6c0f"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/0b91945121df345b.png",
+      "kind": "clear",
+      "values": [
+        639,
+        552,
+        899
+      ],
+      "sha256": "2a512f6cd681667dcf7c52c7bc6c068f5a1104f3538ef0854a72b784ba10cc1d"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/3b21642292295018.png",
+      "kind": "clear",
+      "values": [
+        148,
+        140,
+        564
+      ],
+      "sha256": "5df1fb5abbd80c0c99ffd432b038e6d0444312150889b9df30ed9efad3d694f7"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/b481d6c40da1a6cf.png",
+      "kind": "clear",
+      "values": [
+        201,
+        635,
+        642
+      ],
+      "sha256": "9adfd7cc1cd5fb7215e58b0a619ef326bc43e03a8f9945f683fa79d71030f877"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/2f5002ae5ffd2470.png",
+      "kind": "clear",
+      "values": [
+        384,
+        61,
+        615
+      ],
+      "sha256": "ea80b5d3709e757974a65863fbf2c886f520bbf517d60449e1ed7ac840dc4894"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/92599ae804113134.png",
+      "kind": "clear",
+      "values": [
+        546,
+        349,
+        475
+      ],
+      "sha256": "113a2e92fb4809609475093247aeacd1038088c1a2473683be849ef9fdf05567"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/899d294bc955e3e4.png",
+      "kind": "clear",
+      "values": [
+        407,
+        115,
+        80
+      ],
+      "sha256": "634c4b1ac63c49cf93047980f490fe7f28f3c813d02d86d2f52c3ce0dfff018c"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/82c59ab5806242a4.png",
+      "kind": "clear",
+      "values": [
+        186,
+        253,
+        32
+      ],
+      "sha256": "d8810c64706997bba915c9423612c2793417b546139b18551688f928a0801fec"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/e702f6c102932231.png",
+      "kind": "clear",
+      "values": [
+        892,
+        197,
+        875
+      ],
+      "sha256": "e6b3844ff7011b852fe7944739c6d4f698c37ed690f29ac67e558d7b626d5685"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/2e067e33e648fa1b.png",
+      "kind": "clear",
+      "values": [
+        635,
+        610,
+        644
+      ],
+      "sha256": "a7d4d257f093cb33d6066f8201b5ca5961ab8f53b36a622c158e7a5675b2881f"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/37a451d6a2742b3c.png",
+      "kind": "clear",
+      "values": [
+        387,
+        390,
+        790
+      ],
+      "sha256": "bf4163a6389cbabfe7ae0cee7ff0d88880f145732b404b462d78a449510d3364"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/241eda978c64202c.png",
+      "kind": "clear",
+      "values": [
+        360,
+        720,
+        766
+      ],
+      "sha256": "99ed5cf205f861df981c46de7cc55949c0c7d9d903ceff03be40d8bdcce89a2c"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/ce2c11c782667685.png",
+      "kind": "clear",
+      "values": [
+        957,
+        548,
+        944
+      ],
+      "sha256": "0e3c606ba93c19c544fd4084e187f15597acc9ca45021bc7976ecee9cf9dc9e6"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/79bb50605b1bba83.png",
+      "kind": "clear",
+      "values": [
+        882,
+        11,
+        64
+      ],
+      "sha256": "40a32b7b1507111d45c5a47d2e4c67c130c2193d28e62375cc0da0313be7eefa"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/e150792ba1b0fded.png",
+      "kind": "clear",
+      "values": [
+        595,
+        955,
+        514
+      ],
+      "sha256": "b76a0ba94cbe54d1d594096a9fc5c773c3a2e424a428c960f0ccaf3091345979"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/5632d81c6e92eb79.png",
+      "kind": "clear",
+      "values": [
+        635,
+        552,
+        345
+      ],
+      "sha256": "6f8cd46bfda5e1a4759019fb984230cb6428b898c76a363b11486d8aaba7f895"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/1c76fccbf8503cc0.png",
+      "kind": "clear",
+      "values": [
+        523,
+        972,
+        747
+      ],
+      "sha256": "d4dd2ff02ca734c8164d505db1ed4f960eb1b058fdc2bc2b2de30a8bd71d140e"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/9bb482301fbdd62d.png",
+      "kind": "clear",
+      "values": [
+        9,
+        37,
+        745
+      ],
+      "sha256": "57cb2f7b3f9d89ee310f497a32d96839de2c456798ceaa68543ae48d370f4047"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/42e345a5a9a394d8.png",
+      "kind": "clear",
+      "values": [
+        609,
+        702,
+        431
+      ],
+      "sha256": "33681e70f1f0c50f404409c0f3e92ebd2729c85379dc705ef13d836c2da038d9"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/91573a7e45d1e3ad.png",
+      "kind": "clear",
+      "values": [
+        894,
+        439,
+        628
+      ],
+      "sha256": "9fef906e56c5df5085b198f029f47962b971931c29a815f5a0bb5721584dae2c"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/4633cf736e5d3536.png",
+      "kind": "clear",
+      "values": [
+        754,
+        222,
+        843
+      ],
+      "sha256": "c1cab49d257eca076559a02a25b3577879c5b99ddcfd860267118c5732f6df5d"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/a50433a4d2e286cc.png",
+      "kind": "clear",
+      "values": [
+        357,
+        618,
+        843
+      ],
+      "sha256": "95a08d3afc2d080ffc51337e23e42289bf3ea235382a3c7e7d7d66f61aa188a8"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/002402f5415d9989.png",
+      "kind": "clear",
+      "values": [
+        7,
+        388,
+        825
+      ],
+      "sha256": "2f991728e36d750bd76b3a5d5566e5a308a657f1a398c9f1541cdacf2221c866"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/ee3b8edd1c95a05d.png",
+      "kind": "clear",
+      "values": [
+        233,
+        642,
+        18
+      ],
+      "sha256": "e0717504a48720288f22068693b31fa9bf08df698cc120ac2a18000acb2d56ac"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/1b1082daa175e1df.png",
+      "kind": "clear",
+      "values": [
+        995,
+        59,
+        956
+      ],
+      "sha256": "27a30b5cec82f4318b4bc143ceb5fa6bb3d90dd78161e9fb57e332483d9469f4"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/134aedbab21e0907.png",
+      "kind": "blur",
+      "values": [
+        770,
+        176,
+        340
+      ],
+      "sha256": "b4766690d68c5dfb748fd5155f612a089fd00a4f9c944783f9a487abdd7eee23"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/3583b25030012c45.png",
+      "kind": "glare",
+      "values": [
+        486,
+        592,
+        454
+      ],
+      "sha256": "8c7f937e4bb35eceb6bdd1f6d5902169e4ea78ccea1d0c9312e44b621b9c4a7e"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/1b54bb1e979bd4da.png",
+      "kind": "crop",
+      "values": [
+        359,
+        544,
+        548
+      ],
+      "sha256": "6eab376331f6eea5ed311851647b27b3a628b78886753735f27bef5f931a66f3"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/13d6b34f90d803cb.png",
+      "kind": "missing-label",
+      "values": [
+        206,
+        437,
+        177
+      ],
+      "sha256": "9adcc0be0f5ae5cbcc8b60ef6576f9e523ef52a672fd47726a9c0b41c2200e81"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/d155d66461e46327.png",
+      "kind": "ambiguous",
+      "values": [
+        973,
+        553,
+        354
+      ],
+      "sha256": "1d1f4653814fd0c3e8df6d90a1bae7ca144b43af55326ea7d6ccce1123c8ae75"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/f67ca50e78f8122b.png",
+      "kind": "erased-digit",
+      "values": [
+        488,
+        320,
+        636
+      ],
+      "sha256": "6862bbf7cc0a2d0bbf7a8ad6e796ad3b9a5314e879dcc6693606bcc648d432fb"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/5f205641d9487e9c.png",
+      "kind": "unsupported",
+      "values": [
+        11,
+        452,
+        280
+      ],
+      "sha256": "7c97e0dda6d7122c0b50eb79752b46e3edbd53920a6fa67b4f3702408831ff1b"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/24f9a48f2626ead4.png",
+      "kind": "too-small",
+      "values": [
+        646,
+        303,
+        115
+      ],
+      "sha256": "e2dce9df0520eaa3b4d23361d4258fc547086f2f60ab65f0d29d76371d3ba464"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/43caa327d7aa1033.png",
+      "kind": "blur",
+      "values": [
+        500,
+        476,
+        764
+      ],
+      "sha256": "82bbc232c9e2fec670b7463884c751beef55bb361f51f95016572080b6f5b0f0"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/e26de4b585f5dbee.png",
+      "kind": "glare",
+      "values": [
+        319,
+        265,
+        131
+      ],
+      "sha256": "09bc691bee1578d82b4ca1763538b97abb29e4ae6386c3c5b2e72e6d82531cf5"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/95a91a479f67a97f.png",
+      "kind": "crop",
+      "values": [
+        209,
+        108,
+        348
+      ],
+      "sha256": "1aca528e6e1154c8c1fcdd84674d21be05aa2a1382a375460d103569a81274c1"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/52300bf5a35b313d.png",
+      "kind": "missing-label",
+      "values": [
+        784,
+        635,
+        453
+      ],
+      "sha256": "800401514af18bc50bc61fabc3e6c102b91db6378aa17a62a9c5a735abf43111"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/c0856cdf98b59adb.png",
+      "kind": "ambiguous",
+      "values": [
+        209,
+        417,
+        138
+      ],
+      "sha256": "8cae3855c45e424f6e168b17ae51e0fd69194ac9217fe0056b95a47eb5eccc10"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/756fe57ec45693f9.png",
+      "kind": "erased-digit",
+      "values": [
+        684,
+        601,
+        696
+      ],
+      "sha256": "90f122a5bf96abd06a29bd2c327e7120d1d4c77e0d3e9cc37b81871119af7c1b"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/b05a3855b8780727.png",
+      "kind": "unsupported",
+      "values": [
+        576,
+        288,
+        79
+      ],
+      "sha256": "ddc4a06e1e90add0815a65a15cfe2665feb24da6797efbe24ad5cb0e19cbffe6"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/13842d25a379d74b.png",
+      "kind": "too-small",
+      "values": [
+        667,
+        61,
+        861
+      ],
+      "sha256": "1f85dbea077adf8b6353201afdc428ae5cca8dbaf2ceeb81ad3a08fdf1bba7f6"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/734b8faea3dd09a0.png",
+      "kind": "blur",
+      "values": [
+        471,
+        279,
+        672
+      ],
+      "sha256": "8d7203ea7e652c0b570d879cc9d11b32e212a79855947fa0e4df9cc218afccc2"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/51d7152efe952894.png",
+      "kind": "glare",
+      "values": [
+        752,
+        887,
+        413
+      ],
+      "sha256": "b2ee8a5a9247ea2f37f7bd62ef08537cff9a26738272afadd1705caf2cf2bafa"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/c2d66ab8504f6d14.png",
+      "kind": "crop",
+      "values": [
+        934,
+        186,
+        106
+      ],
+      "sha256": "1aed7cea21e586d5f9540ebf1c8886e4303ebaf6c85820bd59c7c1566c342c11"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/acb31dcfa953dce4.png",
+      "kind": "missing-label",
+      "values": [
+        153,
+        634,
+        353
+      ],
+      "sha256": "c3dbdcde7d5c0cebf66ea7ac6f18564855af1b4633baaf36ba8e933839957659"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/2e140b6271621bc8.png",
+      "kind": "ambiguous",
+      "values": [
+        834,
+        552,
+        524
+      ],
+      "sha256": "f3098ac50ec0a89e1286a89b6ceec4fa7de3d5e3fb939d13a9f5848aa5ecab77"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/ae46df79fad63054.png",
+      "kind": "erased-digit",
+      "values": [
+        944,
+        846,
+        457
+      ],
+      "sha256": "c0ad3f60053c9dd136aa26370b7405d2510b0241fd0721cfffc33da0ba559c0a"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/270d4177048905b2.png",
+      "kind": "unsupported",
+      "values": [
+        815,
+        853,
+        776
+      ],
+      "sha256": "3dc7a26c10f0efb7b9439a321fe8c3369b7d67e062858317023c4ff03f2e7598"
+    },
+    {
+      "split": "development",
+      "file": "optical-development/e0ab786de29769db.png",
+      "kind": "too-small",
+      "values": [
+        668,
+        90,
+        253
+      ],
+      "sha256": "721ae80ea7d350ec3c192fc6bf8fa3c728af3381c371e8160d0597d21bf609e0"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/452adcfd94ddbb3e.png",
+      "kind": "clear",
+      "values": [
+        774,
+        552,
+        341
+      ],
+      "sha256": "3d5ccae77b11ae4877419f20a6ba008ef6bab359650501361c53470002c0e7ac"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/50aa5a9405956618.png",
+      "kind": "clear",
+      "values": [
+        516,
+        183,
+        285
+      ],
+      "sha256": "b6e122a54eb5b1a0850b6a7f49297c18af95a05b7f7fd812ba7132397bd5e6df"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1867a2bcd23999c2.png",
+      "kind": "clear",
+      "values": [
+        897,
+        866,
+        289
+      ],
+      "sha256": "e31803538cdecd0acc281d5df644fd0c52594cf73517c8f952cc905bef5e80c5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/f2bb1a8b4f6950ce.png",
+      "kind": "clear",
+      "values": [
+        334,
+        143,
+        505
+      ],
+      "sha256": "ad525c40ae8834684354ccb0f08841ee48ca4ed77df1bd124fa3a8de7d7884cd"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/598467c0126b0bab.png",
+      "kind": "clear",
+      "values": [
+        220,
+        330,
+        5
+      ],
+      "sha256": "2b8ea17c0318c562f5a851ae484273b6706d3566c2d820ab333821efd84475d8"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d53ce412ffe0e94c.png",
+      "kind": "clear",
+      "values": [
+        201,
+        92,
+        278
+      ],
+      "sha256": "6f9e74142bd46399641923438729f1e3b53db8b3b7daa0abb33d3234f2f0d275"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/b77d76c04fb821f3.png",
+      "kind": "clear",
+      "values": [
+        494,
+        157,
+        566
+      ],
+      "sha256": "8dbda810d3a15f6af021a17429a35d6eee8facbd7f5ca9145dbac947512caba8"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/096f2efdac18f7bf.png",
+      "kind": "clear",
+      "values": [
+        861,
+        461,
+        753
+      ],
+      "sha256": "46e3edd75dfca58964353ce4c5750013985a71486ab52b87ab2d100eb312d98a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cd65187386bb669c.png",
+      "kind": "clear",
+      "values": [
+        490,
+        530,
+        917
+      ],
+      "sha256": "d870b7ea16b61044fa6b1d9702934f615dd2909eaa5826118d9815aa839dce4b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/253554dc56e3b9db.png",
+      "kind": "clear",
+      "values": [
+        14,
+        261,
+        668
+      ],
+      "sha256": "9cfa866b57240b81ae8962c3e369ed9daea12fd9cb6ac52f2ba9dfaba8286097"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5f1efdd53ccb1c07.png",
+      "kind": "clear",
+      "values": [
+        632,
+        684,
+        289
+      ],
+      "sha256": "d1dabf54908626bf2ad710fe4f39c07d8c5d5ff1a2dc3c2fd5fe6d4e60a5e986"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cfa8bba2d4c67434.png",
+      "kind": "clear",
+      "values": [
+        741,
+        61,
+        546
+      ],
+      "sha256": "c4dc4b4e2ea95c7d8e519a433e098ce3e11fed15d24386632a13bc7e4d9bb40d"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/c1e341559ce9d16e.png",
+      "kind": "clear",
+      "values": [
+        830,
+        975,
+        873
+      ],
+      "sha256": "3627c0524a73bfb1540d4f8976af4016512762026f532de8c434a70de6046fe5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/33642bb82726a839.png",
+      "kind": "clear",
+      "values": [
+        404,
+        394,
+        400
+      ],
+      "sha256": "da74b8adf532deec3d4125d0ae3698de7b5f02c2f31a1d2e95ebb432fef50e04"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/49e56a6acdf932dc.png",
+      "kind": "clear",
+      "values": [
+        650,
+        35,
+        488
+      ],
+      "sha256": "9f60036a4e2134367bd7868f4a7565b697b400648de720a896c6363063334308"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ab062d4ed793e1bc.png",
+      "kind": "clear",
+      "values": [
+        484,
+        476,
+        394
+      ],
+      "sha256": "515f5f27bf4e624a3e4e281d075962e37158455fc13a6907ad97c6c5e8f5cea5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/a66b4740bd53961e.png",
+      "kind": "clear",
+      "values": [
+        669,
+        91,
+        695
+      ],
+      "sha256": "f73d0800004dfd9fc5ba661005c6879a9e0446359de3e31fd058660565961a61"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ea0589c255302964.png",
+      "kind": "clear",
+      "values": [
+        934,
+        285,
+        910
+      ],
+      "sha256": "73c4ab52cf1374522bde2b3703d139347b09bf945d01d9341a9636b79c57374b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d59ed16bb785d3e2.png",
+      "kind": "clear",
+      "values": [
+        399,
+        926,
+        721
+      ],
+      "sha256": "c38d203a0341605e1193795fabb039954ede0fb538f50ce723adb0e9f6fe3ff5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/40df275a6f113f51.png",
+      "kind": "clear",
+      "values": [
+        125,
+        918,
+        872
+      ],
+      "sha256": "08f9f797a74a45804f82b23fbc0d49c864ff1fb4449de7d1f6a039cd10738549"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/35c1b5850a63f503.png",
+      "kind": "clear",
+      "values": [
+        875,
+        477,
+        716
+      ],
+      "sha256": "d54bbedff9dc944866287bbf98954d98a75edb3a92c8ceb2a54b19a3ec34cc0c"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ad16dc9611e0d02e.png",
+      "kind": "clear",
+      "values": [
+        567,
+        405,
+        705
+      ],
+      "sha256": "60626d1f76e632ea91ea2434422b3abf17f0a7c340733b4def269c1ce7586518"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/0d50878db84450ec.png",
+      "kind": "clear",
+      "values": [
+        489,
+        280,
+        125
+      ],
+      "sha256": "8233456afac709117fa9ae9cb044fa02440fe88286e40c78f589dcdf5e83dcdf"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cd2106e018669b48.png",
+      "kind": "clear",
+      "values": [
+        257,
+        172,
+        933
+      ],
+      "sha256": "90062f1c5c83aa3ca5924ee6aee8060c2fe6b90c7382710e65253d3b57855866"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ac5f49c938338646.png",
+      "kind": "clear",
+      "values": [
+        554,
+        333,
+        915
+      ],
+      "sha256": "53544470c77f1923bed405da56f133784d2138555633450ad05ad46eb64a1151"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/7b39b71aa5e20b4b.png",
+      "kind": "clear",
+      "values": [
+        90,
+        568,
+        730
+      ],
+      "sha256": "63d10512af264070ad5ce602ecc3feac96ad46608f5ebc406644b3249bdb35a2"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/4a595993d6f275f0.png",
+      "kind": "clear",
+      "values": [
+        864,
+        349,
+        333
+      ],
+      "sha256": "857099e1ced9b08acfa0901bfc2c9a933a6918b3e9191c2200ebcb503253e5a5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/38c47a05a2e8b5ee.png",
+      "kind": "clear",
+      "values": [
+        937,
+        708,
+        689
+      ],
+      "sha256": "15e64b58cff8cee17f9556394862718ff0c4e27b18747eea15721b647e0b72d9"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e9128eed2578cffb.png",
+      "kind": "clear",
+      "values": [
+        114,
+        209,
+        818
+      ],
+      "sha256": "2488368d93a7ccc2239839f06eb6a4d90f6dd90d78b8d1e9eb84c3d7772d509b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5b9ba572bb3a6729.png",
+      "kind": "clear",
+      "values": [
+        932,
+        260,
+        133
+      ],
+      "sha256": "5459a87d8d7b2cdefe7503ff6e9fdf99a7f0079578673e23bfab1f0d71eeae31"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/871212880636c022.png",
+      "kind": "clear",
+      "values": [
+        23,
+        215,
+        779
+      ],
+      "sha256": "ee82d08c7318c8b8c441b6af769cfd39502bb2991f35e34c5d5640018ccf9860"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/c1620aef70ed22dc.png",
+      "kind": "clear",
+      "values": [
+        512,
+        467,
+        860
+      ],
+      "sha256": "fdc04ce4d027f89294c077aaeb7d5c6655c199a27a87727ae943f0c746bbe959"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/8fce1c2afbcea60d.png",
+      "kind": "clear",
+      "values": [
+        248,
+        325,
+        546
+      ],
+      "sha256": "1612ad689b6718405dd27b0ac3e00c10b25bf8639ffb13b07651ec4aa15064bd"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cb42bf79c6e46029.png",
+      "kind": "clear",
+      "values": [
+        451,
+        586,
+        204
+      ],
+      "sha256": "c6f3ecc5eb706e9cff581dad2d6f15dc9d603294f01bca5fa8384b979ef6db55"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5fa0644c91075ef2.png",
+      "kind": "clear",
+      "values": [
+        251,
+        810,
+        77
+      ],
+      "sha256": "e1a8bd20823849e38e3dd543dd0bb3f286d3efa687075b78ed20d57fb9e4dc86"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e5fa5128ff31d66f.png",
+      "kind": "clear",
+      "values": [
+        400,
+        901,
+        82
+      ],
+      "sha256": "9b7d99302848b83f5617290c1b5e21b2288adf4702084f8fd604090e67cbf39c"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/422e709955f3b4dc.png",
+      "kind": "clear",
+      "values": [
+        274,
+        689,
+        342
+      ],
+      "sha256": "2ffae5e0b0827b787d5cd8db8a8d5edea3ace16d9fe9992321d091e88b35b1f4"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/bc568f447c65c384.png",
+      "kind": "clear",
+      "values": [
+        221,
+        825,
+        435
+      ],
+      "sha256": "d5bb5b9f23641bea842fed90ce44e74c5b6abc7fba0726d55726046a66c9f472"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/2acd389bf77a018c.png",
+      "kind": "clear",
+      "values": [
+        19,
+        675,
+        465
+      ],
+      "sha256": "28a96188c191cfea061295dec5904862183eab4608df80189026eaf66536f7a7"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/8997990b772f8738.png",
+      "kind": "clear",
+      "values": [
+        735,
+        456,
+        964
+      ],
+      "sha256": "3dba0df6007879f00961800c7fdddc55d36a47e4a6b007563d85728be7b80a23"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/56fed08074a6e60b.png",
+      "kind": "blur",
+      "values": [
+        33,
+        42,
+        982
+      ],
+      "sha256": "62dcad8c7354afc1fb9c7f24c53c55066edc9c2f1452ca2f5842ee39b973c500"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/de829933973e8beb.png",
+      "kind": "glare",
+      "values": [
+        462,
+        374,
+        228
+      ],
+      "sha256": "ce3cc36d37620c9e28a6f3187143d22176572e27dbc0808c28eb78f44ad0dc12"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e2b2539e2a2865ca.png",
+      "kind": "crop",
+      "values": [
+        639,
+        998,
+        160
+      ],
+      "sha256": "d159744a8829a6574a2116b6aa505bbc5a86beb904e30eaf6403886dc517a536"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/14314c7d369d18bd.png",
+      "kind": "missing-label",
+      "values": [
+        959,
+        678,
+        572
+      ],
+      "sha256": "06a9712dffdded7a73b065759835740765b371529a5ac2ee78d858ec0e0a8849"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/fe31d048d774ea81.png",
+      "kind": "ambiguous",
+      "values": [
+        437,
+        336,
+        599
+      ],
+      "sha256": "b02a3566b8bccffadf94b64d4ef4e94cc3306fcfcd301bbe80d2857e92612e76"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ee6f8916daac1544.png",
+      "kind": "erased-digit",
+      "values": [
+        58,
+        345,
+        347
+      ],
+      "sha256": "50921b9becc1c9fb357cb390eaf4be6889a283a51e481dbdb780ad70a2f43951"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/fea3494cdeac7c57.png",
+      "kind": "unsupported",
+      "values": [
+        377,
+        173,
+        675
+      ],
+      "sha256": "7c68c7c6cc0d301de8618aa36e9eb870ede7ece6a49ba95fe6e14732b2685380"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/25dede8ddb5b7152.png",
+      "kind": "too-small",
+      "values": [
+        673,
+        424,
+        189
+      ],
+      "sha256": "5d6267e7fc87859edbf2866795c7f889e9b6983e98bda25ab4e520ea1678e5de"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ecbb423cd8afaf5b.png",
+      "kind": "blur",
+      "values": [
+        596,
+        525,
+        850
+      ],
+      "sha256": "5a4b2a2555438d0de0bfda211ff490e41b03294e437da0fc971e781dce69b01e"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1d7dfb8b4583c2c3.png",
+      "kind": "glare",
+      "values": [
+        629,
+        152,
+        29
+      ],
+      "sha256": "7b2379c8c3877ed1e5e409bc4fc1c02e040ac69f9f85cbd76e5f29d9cd99fe15"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/7a119987b553374f.png",
+      "kind": "crop",
+      "values": [
+        376,
+        491,
+        226
+      ],
+      "sha256": "11f85f33892da9f9a3573d9ee073b3c7051dcef8e7b6c3a7b033a78342e4175a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/69499e011640713e.png",
+      "kind": "missing-label",
+      "values": [
+        978,
+        248,
+        339
+      ],
+      "sha256": "0ca47fe3a44d8bde9b532e9d1db416ef0c19c1fc15e7866872f7ea61803888bb"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5eed6db8abdc4554.png",
+      "kind": "ambiguous",
+      "values": [
+        869,
+        176,
+        91
+      ],
+      "sha256": "04cc0dcf1eac985b3503af397c0593b08a859f8f0cbf0b262f14c43c4fabde5a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1168c1d38801ebb4.png",
+      "kind": "erased-digit",
+      "values": [
+        817,
+        747,
+        582
+      ],
+      "sha256": "96b554060fcda51676edb648a33bad88912cba3adcc7da799089ff1c480b84ea"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d540813136347d2d.png",
+      "kind": "unsupported",
+      "values": [
+        447,
+        285,
+        324
+      ],
+      "sha256": "6420a728724922073a6d1b299ffd1200b5f3ee540674f02576f7ccd217647952"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/014e643e11b95b93.png",
+      "kind": "too-small",
+      "values": [
+        771,
+        241,
+        473
+      ],
+      "sha256": "5d7c7b1e4caeaf03f4c36d7efa034ada70a79ed1a71ddb02b4e0263afe252024"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/305ed77c8ddc7832.png",
+      "kind": "blur",
+      "values": [
+        218,
+        41,
+        555
+      ],
+      "sha256": "6771119eccb46b08ec2e5de5d24a7f77c0aabbd47238e78f8245919b4732f37d"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/7d1d7e167fc57b66.png",
+      "kind": "glare",
+      "values": [
+        430,
+        73,
+        888
+      ],
+      "sha256": "63d7d35e42fcf975cec8b9fb2a3c23fa2a504dd154e2c9dd6072c318b2b0a216"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1f559e8b6a60d63b.png",
+      "kind": "crop",
+      "values": [
+        648,
+        749,
+        933
+      ],
+      "sha256": "55f4660d477d1a151d86bff2903feadec5269aae5ea8c47d3f478893cb95735d"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/004d36334f6a2908.png",
+      "kind": "missing-label",
+      "values": [
+        396,
+        43,
+        212
+      ],
+      "sha256": "6c2ef6c7e2fb56c3dd14905be9805b168836ae9333337a2d3d661bf060807985"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/039a3cbf5d142df7.png",
+      "kind": "ambiguous",
+      "values": [
+        385,
+        639,
+        555
+      ],
+      "sha256": "ee872f6b700cb5b1e192bdf8958f8c7ba8f79a8fb5953d2b2669e1d3c4d856e8"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/584dadabb4b493f1.png",
+      "kind": "erased-digit",
+      "values": [
+        692,
+        466,
+        389
+      ],
+      "sha256": "d05411cdfaabbb3a40ebac8b720575d89f32a74741e349c0a379026d42300d6c"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/c6fbd75ce5422fc4.png",
+      "kind": "unsupported",
+      "values": [
+        228,
+        444,
+        613
+      ],
+      "sha256": "98ce68aec62bcca587f3ecc15fa41ba55030cf3879faf90f85a79c16619eafbe"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/83f3aa640a16ac13.png",
+      "kind": "too-small",
+      "values": [
+        139,
+        603,
+        81
+      ],
+      "sha256": "d361bf9c7c63018d5543f86de00659a4a1f091f3a86ffae378840cd23f986949"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e2e1da497b60553f.png",
+      "kind": "blur",
+      "values": [
+        377,
+        934,
+        179
+      ],
+      "sha256": "19f3d4a416a3edeb7c88866d8ad84fc6e3c8457ee7fe617279eefb9a8eb8bb57"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5cd0c49e96b44d7f.png",
+      "kind": "glare",
+      "values": [
+        443,
+        162,
+        296
+      ],
+      "sha256": "b831f9ce5b48f1c5255ae9b82002ff1185def279106feb6e78c4ef7d5d8a4fd2"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/957a4536e3fbf487.png",
+      "kind": "crop",
+      "values": [
+        869,
+        551,
+        560
+      ],
+      "sha256": "40a8a6f1f8836fb5cabdd324be42367f91b1b96095442a95d48aaa394ce66972"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/456f07ebaaad4dc2.png",
+      "kind": "missing-label",
+      "values": [
+        836,
+        255,
+        777
+      ],
+      "sha256": "aa601de843ccb1a3b112d8aa3130d5d10715bf845079b5a4e536f91af0261a75"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/dd6f45052b111c1e.png",
+      "kind": "ambiguous",
+      "values": [
+        920,
+        742,
+        370
+      ],
+      "sha256": "44b51e29657f593360119505fbbcaa5f54021a10406f2cb7d2491ef4bae26e97"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/71756007fa1c7f6e.png",
+      "kind": "erased-digit",
+      "values": [
+        536,
+        576,
+        980
+      ],
+      "sha256": "2a0452afab0cf9a88fd86f7386c4fa98588f4d4440cc58a21de4b42441d1bbd9"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/51f3e7263ef112d5.png",
+      "kind": "unsupported",
+      "values": [
+        848,
+        750,
+        436
+      ],
+      "sha256": "fb9be0ac0278eacdd9f7aa521af0186a808f8e37aab71e15a0cc19f206111219"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/9ff812a9e61ee07b.png",
+      "kind": "too-small",
+      "values": [
+        975,
+        167,
+        54
+      ],
+      "sha256": "ae1fe4c0bfeae5846d8a41045f0489be8c3cfb0135255ff29f9fd6c58dd23bd8"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/b28ba73e1ec670a3.png",
+      "kind": "blur",
+      "values": [
+        3,
+        249,
+        166
+      ],
+      "sha256": "804ae64cb94478fa8691d0997be91d234040e8572dd583e63f354965efe061ec"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ef4a28e0dad4031f.png",
+      "kind": "glare",
+      "values": [
+        76,
+        210,
+        352
+      ],
+      "sha256": "1388b993a55ce7a9efa4d7aa5c85d72ea5e53e3008d844232b815df80d71cf7e"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/f5e623578b49b38d.png",
+      "kind": "crop",
+      "values": [
+        562,
+        63,
+        728
+      ],
+      "sha256": "d5c90b9f84c4b27ae9bd5ab493a469d58b7608abb6b6e6e3849296760ba978ee"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/3db1c09a62d6117b.png",
+      "kind": "missing-label",
+      "values": [
+        853,
+        259,
+        125
+      ],
+      "sha256": "e497d247c6afef112331df7a6ac7d63924103f251932a166516cff0727c9973b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/dcb385933a7dfe76.png",
+      "kind": "ambiguous",
+      "values": [
+        991,
+        434,
+        85
+      ],
+      "sha256": "4755d850442fa107d01c3bd47abdf27ca6ab90686a9012fd7c0a4520c5e29ca4"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/a5a6c024d6cc4e9a.png",
+      "kind": "erased-digit",
+      "values": [
+        584,
+        40,
+        589
+      ],
+      "sha256": "6f86cb914a5ae4e02d61f7fae8eb86b9b0afa08f8c6bfeb1a0ea95c82c51287a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/2ae29229fe4d7666.png",
+      "kind": "unsupported",
+      "values": [
+        282,
+        617,
+        45
+      ],
+      "sha256": "4c365cc525fa289628b1f447bc87eb7f59b443fdab1c1b67447d2d1ce609e033"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d0db18a9dc34b8a2.png",
+      "kind": "too-small",
+      "values": [
+        808,
+        276,
+        208
+      ],
+      "sha256": "d25c83fdd0b56a461f007cb8910f7c3288d4c35764440ef708f3be35ce1fab34"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/b0a2a1690341135c.png",
+      "kind": "blur",
+      "values": [
+        751,
+        441,
+        39
+      ],
+      "sha256": "12e45dc1868cd4cb3af55f079a57cabeac54b74470543a550ef55f0205692a62"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/13fac37b21d126a3.png",
+      "kind": "glare",
+      "values": [
+        681,
+        794,
+        112
+      ],
+      "sha256": "dacade7756e4a7eb442d81ac8fd1cff36a0f4355b2310c2d55b392bd9f16dfd7"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e96706d9a4a0a747.png",
+      "kind": "crop",
+      "values": [
+        620,
+        218,
+        674
+      ],
+      "sha256": "5de37cd2a360df4d0f267683edb9d145e82e95b689049c54ee9cfce99a736450"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/de9f1b619ab0c1d2.png",
+      "kind": "missing-label",
+      "values": [
+        616,
+        254,
+        383
+      ],
+      "sha256": "4924630e8bfb02ea2a974f2754735f7092d00a48109b18dfc5f4f63c4aa2951e"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/91d3c649ccdc348e.png",
+      "kind": "ambiguous",
+      "values": [
+        543,
+        567,
+        519
+      ],
+      "sha256": "ebf312459d08d95dfcf8e0d8ed7fbfa644df0fbf951e2c199103abf428c74a0e"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/aef9eae1435f5267.png",
+      "kind": "erased-digit",
+      "values": [
+        294,
+        867,
+        956
+      ],
+      "sha256": "f294707276eab5c0ede73c7ec79f440433e0205de02a5226f47a2f1986a4ed8a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/6021fafb0be08b12.png",
+      "kind": "unsupported",
+      "values": [
+        25,
+        835,
+        682
+      ],
+      "sha256": "e870f2e76bdf202b7cde5debae33ff8decd35dcbacaba564ecf5d99ed6e51b54"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/741e64e634f051f4.png",
+      "kind": "too-small",
+      "values": [
+        396,
+        577,
+        19
+      ],
+      "sha256": "81b80bccc5587a6c275eafe1d45fdd6d8b75351433f66814fc5b1fd7b56b8749"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/77ee2699ca2623b9.png",
+      "kind": "blur",
+      "values": [
+        277,
+        497,
+        486
+      ],
+      "sha256": "6cbffa02a8a8f429c4d227772620d47d0a14d96a40a205594e826ed737f094e8"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/203daaccdbd930f0.png",
+      "kind": "glare",
+      "values": [
+        298,
+        142,
+        796
+      ],
+      "sha256": "d9ccdbc958bcd6db32345e563af1cd4df0cf6372c875a5803f7f163e2a4d0050"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1a453032b29c43ce.png",
+      "kind": "crop",
+      "values": [
+        893,
+        67,
+        783
+      ],
+      "sha256": "41bea337dedb313b3703e8faa2ac7e1678b6ad99aa0059e334b0645764fc938f"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/2e455c5ccb610a36.png",
+      "kind": "missing-label",
+      "values": [
+        983,
+        442,
+        916
+      ],
+      "sha256": "66ccfa17924841041ab0facc22afa99907ac669a4322293ff6694353014e4ae1"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/7d281fbd11b36280.png",
+      "kind": "ambiguous",
+      "values": [
+        714,
+        122,
+        783
+      ],
+      "sha256": "29690f7b0d7a3cf1f6aad38bf43b30476a87f1bb9ef41cc4208d036baeba6f47"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/b21e4c4719989a3f.png",
+      "kind": "erased-digit",
+      "values": [
+        594,
+        218,
+        227
+      ],
+      "sha256": "5bfca5aa27a0e3903b33c7468c3d5c86d8a44c48bcd875d88cbec1b02a0cfdde"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/f4af0ed7c40d9db6.png",
+      "kind": "unsupported",
+      "values": [
+        113,
+        143,
+        64
+      ],
+      "sha256": "adb7a448146b243a76ee6154b4d18d85100b854ce6047b081dbacdbb375ed416"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/04dd45fb7d89b6b5.png",
+      "kind": "too-small",
+      "values": [
+        775,
+        55,
+        43
+      ],
+      "sha256": "0fe0e8f2dd8ff8a671e8f5f5117b3da5133df4d11d178f19302a6887c8316e10"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/b4f20d1e306eb11a.png",
+      "kind": "blur",
+      "values": [
+        9,
+        604,
+        585
+      ],
+      "sha256": "490ded9a0d5580413b2ae40ae17ae2d2f9c1c6eb0cb74ff9b188b4807f5a6f53"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/2b4440b64db11ca1.png",
+      "kind": "glare",
+      "values": [
+        513,
+        186,
+        470
+      ],
+      "sha256": "cdc690afc947f2b9fbdcfda07bd9a75f50e67fb11f9060c49037f7beaeda26d9"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/e530a8e9e4e495df.png",
+      "kind": "crop",
+      "values": [
+        392,
+        866,
+        435
+      ],
+      "sha256": "9cc1e7e2e6e8177409a738c66e7f65e96cc55e2485286ce42b441907c2c19eeb"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ff50664a9146b4e1.png",
+      "kind": "missing-label",
+      "values": [
+        330,
+        160,
+        376
+      ],
+      "sha256": "0db38c1438a222bc1764e10758e5ee7c99bde9d360f3e25e6afdd0c262dcd5b5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/5f3fea898c0e6861.png",
+      "kind": "ambiguous",
+      "values": [
+        588,
+        879,
+        824
+      ],
+      "sha256": "687d817935d155a6be98f628ff5d9e2655bde7f7d4fbd3e7368a042ed81fba48"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/9e277c2b360dcedf.png",
+      "kind": "erased-digit",
+      "values": [
+        929,
+        118,
+        840
+      ],
+      "sha256": "cc1e879a9f50482e05d1c98d6a49d230a73d20e0d53be4a16c152d3740451151"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cd5f21b09fea346c.png",
+      "kind": "unsupported",
+      "values": [
+        913,
+        458,
+        872
+      ],
+      "sha256": "63e685ee2dad67254cb15ddc7b8f075c166ac0786a96bae60b975fe2b2f1da69"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/1d77c81452e66b30.png",
+      "kind": "too-small",
+      "values": [
+        647,
+        44,
+        853
+      ],
+      "sha256": "32d54e468800edfea9b8daab98de6d9a00fd4058dc3f49ce337414d3e9930b0b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/357356d26010a324.png",
+      "kind": "blur",
+      "values": [
+        427,
+        40,
+        519
+      ],
+      "sha256": "4e77230b9c1e97de87615c17415424df61d0e05f21d6aea79eb56202e45a7b96"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/c4856903205395e6.png",
+      "kind": "glare",
+      "values": [
+        357,
+        256,
+        663
+      ],
+      "sha256": "2b13a126429a5cca5634dca7f294459dd93f43174b7f7526b17f49726f0811fd"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/cd3da94e73f04c58.png",
+      "kind": "crop",
+      "values": [
+        357,
+        126,
+        959
+      ],
+      "sha256": "8eb2ae876eb8130305db327008cc5a756bc156984eab720561b5efc4ef658353"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d9088d51a537d170.png",
+      "kind": "missing-label",
+      "values": [
+        573,
+        223,
+        100
+      ],
+      "sha256": "8bc69065e72517f5f653f7642da742f82071b32212bfdcfdb5719807cfaf3083"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/613be8865daa5699.png",
+      "kind": "ambiguous",
+      "values": [
+        257,
+        184,
+        511
+      ],
+      "sha256": "69fa134b9d15e3c493ffd9c3db018a7d0a46c4b90fa2e647074eea10a5e10352"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/a2da2252124fe4f7.png",
+      "kind": "erased-digit",
+      "values": [
+        977,
+        448,
+        764
+      ],
+      "sha256": "49facde529e437a376e11f00d8c683e05faecae072348faf3a501a0cf9143e55"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d259b3b7fc5823d4.png",
+      "kind": "unsupported",
+      "values": [
+        136,
+        763,
+        389
+      ],
+      "sha256": "9e12a843ff08b2ac5e66ebae4b3faf450830534fce533c86cbc1f3ee1373e50f"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/8a90d2ab23e88cf9.png",
+      "kind": "too-small",
+      "values": [
+        101,
+        970,
+        130
+      ],
+      "sha256": "4a422ffc5263d50596fbe4158dd6172c9c4e1b2433c539930389cf86f3f2990d"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/ac518efff0c1fd6a.png",
+      "kind": "blur",
+      "values": [
+        827,
+        153,
+        347
+      ],
+      "sha256": "8a57a6a3d0b370d866044c83197aa80223fbdf43eabacf7464898ba5da02c68c"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/06a7b19dd9614f80.png",
+      "kind": "glare",
+      "values": [
+        879,
+        279,
+        883
+      ],
+      "sha256": "74c63da891ed27a1ede370ed9f627d55ab6766978600cba7f88a864960ce6e1b"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/8c88cb9ae7b13e83.png",
+      "kind": "crop",
+      "values": [
+        699,
+        920,
+        534
+      ],
+      "sha256": "f7ce43ee7b00e64cf1b5a5cc91a416fa88f3b8c0cdee08e6a7a0bf6f7cd37623"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/bf49d618865804fd.png",
+      "kind": "missing-label",
+      "values": [
+        861,
+        999,
+        208
+      ],
+      "sha256": "d1a6848084efcc4baa5c3ae98239c33e76b7d98ee2c5560f7236fc7162d622f6"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/53ec8f0abccf4982.png",
+      "kind": "ambiguous",
+      "values": [
+        333,
+        87,
+        678
+      ],
+      "sha256": "dc1125f85da8cfd2091612436169c76fb92bd9b637ab86f11d35c1e85ca840e5"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/d4d7db4c136f7628.png",
+      "kind": "erased-digit",
+      "values": [
+        646,
+        840,
+        533
+      ],
+      "sha256": "857f2f96578bb7b1adcbd4fae8bfce0d015c9f2c410ee18d64e51f66f3387d0a"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/a3f33ecf7e2ac81c.png",
+      "kind": "unsupported",
+      "values": [
+        637,
+        176,
+        958
+      ],
+      "sha256": "7e713e993098330c072aeed26dfb3eab7ec3f9c3f8ab224e089246f85cfb5795"
+    },
+    {
+      "split": "heldout",
+      "file": "optical-heldout/7a187d89c2bafa2e.png",
+      "kind": "too-small",
+      "values": [
+        821,
+        15,
+        896
+      ],
+      "sha256": "0ee67e47b3406c7f84c4dcf67a62213e67e6d21a609b745df8ae6e4e0dc49669"
+    }
+  ]
+}

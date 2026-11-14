@@ -1,0 +1,10 @@
+scenario,total,exact,wrong,rejected
+clear,40,38,0,2
+blur,10,0,0,10
+glare,10,0,0,10
+crop,10,0,0,10
+missing-label,10,0,0,10
+ambiguous,10,0,0,10
+erased-digit,10,0,0,10
+unsupported,10,0,0,10
+too-small,10,0,0,10

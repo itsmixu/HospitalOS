@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  /><title>Lumi · Demo desk</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font: 16px system-ui;
+      background: #0d1719;
+      color: #e6f3ee;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 24px;
+    }
+    h1 {
+      font-size: 30px;
+      margin: 0;
+    }
+    h2 {
+      font-size: 19px;
+      margin: 0 0 16px;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    p {
+      line-height: 1.55;
+      color: #adc4be;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .sub {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .tag {
+      font-size: 12px;
+      border: 1px solid #37534a;
+      border-radius: 20px;
+      padding: 7px 12px;
+      color: #b5d8ca;
+    }
+    section,
+    details.panel {
+      border: 1px solid #29403b;
+      border-radius: 16px;
+      padding: 24px;
+      background: #152326;
+      margin-bottom: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .grid > section {
+      margin: 0;
+    }
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .status {
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #233332;
+      font-size: 14px;
+    }
+    .ok {
+      color: #a4edc6;
+    }
+    .bad {
+      color: #ffbe9c;
+    }
+    button,
+    input,
+    select {
+      font: inherit;
+      border-radius: 9px;
+      border: 1px solid #476159;
+      padding: 11px 14px;
+      background: #213934;
+      color: #edf6f2;
+    }
+    button {
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    button.primary {
+      background: #b7efd6;
+      color: #132a20;
+      border: 0;
+      font-weight: 650;
+    }
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #c7fae3;
+      outline-offset: 3px;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .lens {
+      background: #050909;
+      border-radius: 12px;
+      padding: 24px;
+      min-height: 200px;
+    }
+    .lens h2 {
+      font-size: 25px;
+    }
+    .lens p {
+      white-space: pre-line;
+    }
+    small,
+    .muted {
+      font-size: 13px;
+      color: #9db8ae;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    details > div {
+      margin-top: 18px;
+    }
+    .row {
+      padding: 14px 0;
+      border-bottom: 1px solid #2a403b;
+    }
+    .row:last-child {
+      border: 0;
+    }
+    .row p {
+      margin: 0 0 8px;
+    }
+    .row button {
+      font-size: 14px;
+      margin-right: 8px;
+      padding: 7px 12px;
+    }
+    ol {
+      padding-left: 21px;
+      color: #b7ccc4;
+      line-height: 1.65;
+    }
+    #error {
+      color: #ffc6ad;
+      margin: 0;
+    }
+    #error:empty {
+      display: none;
+    }
+    input {
+      max-width: 100%;
+      width: 100%;
+      margin: 12px 0;
+    }
+    #voice-heard {
+      font-style: italic;
+    }
+    #body {
+      color: #e0eee8;
+    }
+    #phase {
+      display: block;
+      margin-top: 20px;
+    }
+    a {
+      color: #b7efd6;
+    }
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 0 16px;
+        margin-top: 20px;
+      }
+      header {
+        align-items: flex-start;
+      }
+      section,
+      details.panel {
+        padding: 18px;
+      }
+    }
+    [hidden]{display:none!important}
+    .demo-tabs{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
+    .demo-tabs [aria-selected="true"]{background:#b6f2d7;color:#10241e;border-color:#b6f2d7}
+    .tool-frame{width:100%;height:max(500px,calc(100vh - 190px));border:1px solid #44635b;border-radius:14px;background:#fff}
+  </style>
+  <header>
+    <div>
+      <h1>Lumi</h1>
+      <p class="sub">Glasses demo desk</p>
+    </div>
+    <span class="tag">Synthetic ward · local demo</span>
+  </header>
+  <nav class="demo-tabs" role="tablist" aria-label="Demo tools">
+    <button id="tab-demo" role="tab" aria-selected="true" aria-controls="panel-demo" data-tab="demo">Demo</button>
+    <button id="tab-monitor" role="tab" aria-selected="false" aria-controls="panel-monitor" data-tab="monitor" tabindex="-1">Blood pressure</button>
+    <button id="tab-patients" role="tab" aria-selected="false" aria-controls="panel-patients" data-tab="patients" tabindex="-1">Patient QR</button>
+  </nav>
+  <div id="panel-demo" role="tabpanel" aria-labelledby="tab-demo">
+
+  <section>
+    <h2>Connection</h2>
+    <div class="status-row">
+      <span class="status" id="ward-status">Ward · connecting</span
+      ><span class="status" id="glasses-status">Glasses · waiting</span
+      ><span class="status" id="ben-status">Ben · connecting</span
+      ><span class="status" id="input-status">Voice · checking</span>
+    </div>
+    <p id="next-step" role="status">Connecting this page to the local ward…</p>
+    <div class="buttons"><button id="reconnect">Reconnect demo</button></div>
+    <p id="error" role="alert"></p>
+    <details style="margin-top: 18px">
+      <summary>Phone and glasses setup</summary>
+      <ol>
+        <li>
+          Connect the Android phone to this computer by USB. Wear the glasses
+          and check that Meta AI shows them connected.
+        </li>
+        <li>
+          In HospitalOS on the phone: allow Bluetooth, connect to Meta AI, then
+          start the glasses display. Meta AI Developer Mode must be enabled.
+        </li>
+        <li>
+          Keep HospitalOS open and the phone unlocked. This page connects Aino’s
+          display and Ben’s demo responder automatically.
+        </li>
+        <li>
+          For speech, allow the glasses microphone in phone setup, then tap
+          <b>Enable glasses voice</b>. Say <b>“Hey Lumi”</b>, pause for
+          Listening, then your command. Glasses voice stays enabled until
+          stopped, the phone app leaves the foreground, or the glasses
+          disconnect. The display stays clear between interactions; new requests
+          and messages bring it back.
+        </li>
+      </ol>
+      <p class="muted">
+        Reconnect demo reconnects this web page. It cannot pair Bluetooth, grant
+        phone permissions, or restart a failed glasses session.
+      </p>
+    </details>
+  </section>
+  <div class="grid">
+    <section>
+      <h2>Send from Ben</h2>
+      <p>Send a routine assistance request to Aino’s glasses.</p>
+      <div class="buttons">
+        <button class="primary" id="incoming" disabled>
+          Send request · room 7</button
+        ><button id="ben-message" disabled>Send a message</button>
+      </div>
+      <label for="ben-message-text">Ben’s message (up to 160 characters)</label
+      ><input
+        id="ben-message-text"
+        maxlength="160"
+        value="Can you bring the transfer belt?"
+        autocomplete="off"
+      />
+      <p id="send-status" role="status">Waiting for the glasses.</p>
+      <p class="muted">
+        Request: “Bring the transfer belt.” Read the card, hold still briefly,
+        then tilt right and hold briefly to accept. No activation phrase needed.
+        Tilt your head toward your left shoulder to close the card without
+        declining.
+      </p>
+      <p class="muted">
+        Message: “Can you bring the transfer belt?” Tilt right to open it, or
+        tilt left to leave it unread for later. You can also say “Hey Lumi”,
+        then “Read message”.
+      </p>
+    </section>
+    <section>
+      <h2>On the glasses</h2>
+      <div class="lens">
+        <h2 id="title">Waiting for display</h2>
+        <p id="body">The live card will appear here.</p>
+        <p id="hint"></p>
+        <small id="phase">No current display state</small>
+      </div>
+      <p class="muted">
+        Controller mirror; the real glasses remain the place to review and
+        confirm. A stale card is cleared when the connection is lost.
+      </p>
+    </section>
+  </div>
+  <section style="margin-top: 18px">
+    <h2>Recent requests</h2>
+    <div id="tasks"><p>No requests loaded.</p></div>
+    <p class="muted">
+      Delivered means received by the device. Accepted means the wearer
+      confirmed. Completion is a separate action. Unaccepted requests expire
+      after two minutes.
+    </p>
+  </section>
+  <details class="panel">
+    <summary>Bedside reading demo and saved records</summary>
+    <div>
+      <p>
+        <a href="/monitor" target="_blank" rel="noopener"
+          >Open the blood-pressure monitor</a
+        >
+      </p>
+      <p>
+        Use the supported synthetic HOS-BP-1 monitor scene. Camera access must
+        be allowed in phone setup.
+      </p>
+      <ol>
+        <li>
+          “Hey Lumi” → “Select patient demo A” → review → tilt right to confirm.
+        </li>
+        <li>“Capture reading” → look at the supported monitor.</li>
+        <li>
+          Review every value → tilt right to save. To correct: “Correct systolic
+          141”.
+        </li>
+        <li>“Share reading with Ben” → review → tilt right to send.</li>
+      </ol>
+      <p class="muted">
+        Pause for each new card. Say “Hey Lumi” again if the command window has
+        closed. Saved records are synthetic local records, not an EHR. Captured
+        time does not prove measurement freshness.
+      </p>
+      <p><a href="/patients" target="_blank" rel="noopener">Open synthetic patient QR codes</a> · Say “Scan patient”, review the name, then tilt right to confirm. Voice selection remains available.</p>
+      <h3>Manual patient notes</h3>
+      <p>
+        Confirm the patient, then say “Save to patient records that I gave 400mg
+        of ibuprofen at 12:00.” Read the exact statement, then say “Save note”
+        or tilt right. Say “Edit note” to dictate a replacement. Notes are
+        author-reported; no medication or event-time inference.
+      </p>
+      <div id="notes"><p>No saved notes loaded.</p></div>
+      <h3>Saved readings</h3>
+      <div id="records"><p>No records loaded.</p></div>
+    </div>
+  </details>
+  <details class="panel">
+    <summary>Troubleshooting and optional computer microphone</summary>
+    <div>
+      <p id="debug-status">Waiting for connection information.</p>
+      <p>
+        <b>No eligible device:</b> check Meta AI’s connection and Developer
+        Mode, then reopen HospitalOS. <b>No tilt response:</b> check the phone’s
+        head-motion status, wait for the request card and return upright before
+        each tilt. <b>No voice response:</b> check glasses voice is enabled and
+        HospitalOS remains open on the phone.
+      </p>
+      <h3>Computer microphone fallback</h3>
+      <p class="muted">
+        Optional, explicitly separate from glasses speech. English recognition
+        runs on this computer. This input stops when the page is hidden,
+        disconnected, or after five minutes.
+      </p>
+      <div class="buttons">
+        <button id="voice-start">Enable computer microphone</button
+        ><button id="voice-stop" disabled>Stop computer microphone</button>
+      </div>
+      <p id="voice-status" role="status">Computer microphone off</p>
+      <p id="voice-heard"></p>
+      <details>
+        <summary>Developer controls · injected input</summary>
+        <div>
+          <p class="muted">
+            These inject commands into the controller. They do not test physical
+            speech or head tracking. Stop glasses voice before using injected
+            speech.
+          </p>
+          <button data-kind="wake">Open command window</button
+          ><input
+            id="words"
+            aria-label="Command to inject"
+            value="review request in room seven"
+          />
+          <div class="buttons">
+            <button id="speak">Inject command</button
+            ><button data-gesture="nod">Simulate double nod</button
+            ><button data-gesture="shake">Simulate head shake</button>
+          </div>
+        </div>
+      </details>
+    </div>
+  </details>
+  <section>
+    <h2>Saved messages</h2>
+    <p>
+      On the glasses: “Hey Lumi” → “Message Ben” → dictate → review → tilt right
+      or say “Send message”. Say “Edit message” to replace the draft. Short
+      messages are saved locally after confirmation.
+    </p>
+    <div id="messages"><p>No messages loaded.</p></div>
+  </section>
+  <section class="panel"><h2>Ward-wide help</h2><p>Send from Ben to all available connected nurses. Sara below is a simulated colleague.</p><button id="broadcast">Request 2 nurses · room 12</button><div id="sara-status">Sara connecting…</div><div id="sara-requests"></div></section>
+  </div>
+  <section id="panel-monitor" role="tabpanel" aria-labelledby="tab-monitor" hidden><iframe class="tool-frame" title="Synthetic blood pressure monitor" src="/monitor" allow="fullscreen" loading="lazy"></iframe></section>
+  <section id="panel-patients" role="tabpanel" aria-labelledby="tab-patients" hidden><iframe class="tool-frame" title="Synthetic patient QR cards" src="/patients" loading="lazy"></iframe></section>
+  <script type="module">
+    import { attachLiveVoice } from "/live-voice.js";
+    const $ = (id) => document.getElementById(id),
+      endpoint = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}`;
+    let control, sara,
+      ben,
+      controllerState,
+      wardReady = false,
+      benReady = false,
+      headsetReady = false,
+      retry,
+      epoch = 0,
+      pending = null,
+      lastTasks = [];
+    function showTab(name){
+      for(const b of document.querySelectorAll('[data-tab]')){const active=b.dataset.tab===name;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;document.getElementById('panel-'+b.dataset.tab).hidden=!active;}
+    }
+    for(const b of document.querySelectorAll('[data-tab]')){
+      b.onclick=()=>showTab(b.dataset.tab);
+      b.onkeydown=e=>{if(['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();const tabs=[...document.querySelectorAll('[data-tab]')];const next=tabs[(tabs.indexOf(b)+(e.key==='ArrowRight'?1:2))%3];next.focus();showTab(next.dataset.tab)}};
+    }
+    for(const link of document.querySelectorAll('a[href="/monitor"],a[href="/patients"]'))link.onclick=e=>{e.preventDefault();const name=link.getAttribute('href').slice(1);showTab(name);document.getElementById('tab-'+name).focus();window.scrollTo(0,0)};
+    function sendInput(input) {
+      if (control?.readyState === 1)
+        control.send(JSON.stringify({ type: "sim.input", input }));
+    }
+    const voice = attachLiveVoice({
+      state: () => controllerState,
+      connected: () => wardReady,
+      token: () => "aino-demo",
+      sendInput,
+    });
+    function badge(id, label, ready) {
+      $(id).textContent = label;
+      $(id).className = "status " + (ready ? "ok" : "");
+    }
+    function paint() {
+      $("broadcast").disabled=!(wardReady&&benReady&&headsetReady)||!!pending;
+      badge(
+        "ward-status",
+        wardReady ? "Ward · connected" : "Ward · connecting",
+        wardReady,
+      );
+      badge(
+        "glasses-status",
+        headsetReady ? "Glasses · ready" : "Glasses · not ready",
+        headsetReady,
+      );
+      badge(
+        "ben-status",
+        benReady ? "Ben · connected" : "Ben · connecting",
+        benReady,
+      );
+      badge(
+        "input-status",
+        controllerState?.glassesVoice
+          ? "Glasses voice · enabled"
+          : voice.isActive()
+            ? "Computer voice · enabled"
+            : "Voice · off",
+        controllerState?.glassesVoice || voice.isActive(),
+      );
+      $("incoming").disabled = $("ben-message").disabled =
+        !(wardReady && benReady && headsetReady) || !!pending;
+      $("voice-start").disabled =
+        !headsetReady || !!controllerState?.glassesVoice || voice.isActive();
+      $("next-step").textContent = !wardReady
+        ? "Connecting to the local ward. Reconnect if this persists."
+        : !headsetReady
+          ? "Open HospitalOS on the phone and start the glasses display. Check Meta AI if the phone reports a session error."
+          : !benReady
+            ? "Connecting Ben’s demo responder…"
+            : "Ready. Send Ben’s request, then accept it on the glasses with a brief right tilt.";
+      $("debug-status").textContent =
+        `Wearer: Aino · ${headsetReady ? "display ready" : "display unavailable"} · ${controllerState ? "controller state received" : "waiting for controller state"}. ${controllerState?.motion ? "Motion: " + controllerState.motion.state + " · " + controllerState.motion.samples + " samples · " + controllerState.motion.ageMs + " ms ago · " + controllerState.motion.source + " · " + controllerState.motion.status : "Motion diagnostics waiting for updated app."}`;
+    }
+    function clearCard() {
+      controllerState = undefined;
+      $("title").textContent = "Display disconnected";
+      $("body").textContent = "Reconnect HospitalOS on the phone.";
+      $("hint").textContent = "";
+      $("phase").textContent = "No current display state";
+    }
+    function command(fields) {
+      if (!benReady || ben?.readyState !== 1) {
+        $("error").textContent = "Ben is disconnected. Reconnect demo.";
+        return;
+      }
+      const id = crypto.randomUUID();
+      ben.send(JSON.stringify({ id, ...fields }));
+      return id;
+    }
+    function sendDemo(fields) {
+      if (pending) return;
+      $("error").textContent = "";
+      pending = command(fields);
+      $("send-status").textContent = "Sending…";
+      paint();
+      const id = pending;
+      setTimeout(() => {
+        if (pending === id) {
+          pending = null;
+          $("send-status").textContent =
+            "No acknowledgement. Check recent requests before trying again.";
+          paint();
+        }
+      }, 5000);
+    }
+    function renderTasks(tasks) {
+      lastTasks = tasks;
+      $("tasks").replaceChildren();
+      const visible = [...tasks].reverse().slice(0, 6);
+      if (!visible.length) $("tasks").textContent = "No requests yet.";
+      for (const t of visible) {
+        const row = document.createElement("div");
+        row.className = "row";
+        const p = document.createElement("p");
+        p.textContent = `${t.from} → ${t.required?"available nurses":t.to} · Room ${t.room} · ${t.text} · ${t.status}${t.required?" · "+t.acceptedBy.length+"/"+t.required+" confirmed: "+t.acceptedBy.join(", "):""}`;
+        row.append(p);
+        if (t.attachment) {
+          const a = t.attachment,
+            q = document.createElement("p");
+          q.className = "muted";
+          q.textContent = `${a.patientName} · ${a.patientId} · ${a.values.systolic}/${a.values.diastolic} mmHg · pulse ${a.values.pulse} bpm · captured ${a.capturedAt}`;
+          row.append(q);
+        }
+        const actions =
+          t.to === "ben" && t.status === "delivered"
+            ? [
+                ["Accept as Ben", "request.accept"],
+                ["Decline as Ben", "request.decline"],
+              ]
+            : t.to === "ben" && t.status === "accepted"
+              ? [["Mark complete as Ben", "request.complete"]]
+              : [];
+        for (const [label, type] of actions) {
+          const b = document.createElement("button");
+          b.textContent = label;
+          b.disabled = !benReady;
+          b.onclick = () =>
+            command({ type, taskId: t.id, revision: t.revision });
+          row.append(b);
+        }
+        $("tasks").append(row);
+      }
+      const latest = [...tasks]
+        .reverse()
+        .find((t) => t.from === "ben" && t.to === "aino");
+      if (latest && !pending)
+        $("send-status").textContent = `Latest request · ${latest.status}`;
+    }
+    function renderNotes(notes) {
+      $("notes").replaceChildren();
+      if (!notes.length) $("notes").textContent = "No saved manual notes yet.";
+      for (const n of [...notes].reverse().slice(0, 8)) {
+        const p = document.createElement("p");
+        p.textContent = `${n.patientId} · ${n.text} · author-reported · saved ${n.savedAt}`;
+        $("notes").append(p);
+      }
+    }
+    function renderMessages(messages) {
+      $("messages").replaceChildren();
+      if (!messages.length)
+        $("messages").textContent = "No saved messages yet.";
+      for (const m of [...messages].reverse().slice(0, 10)) {
+        const row = document.createElement("div");
+        row.className = "row";
+        const p = document.createElement("p");
+        p.textContent = `${m.from} → ${m.to} · ${m.text} · ${m.readAt ? "Marked read" : "Saved · not marked read"}`;
+        row.append(p);
+        if (m.to === "ben" && !m.readAt) {
+          const b = document.createElement("button");
+          b.textContent = "Mark read as Ben";
+          b.onclick = () => command({ type: "message.read", messageId: m.id });
+          row.append(b);
+        }
+        $("messages").append(row);
+      }
+    }
+    function schedule() {
+      clearTimeout(retry);
+      retry = setTimeout(connect, 2500);
+    }
+    function connect() {
+      clearTimeout(retry);
+      epoch++;
+      const generation = epoch;
+      voice.stop();
+      control?.close();
+      ben?.close();
+      sara?.close();
+      wardReady = benReady = headsetReady = false;
+      pending = null;
+      clearCard();
+      $("error").textContent = "";
+      paint();
+      control = new WebSocket(endpoint);
+      ben = new WebSocket(endpoint);
+      sara = new WebSocket(endpoint);
+      const helper=sara;
+      helper.onopen=()=>helper.send(JSON.stringify({type:'auth',token:'sara-demo',role:'responder'}));
+      helper.onmessage=e=>{if(generation!==epoch)return;const m=JSON.parse(e.data);
+        if(m.type==='snapshot'){
+          $('sara-status').textContent='Sara · simulated available nurse';$('sara-requests').replaceChildren();
+          for(const t of m.tasks.filter(t=>t.required)){
+            const row=document.createElement('p');row.textContent=`Room ${t.room} · ${t.acceptedBy.length}/${t.required} confirmed · ${t.status}`;
+            if(['sent','delivered'].includes(t.status)){
+              const b=document.createElement('button');b.textContent='Accept as Sara';b.onclick=()=>helper.send(JSON.stringify({id:crypto.randomUUID(),type:'request.accept',taskId:t.id,revision:t.revision}));row.append(b);
+            }$('sara-requests').append(row);
+          }
+        }if(m.type==='ack'&&!m.ok)$('sara-status').textContent=m.reason;
+      };
+      helper.onclose=()=>{if(generation===epoch)$('sara-status').textContent='Sara disconnected · reconnect demo';};
+      const mine = control,
+        peer = ben;
+      mine.onopen = () =>
+        mine.send(
+          JSON.stringify({ type: "auth", token: "aino-demo", role: "control" }),
+        );
+      peer.onopen = () =>
+        peer.send(
+          JSON.stringify({
+            type: "auth",
+            token: "ben-demo",
+            role: "responder",
+          }),
+        );
+      mine.onmessage = (e) => {
+        if (generation !== epoch) return;
+        const m = JSON.parse(e.data);
+        if (m.type === "error") $("error").textContent = m.reason;
+        if (m.type === "snapshot") {
+          renderNotes(m.notes || []);
+          wardReady = true;
+          headsetReady = !!m.staff.find((s) => s.id === "aino")?.reachable;
+          if (!headsetReady) {
+            voice.stop();
+            clearCard();
+          }
+          const rows = (m.observations || []).slice(-5).reverse();
+          $("records").replaceChildren();
+          if (!rows.length) $("records").textContent = "No saved readings yet.";
+          for (const o of rows) {
+            const p = document.createElement("p");
+            p.textContent = `${o.patientId} · ${o.values.systolic}/${o.values.diastolic} mmHg · pulse ${o.values.pulse} bpm · ${o.corrected.length ? "Manually corrected" : "Reviewed"} · ${o.source} · captured ${o.capturedAt}`;
+            $("records").append(p);
+          }
+        }
+        if (m.type === "sim.state" && headsetReady) {
+          controllerState = m;
+          for (const k of ["title", "body", "hint", "phase"])
+            $(k).textContent = m.card[k];
+          $("hint").textContent = m.card.hint
+            .replace(/Wake|wake/g, "Say “Hey Lumi”")
+            .replace(
+              "Double nod or say ‘accept request’ · shake to decline",
+              "Tilt right to accept · tilt left to close",
+            );
+          if (m.glassesVoice || voice.isActive())
+            $("hint").textContent = $("hint").textContent.replace(
+              "Microphone off",
+              "Command window closed",
+            );
+          $("phase").textContent =
+            m.card.phase === "quiet"
+              ? "Display cleared · waiting for activation or a new notification"
+              : m.card.microphone
+                ? "Command window open"
+                : "Command window closed";
+        }
+        paint();
+      };
+      peer.onmessage = (e) => {
+        if (generation !== epoch) return;
+        const m = JSON.parse(e.data);
+        if (m.type === "snapshot") {
+          benReady = true;
+          for (const t of m.tasks)
+            if (t.to === "ben" && t.status === "sent")
+              command({
+                type: "request.delivered",
+                taskId: t.id,
+                revision: t.revision,
+              });
+          renderTasks(m.tasks);
+          renderMessages(m.messages || []);
+        }
+        if (m.type === "ack") {
+          if (m.id === pending) {
+            pending = null;
+            $("send-status").textContent = m.ok
+              ? "Sent to the ward"
+              : m.reason || "Request rejected";
+          }
+          if (!m.ok) $("error").textContent = m.reason || "Action rejected";
+        }
+        if (m.type === "error") $("error").textContent = m.reason;
+        paint();
+      };
+      const lost = () => {
+        if (generation !== epoch) return;
+        wardReady = benReady = headsetReady = false;
+        voice.stop();
+        clearCard();
+        paint();
+        schedule();
+      };
+      mine.onclose = peer.onclose = lost;
+    }
+    $("broadcast").onclick=()=>sendDemo({type:"request.broadcast",room:"12",required:2});
+    $("reconnect").onclick = connect;
+    $("incoming").onclick = () =>
+      sendDemo({
+        type: "request.create",
+        to: "aino",
+        room: "7",
+        text: "bring the transfer belt",
+      });
+    $("ben-message").onclick = () =>
+      sendDemo({
+        type: "message.send",
+        to: "aino",
+        text: $("ben-message-text").value.trim(),
+      });
+    $("speak").onclick = () =>
+      sendInput({ kind: "transcript", text: $("words").value });
+    document
+      .querySelectorAll("[data-kind]")
+      .forEach((b) => (b.onclick = () => sendInput({ kind: b.dataset.kind })));
+    document
+      .querySelectorAll("[data-gesture]")
+      .forEach(
+        (b) =>
+          (b.onclick = () =>
+            sendInput({ kind: "gesture", value: b.dataset.gesture })),
+      );
+    setInterval(paint, 1000);
+    connect();
+  </script>
+</html>

@@ -1,0 +1,32 @@
+{
+  "scope": "synthetic only; no real glasses validation",
+  "profile": "HOS-BP-1/v1",
+  "android_tests": 69,
+  "android_failures": 0,
+  "server_tests_at_capture_checkpoint": 42,
+  "server_failures": 0,
+  "evaluation_csv_sha256": "312232b765932e29747a1bf55288cb4035f21137ed6ff8b1a77d6a30150df96f",
+  "runtime_direct_frame_rehearsal": "passed final APK on retry: patient/capture/correct/save/duplicate/share/Ben acceptance/participant filter/Ben is coming on glasses",
+  "runtime_fault_rehearsal": "passed blur/glare/crop/missing-label/ambiguous/denied/unavailable/patient switch/stale result/cancel/retry",
+  "dat_mock_camera_rehearsal": "passed final APK fixed-slot profile: correction, duplicate save, private record, exact separate attachment, Ben acceptance and Ben is coming on glasses",
+  "prototype_preserved_files": 45,
+  "visual_check": "official Chrome Meta simulator saved and accepted cards verified; simulator-saved.png and simulator-accepted.png",
+  "observed_timing_limitation": "One clear-frame attempt after fault suite reached bounded 5-second timeout with no save; immediate retry passed without app/server restart. Cause unconfirmed.",
+  "typescript_check": "passed",
+  "android_build": "debug APK assembled; release Kotlin compiled",
+  "optical_followup": {
+    "scope": "transformed synthetic screens only; real camera not yet validated",
+    "development_seed": 113708,
+    "heldout_seed": 672941,
+    "development_clear_exact": 34,
+    "development_clear_total": 36,
+    "development_adverse_rejected": 24,
+    "heldout_clear_exact": 38,
+    "heldout_clear_total": 40,
+    "heldout_adverse_rejected": 80,
+    "heldout_adverse_total": 80,
+    "wrong_proposals": 0,
+    "original_330_scene_regression": "passed unchanged",
+    "heldout_sha256": "0fd31193fa1ebf42ceed3aeeda7a38376b01658cd7a4bf929e362a9f354777c2"
+  }
+}

@@ -1,0 +1,3638 @@
+{
+  "seeds": {
+    "development": 161115,
+    "heldout": 918274
+  },
+  "cases": [
+    {
+      "split": "development",
+      "file": "development-fixed-slots/e7e07e4a7422b6ef.png",
+      "kind": "clear",
+      "values": [
+        564,
+        490,
+        399
+      ],
+      "sha256": "3b264205d623efa110086d8e3abaf553afce38191dc2d1739839ec221fdcacb9"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c61a8202a7e2c245.png",
+      "kind": "clear",
+      "values": [
+        779,
+        411,
+        614
+      ],
+      "sha256": "ffa6f29031fa61d23048d3ccf2032acc50046a8a0c79f4236c051269301e8c4d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/b027b93da4fc3ead.png",
+      "kind": "clear",
+      "values": [
+        618,
+        521,
+        619
+      ],
+      "sha256": "6db80124695f2d42608ce686b1be7ad0ed0cd7ca97bfa939ed2c43c2ca66a199"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4d2175c9050d637e.png",
+      "kind": "clear",
+      "values": [
+        471,
+        962,
+        391
+      ],
+      "sha256": "689274de586f361999d52aa1f06a75e31ec4889aaf8d6ff59f3d53400332e4f3"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/a41a10da0f329163.png",
+      "kind": "clear",
+      "values": [
+        246,
+        917,
+        518
+      ],
+      "sha256": "0f501c393d066a88c7617c2939fb16ec903827e821f3a114989f4fc0ddb56088"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/08bc4cef2fb1885d.png",
+      "kind": "clear",
+      "values": [
+        628,
+        611,
+        453
+      ],
+      "sha256": "7ef28cc7946fef74f2cbd311aef9790f3c9c2bb08de0dadec501582ef66886e0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3325cd74ed178649.png",
+      "kind": "clear",
+      "values": [
+        760,
+        342,
+        17
+      ],
+      "sha256": "0ca16d9e76c94d87cfba50458463855d904f25b476a4e0b97d0775cf18350238"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1cea3775aa1957fb.png",
+      "kind": "clear",
+      "values": [
+        352,
+        980,
+        241
+      ],
+      "sha256": "42af053cb2b4324d34e8172e8473ab353caedb4f9dda6bbff47500f20cd0848b"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/d7c43568fc2d173d.png",
+      "kind": "clear",
+      "values": [
+        479,
+        790,
+        545
+      ],
+      "sha256": "bb622fbfa7c9f942a4502eb72dadf189ef5adeff2ca6191f057a923999f7de8a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/06391255d5fffbff.png",
+      "kind": "clear",
+      "values": [
+        858,
+        959,
+        379
+      ],
+      "sha256": "4555f0eb065ef7d2928858e6ead403dfbfbff64d335c34b2e0de786437c69307"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/f84aa7f2bf93a8b0.png",
+      "kind": "clear",
+      "values": [
+        36,
+        457,
+        925
+      ],
+      "sha256": "e303f5498c7d9671e4d86b2267d266a9226d859419e57393a39fdaf8d22c075b"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/b0170f832647d0c1.png",
+      "kind": "clear",
+      "values": [
+        954,
+        141,
+        324
+      ],
+      "sha256": "7f57a1c5462566206eacacfd0fb728f1c05f9cbaae3ff4a9636f19816581d71c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/6dd1fe8a57b1b5b7.png",
+      "kind": "clear",
+      "values": [
+        631,
+        711,
+        705
+      ],
+      "sha256": "63aad2b7e000c566c69cdff4efda9e2892ceb608fbffd778d8ffe16b9e9e5787"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/7d7b682fa2eca3d2.png",
+      "kind": "clear",
+      "values": [
+        98,
+        51,
+        218
+      ],
+      "sha256": "26546fba51e5c479c73204c3bc875415a662a64e0cc3c35d6e407e69f9069e04"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/807c3e89352653d6.png",
+      "kind": "clear",
+      "values": [
+        637,
+        946,
+        201
+      ],
+      "sha256": "33c25d8d359d2e6939aac765b17cd41d70e51f2eccc4786b174721abf56cd8f0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/55f61f4e4ca13672.png",
+      "kind": "clear",
+      "values": [
+        133,
+        113,
+        32
+      ],
+      "sha256": "2132a61c79beb37ea391b8f6356525936be732f71edb4716d6fce93c1d53b298"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/d9852c1f11e78e74.png",
+      "kind": "clear",
+      "values": [
+        510,
+        819,
+        243
+      ],
+      "sha256": "3c368d5588476e4f52be47e1adb6f838b28e74e00dce0b8bf69543e500d3c66c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/573c9711eff8ea31.png",
+      "kind": "clear",
+      "values": [
+        752,
+        214,
+        440
+      ],
+      "sha256": "0a6b849e8d7569cc7b0d3dc042ec9941b6d9e77ac16e8207af6946eb5275a900"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ab013c6285536ffc.png",
+      "kind": "clear",
+      "values": [
+        619,
+        435,
+        951
+      ],
+      "sha256": "f3826a7cd70385cc9154bd85c1aa5577bed598a812d62a1ea3f76c2690168897"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/42f2587211e122fd.png",
+      "kind": "clear",
+      "values": [
+        325,
+        790,
+        547
+      ],
+      "sha256": "f2bc720786b3d7efe7ebe62defd092f252edf544934f4aac5250be451184a6e8"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c7dd4d7ff24d44e1.png",
+      "kind": "clear",
+      "values": [
+        729,
+        838,
+        213
+      ],
+      "sha256": "e789c1f9b1f7d90c65d5cb4e50aa880477ef995621926111da040991921293e6"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/64cfb3e88069ec68.png",
+      "kind": "clear",
+      "values": [
+        946,
+        160,
+        624
+      ],
+      "sha256": "c9336002ebc5c76c3bb0648f226f654e65e0f90e13064e83922d9476d05fef12"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/b5b1f2b7989901cd.png",
+      "kind": "clear",
+      "values": [
+        313,
+        805,
+        725
+      ],
+      "sha256": "542e7fa6eb13d53901403393094c70c5ada6d4ca65b1f63017be770057aeb5a2"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5aa3e0e3d7791314.png",
+      "kind": "clear",
+      "values": [
+        497,
+        891,
+        414
+      ],
+      "sha256": "205153ccc5ded5415a8e26c450830e1fc8881138265c3648c6b7222615c93374"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/64c06ca768a7ed99.png",
+      "kind": "clear",
+      "values": [
+        792,
+        286,
+        371
+      ],
+      "sha256": "3761ace54a9adfe51ba31f52cab1a94a3d3463e0a0fdb40aa30de59410e7bc21"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ab3782e8c6ced420.png",
+      "kind": "clear",
+      "values": [
+        971,
+        783,
+        16
+      ],
+      "sha256": "f3e03d3d2297afeb84821e9705481ba31992067effb781f4f9f1c0752f3ce8a8"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/76fa03167ea25965.png",
+      "kind": "clear",
+      "values": [
+        172,
+        495,
+        358
+      ],
+      "sha256": "03df8ffe13a21ff202ded09af3cac2683219399942492d11c741652ee62be2b4"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/799e880e22fb9aed.png",
+      "kind": "clear",
+      "values": [
+        809,
+        241,
+        910
+      ],
+      "sha256": "adee3db0ba19bae28898b998cf569bf32bf8bb266dbadd6e7a922558b059c99c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/807f2f2004c5e22b.png",
+      "kind": "clear",
+      "values": [
+        223,
+        394,
+        882
+      ],
+      "sha256": "20885d0ce335fbcf8860ffcfc7345b5ccdcfe1d30acf1576d37bd5efee51d80f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/da02c0b94d57b2e3.png",
+      "kind": "clear",
+      "values": [
+        3,
+        948,
+        596
+      ],
+      "sha256": "67f83548d91624d5277caaeb8434bb05d60c6e85f27454e3452116f7bc8407e7"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/56aea54f18de33e3.png",
+      "kind": "clear",
+      "values": [
+        879,
+        385,
+        488
+      ],
+      "sha256": "e819d659292e69b92a7854bde1fee0b643f85699d5d0ed8be0bf2ea0a9825800"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8ac96522d3e4f6cb.png",
+      "kind": "clear",
+      "values": [
+        697,
+        389,
+        366
+      ],
+      "sha256": "f2ceec1652fff1a80c8ab87da3f3e77a2758bb0663ffe17993e6b9241440b585"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/0f0d98b762b3fb3c.png",
+      "kind": "clear",
+      "values": [
+        631,
+        184,
+        939
+      ],
+      "sha256": "2285abfc65cb645e62a6605d5d38695b09bc9575ac20f2a0615991626073d9f1"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/b7112c25af2e8354.png",
+      "kind": "clear",
+      "values": [
+        787,
+        514,
+        175
+      ],
+      "sha256": "0ebefae393d83102091d0f8db77878f031b3c81a3b24eee0d2f0e90aec11c203"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/650abf9eefb1bbab.png",
+      "kind": "clear",
+      "values": [
+        370,
+        89,
+        599
+      ],
+      "sha256": "f6498b8f4b254a3d1a95cfcd84814627c6f5a20afc8149e7aa6c58be4d5236da"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/70ac30baa359525a.png",
+      "kind": "clear",
+      "values": [
+        484,
+        782,
+        56
+      ],
+      "sha256": "8e5b18331ec5d74e2a8d84306326dbae8f5e162b625eba0183f8dee295e62dd8"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/33433683921853ee.png",
+      "kind": "clear",
+      "values": [
+        613,
+        332,
+        24
+      ],
+      "sha256": "bfc2e32a2adcb9a1d5f2b8b7990e697ab663995e589540295119ea7fd083bf32"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/94593bc33a6a5fd3.png",
+      "kind": "clear",
+      "values": [
+        799,
+        570,
+        880
+      ],
+      "sha256": "e5404ff0e5c3a54faa04f2ba82585c0dbeb87d6acabc4880c6157494a646b45b"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5cc30f21510a1beb.png",
+      "kind": "clear",
+      "values": [
+        878,
+        406,
+        38
+      ],
+      "sha256": "306a74b7ff875c03c3410e930709b2c5650502d68cb0f3957ea01a0cde8f63a1"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/862fe3d545f53545.png",
+      "kind": "clear",
+      "values": [
+        921,
+        601,
+        246
+      ],
+      "sha256": "4da4aada04fc5c211bbcedd1120fd0880fa4a94ae52edf0a12e35c142189687d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/efea4572323d5d3d.png",
+      "kind": "clear",
+      "values": [
+        796,
+        862,
+        10
+      ],
+      "sha256": "c94e9a3aa1fd8a3a90a70092e241b862f0479b949fa20f5583243aa42ba2e54a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/10675f5367247dc6.png",
+      "kind": "clear",
+      "values": [
+        287,
+        86,
+        552
+      ],
+      "sha256": "45a8275a7083a8765e45a5439302c1602c81802447e2c5910fb540788aa2faf0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/95917fae0a8f6b5c.png",
+      "kind": "clear",
+      "values": [
+        599,
+        313,
+        41
+      ],
+      "sha256": "3013b854dcbb24343aa9eb965ee5bdec6464b461f519767b7d4632e832f6e5bd"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/da7029c5d3e072a4.png",
+      "kind": "clear",
+      "values": [
+        8,
+        173,
+        853
+      ],
+      "sha256": "df1a3279d661429499a7a4ab1d1cddda888f70c6881dd8a0f1d9eccad5c24908"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c8f112de861dea1f.png",
+      "kind": "clear",
+      "values": [
+        768,
+        160,
+        162
+      ],
+      "sha256": "a9857651ec8292975964af30096aee3321332a011634eee20e18f72a054089ac"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/a9c44564d1ff2666.png",
+      "kind": "clear",
+      "values": [
+        572,
+        592,
+        801
+      ],
+      "sha256": "34150c4731ceb2e6155edfe3b32d48fceccf29129efbd4179458b8b83c2adc53"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/7c9f8d55d4823b0c.png",
+      "kind": "clear",
+      "values": [
+        652,
+        763,
+        108
+      ],
+      "sha256": "a6a4ca4985c24048fe2d0ec2add0f76eb318493131f82e252b96ad43f48e5314"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4ded0f2fd0a3ac3c.png",
+      "kind": "clear",
+      "values": [
+        121,
+        751,
+        346
+      ],
+      "sha256": "f7f87866f787ff114b59a0cd50054cc1d44f15a9e8dd5ed36eef0ba04b50a0a4"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/7729642cbbaa4868.png",
+      "kind": "clear",
+      "values": [
+        207,
+        596,
+        654
+      ],
+      "sha256": "d749e4ed35e7093ae367c3a2a9a931444e6cae826916543f9353b18afc976da4"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/25613974de0cb02f.png",
+      "kind": "clear",
+      "values": [
+        673,
+        983,
+        801
+      ],
+      "sha256": "9f33df48222cc68bf4f94551caeea647b3ad488e8e9bd06fc443ae56eb53b1f4"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/f4593acc8f2da4d2.png",
+      "kind": "clear",
+      "values": [
+        287,
+        247,
+        197
+      ],
+      "sha256": "7765b8021390d4c68350bbbc201bd6e6ab461a85028d8a9e01a355ffdf011f95"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/bcf357d9b9edf643.png",
+      "kind": "clear",
+      "values": [
+        243,
+        374,
+        865
+      ],
+      "sha256": "f84bc74675ae765ba2b6e2312676d1fe2a6c7949b6c5077e9298f171d6dfaea0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/880e7266fcd7c5b6.png",
+      "kind": "clear",
+      "values": [
+        663,
+        147,
+        141
+      ],
+      "sha256": "25a4f8580f791b4b2d228bd50c462e02f0c81cc6417d31de4480b1b678d0d793"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/04c5cf0c8fb7e16b.png",
+      "kind": "clear",
+      "values": [
+        399,
+        349,
+        480
+      ],
+      "sha256": "81dda72545b2a1771eb0459cba150ee6c839d263ccf4eda61ea17283aa161fdf"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8e55b5447505350d.png",
+      "kind": "clear",
+      "values": [
+        969,
+        75,
+        807
+      ],
+      "sha256": "9725383b8399d616cba29d69137e7580ad9e0c643d286c17148658e8d9938e6a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/88fa5504393d0353.png",
+      "kind": "clear",
+      "values": [
+        340,
+        145,
+        909
+      ],
+      "sha256": "50506857bc88cee51989b1d87b9b954bb3f4c78dc65883b8b5d89503d07e4bc9"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/6d74d520b6111f6b.png",
+      "kind": "clear",
+      "values": [
+        691,
+        936,
+        442
+      ],
+      "sha256": "4017366858c2afbb1c38217c0e32a4b8e0256630e4362b8216453c6125f5fb77"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/92fd36ce6170e7aa.png",
+      "kind": "clear",
+      "values": [
+        635,
+        341,
+        214
+      ],
+      "sha256": "bab94f9f745bef6a8c3878d138777ca236bdb51cafee0f974f976cb1ae53358c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1bd1467052aec761.png",
+      "kind": "clear",
+      "values": [
+        400,
+        600,
+        144
+      ],
+      "sha256": "66379a7f7b79ceeffaa91403aa50b9fdca3c3ca7ac73deabb9c9ed1e87f4e64f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5a7c8a8d83fae51f.png",
+      "kind": "clear",
+      "values": [
+        940,
+        898,
+        452
+      ],
+      "sha256": "ba369bedd756f7cd7626580cfd484b2237c1bab329eb6e1bba1e432b05d05ecd"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/6ec60727d8c07300.png",
+      "kind": "clear",
+      "values": [
+        649,
+        165,
+        460
+      ],
+      "sha256": "80c9c919955eb04da98341f714a75e6080bff785b863d09a6060ba2ae77ce525"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c58c8d801ff834a9.png",
+      "kind": "clear",
+      "values": [
+        752,
+        522,
+        831
+      ],
+      "sha256": "58bb145b457ec59d8857bf568d21614643ffe9fb22ab2a8058c9e70888388e3a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/72cf8019eb9ae502.png",
+      "kind": "clear",
+      "values": [
+        105,
+        353,
+        157
+      ],
+      "sha256": "af6882aaca8586b7663b24d4994721b23508fb4fcfb6448f7ec019e95c084678"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/f602ddfe678c1161.png",
+      "kind": "clear",
+      "values": [
+        325,
+        72,
+        42
+      ],
+      "sha256": "e0c79a1b4a3ecf122ac4e2cfc0014d59dc26731cb413578534bc619163963038"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5f276eaae3b95981.png",
+      "kind": "clear",
+      "values": [
+        997,
+        439,
+        786
+      ],
+      "sha256": "66dfda0478631d2cd809dbda03299d678777d10f3a64d1efcaf253f0fb52d3b9"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/0718698a2eb54a79.png",
+      "kind": "clear",
+      "values": [
+        964,
+        865,
+        800
+      ],
+      "sha256": "769071dcf4235ff027186dd5bd5468f63fda16bc20f74d089ac370009f11dab6"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/50394688c252bf9b.png",
+      "kind": "clear",
+      "values": [
+        711,
+        615,
+        905
+      ],
+      "sha256": "156cb1148fa01409145ac6f2d3174a4bf6dc8fe3a9d804fb1a848219705c85cb"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ba01e601307d6603.png",
+      "kind": "clear",
+      "values": [
+        402,
+        825,
+        762
+      ],
+      "sha256": "061130c31eeb9f253cddc66e56258c1a35152f5f54d48b984c7e264ff65ab358"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c700ef0fd0daf71e.png",
+      "kind": "clear",
+      "values": [
+        533,
+        202,
+        274
+      ],
+      "sha256": "527faf1d0689487959169994dc5f12e7dead855e9a0ef0fb85e6b218e6c8d6de"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3a8915577168b7f1.png",
+      "kind": "clear",
+      "values": [
+        684,
+        112,
+        897
+      ],
+      "sha256": "6499bc9cb56ec3ad1d9c9711f7ad27fa5f92e538a726228513f36feb647dd857"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1ba772c1b994639a.png",
+      "kind": "clear",
+      "values": [
+        54,
+        201,
+        551
+      ],
+      "sha256": "e2d8f69cd4ec48ed2105b6efa3c3cf37a5e51d0a6785399e2b12c4d446181986"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/f4dd8d6955351a0f.png",
+      "kind": "clear",
+      "values": [
+        607,
+        662,
+        697
+      ],
+      "sha256": "12dd5d4dfb2b3f80d1382dda1dafb25cbef82d3b09abb697f3b2dbb161965825"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/6e019ecc1490a7d1.png",
+      "kind": "clear",
+      "values": [
+        969,
+        960,
+        54
+      ],
+      "sha256": "9a2fa04597bb8502dffd15f49c2a477a89a53738be5680abed03cebe2f1209be"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/29e343817b06bc5b.png",
+      "kind": "clear",
+      "values": [
+        301,
+        902,
+        29
+      ],
+      "sha256": "56e2c2ddddf054fa53ee465323b2b8eec2666b7cce59d90523cf5e2ea091a521"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/a7e245f6c1cda4ac.png",
+      "kind": "clear",
+      "values": [
+        284,
+        494,
+        444
+      ],
+      "sha256": "3b032017cbb959420562b60bc0dddd2d075b3e43022cbf9ae9cf3ba287a8f25d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/e6152ca1383bcef2.png",
+      "kind": "clear",
+      "values": [
+        939,
+        985,
+        633
+      ],
+      "sha256": "796fbf8bf2ef8f761c512f287a37e4d1877f14edbdf89c30baa3a7a4fa34f27f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/df5b28324d13c6b5.png",
+      "kind": "clear",
+      "values": [
+        9,
+        559,
+        244
+      ],
+      "sha256": "a6ba13af39278c851d3070c5168710d5664128e22d4acaa76230ac26dd146eb9"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/83cecc32f6c4db8d.png",
+      "kind": "clear",
+      "values": [
+        330,
+        620,
+        948
+      ],
+      "sha256": "6004bf1f35396790d9ccaf549e8c7fba03da2f9508697cc3803b4fb1f139df30"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ac8bf1127d1a7a55.png",
+      "kind": "clear",
+      "values": [
+        307,
+        748,
+        817
+      ],
+      "sha256": "79db50da0f22e5fe89933ceaf64884ce5b4b1852fa08523fff74861dbb511c07"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/96dc29025680e035.png",
+      "kind": "clear",
+      "values": [
+        825,
+        632,
+        996
+      ],
+      "sha256": "476513ab81fa580b2958af793c090cf805c8747a61a4bf8d653f661b40d450b4"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1a2be541c0177b03.png",
+      "kind": "blur",
+      "values": [
+        460,
+        369,
+        288
+      ],
+      "sha256": "9653d6a7d726a2b1bc3d268426c6a494511c4e1cd6f0196c9cfe93cb4cfb107f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/7c0b1d7b3d8c5716.png",
+      "kind": "glare",
+      "values": [
+        635,
+        199,
+        924
+      ],
+      "sha256": "2f4f8356d5df1e2696c62f71501481ef6b4eb6f1aa48d92bdbccbd2589474fe7"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4bd65433798e4966.png",
+      "kind": "crop",
+      "values": [
+        334,
+        587,
+        385
+      ],
+      "sha256": "ee0300117593eacb358d25c3243eeacdc3d32c5f7f5194a98bc1082fc5e376c8"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5065f571d79b3587.png",
+      "kind": "missing-label",
+      "values": [
+        200,
+        286,
+        146
+      ],
+      "sha256": "52759f9a1e0a8f29fee5590ca01f0b4593dc14d921186477ed8685fac5877937"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/276d265cef6ca0fd.png",
+      "kind": "ambiguous",
+      "values": [
+        584,
+        230,
+        158
+      ],
+      "sha256": "cd79c29140bf8b8ae3f2c64424b5e685a9caa0d82787973301decdc8cd531150"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/04a689b6718275cb.png",
+      "kind": "unsupported",
+      "values": [
+        80,
+        969,
+        954
+      ],
+      "sha256": "bbca36de5facec55ceb689892d0560c67b0b2bf645084450be0a064934f875f2"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3999b8f515bdcee6.png",
+      "kind": "erased-digit",
+      "values": [
+        446,
+        264,
+        365
+      ],
+      "sha256": "b8c3857dffe28309e4e8981baff4dd43fd3176b5e34904ef28fc378f3ccae0eb"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ae1673c1bb1d3aa0.png",
+      "kind": "blur",
+      "values": [
+        273,
+        715,
+        994
+      ],
+      "sha256": "51474763e461f9a4b579b9e8e5a540e7c8177731d301c27f6c5c926f93e3e637"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/aab0384d64130a0a.png",
+      "kind": "glare",
+      "values": [
+        604,
+        313,
+        857
+      ],
+      "sha256": "ded7589ceee39c1b296f72753a78b70c719e35755f08704e168085faf12b710d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/321cc4bcfef0c579.png",
+      "kind": "crop",
+      "values": [
+        359,
+        587,
+        401
+      ],
+      "sha256": "9b30d38bdd1e7295e011e683b7c5211d62146e6ea055aaccade1d58eb84175d5"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3f75f0f9141c5506.png",
+      "kind": "missing-label",
+      "values": [
+        493,
+        421,
+        602
+      ],
+      "sha256": "9a9aadc746ee82fae4d2550ebf86b722150eb9b1b23bb9d44e1d5e44a9ee95a8"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4e51863a13f67d04.png",
+      "kind": "ambiguous",
+      "values": [
+        783,
+        774,
+        95
+      ],
+      "sha256": "e65aa8e7e53b392f36aa43cb032c1f07311e8f21eca3c6a2aada9f69211b6fc0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8728ee319a173df1.png",
+      "kind": "unsupported",
+      "values": [
+        143,
+        288,
+        255
+      ],
+      "sha256": "530dc0aeb793d82a73c0de887dc1baa376da38de1f660353f3e46e935663f929"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/16e3395435eb8790.png",
+      "kind": "erased-digit",
+      "values": [
+        374,
+        720,
+        366
+      ],
+      "sha256": "82697ee91af688de280ac25ffb2e16161beba65b4cbecb84e4b1b6ad08b10e74"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/9379170b6003837b.png",
+      "kind": "blur",
+      "values": [
+        194,
+        536,
+        586
+      ],
+      "sha256": "85559f54ed3bf443bce336b08a607cdf90d08e46a07e7c73d7517160db408192"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/71a751f997da4f29.png",
+      "kind": "glare",
+      "values": [
+        378,
+        460,
+        981
+      ],
+      "sha256": "d80c78f28d043caada23032a95f182fa52feac55b6aab6d018b28a5d57525131"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c3551f3a9acd81b4.png",
+      "kind": "crop",
+      "values": [
+        70,
+        243,
+        730
+      ],
+      "sha256": "642372fc6e34b67f2c3113ccc6c3b77dbd9c60dafc52f1e88b37b3f062be44f2"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/ef6fb334ba4313d2.png",
+      "kind": "missing-label",
+      "values": [
+        433,
+        221,
+        309
+      ],
+      "sha256": "56ad7a746673f176108131a8eadfa9bda777ef3f203519e791e5c16f16400932"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/6bfc7f27e08d316e.png",
+      "kind": "ambiguous",
+      "values": [
+        394,
+        310,
+        933
+      ],
+      "sha256": "149361616f1034951d5c205031c3ecfea407ff92166eb4034d2eb2147bf0a3e1"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/9b4216f64a205fec.png",
+      "kind": "unsupported",
+      "values": [
+        911,
+        909,
+        925
+      ],
+      "sha256": "d9fc35f1d3a5acd55e73aec66eff7faee3fe34ccca4ed909508fb5422a05538f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/0d2b01d65e3efb9d.png",
+      "kind": "erased-digit",
+      "values": [
+        270,
+        827,
+        639
+      ],
+      "sha256": "945ac99b3db8156a3d41bfa2a921c774cae2c12bda9aece5f4ff9e883ff5898e"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/a424b6a6b1c35543.png",
+      "kind": "blur",
+      "values": [
+        699,
+        402,
+        353
+      ],
+      "sha256": "ca896975119d78cd5b4230afc285f1dee6cbf736e4547c705a810854ff3a5528"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3623ca827edb3628.png",
+      "kind": "glare",
+      "values": [
+        35,
+        719,
+        763
+      ],
+      "sha256": "8abbfb9dd973216530acd95ab497e8bf396b1d4c8133d65730be3d249bae6065"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/982bb75b5aade20f.png",
+      "kind": "crop",
+      "values": [
+        83,
+        401,
+        702
+      ],
+      "sha256": "768e14bfcbbc665b90457419ae0d10c11c0870557365d9a5725fd59c70ea5feb"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/9e931e5439d38e92.png",
+      "kind": "missing-label",
+      "values": [
+        720,
+        839,
+        545
+      ],
+      "sha256": "dcc6c19340822632a875423995e6c43acdc66a2e7568f9502a6d9d9df1b3ef87"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/cfb2ac1329808ddb.png",
+      "kind": "ambiguous",
+      "values": [
+        214,
+        557,
+        623
+      ],
+      "sha256": "90a950e13ea126b1fc6eda7232b548f1de723f97677b25bf032f051e742be077"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/94f79f6cbb6485bc.png",
+      "kind": "unsupported",
+      "values": [
+        857,
+        987,
+        818
+      ],
+      "sha256": "0964d485b78db8e8bff5dab3e0a36b162147b4e6efff6312daaec6df9c22d192"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/9ff13ee5f3be9d50.png",
+      "kind": "erased-digit",
+      "values": [
+        905,
+        190,
+        726
+      ],
+      "sha256": "12dce94d96f4a8fc5ab43839a71378c6ca6ce701145c4826196de5cd0c03e199"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/22738661e6c63fc1.png",
+      "kind": "blur",
+      "values": [
+        965,
+        285,
+        172
+      ],
+      "sha256": "da6adc08e132c5d7e51bae266c61edef18c28dfd4033c98eaad20cc12a8606d2"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/523c6a0c088a81d4.png",
+      "kind": "glare",
+      "values": [
+        61,
+        933,
+        533
+      ],
+      "sha256": "db8ff6694d4eee83ac4cd00cf062fd38cf9fce27a5d98425dd1ec55dbf8f2231"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/be0eed231e08be8f.png",
+      "kind": "crop",
+      "values": [
+        234,
+        5,
+        565
+      ],
+      "sha256": "83cc8acf527f86ece2051ec66309bb85c7d74ff9c09a0eadfd810e345a5e2102"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/adcea75e32f7265e.png",
+      "kind": "missing-label",
+      "values": [
+        64,
+        566,
+        301
+      ],
+      "sha256": "81f7f883d859b4d41745d344b7178f0601f4853768d05df42048b455e3862f8d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/a2ba73bd20399a7d.png",
+      "kind": "ambiguous",
+      "values": [
+        505,
+        45,
+        660
+      ],
+      "sha256": "040a534952061cbd7fc365fc6eb46269129ec83f67c0a01ee7d60527e7c5548f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8e0031529bda2af4.png",
+      "kind": "unsupported",
+      "values": [
+        997,
+        760,
+        882
+      ],
+      "sha256": "f55a2623c36780f796eb7534cdb397266b2c19a7396e19aff285315c039c3726"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/bd51e0167991061a.png",
+      "kind": "erased-digit",
+      "values": [
+        152,
+        411,
+        836
+      ],
+      "sha256": "6e78b3006a0b9f27cc30a30971fee9cf6b69393745d9dc8ef8065dc1e2e04fe0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/33c8c4d3a84ee130.png",
+      "kind": "blur",
+      "values": [
+        737,
+        182,
+        293
+      ],
+      "sha256": "a5e4bbc795093f95224d098b82698d9656a04cda5b1b9d0c962373b820d940f0"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/06948b16317035aa.png",
+      "kind": "glare",
+      "values": [
+        733,
+        792,
+        138
+      ],
+      "sha256": "d5a7ac228706bd806775b602fab89b22e0db665a6cf16996bd581cea8468e80a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/43df636d63aa00d2.png",
+      "kind": "crop",
+      "values": [
+        52,
+        178,
+        957
+      ],
+      "sha256": "0bbdd1adb288879667e16a02b192777a2889f060ee92adb2b790afc0ad2fb26a"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/52a0d002c35337b7.png",
+      "kind": "missing-label",
+      "values": [
+        568,
+        327,
+        437
+      ],
+      "sha256": "0582aa4c95cf94a54c3ba40b31c6013211d38aaa087bc9da908d7b6579f0f08b"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/5cc5e5fb1942e502.png",
+      "kind": "ambiguous",
+      "values": [
+        593,
+        97,
+        370
+      ],
+      "sha256": "389aff0970b998f471962d400ed1795b93237de9fd3f4f9fa0ef33cb0cdd36ef"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/cfb8659493c29d33.png",
+      "kind": "unsupported",
+      "values": [
+        882,
+        928,
+        618
+      ],
+      "sha256": "8ae33b962ffb6426597fbcd245bb2e88f5748d85daab5c7408d4d099c7c1b829"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8eab98e646b31294.png",
+      "kind": "erased-digit",
+      "values": [
+        436,
+        624,
+        844
+      ],
+      "sha256": "abfb5d86a9779399b4fbdf243354daf3b47c02c7f659bea348e5fed8ce4ff34c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4ae35e61ca8432fa.png",
+      "kind": "blur",
+      "values": [
+        330,
+        683,
+        254
+      ],
+      "sha256": "0e9dcb7d5b95c3e3786ae0244d20458f936293dc229cbe097abadb4c1a88ed72"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/e23e23ad00358d76.png",
+      "kind": "glare",
+      "values": [
+        870,
+        554,
+        856
+      ],
+      "sha256": "d27df4812fd808e13ff8113943370912105d76a62f94f40f4143b3dc84719350"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/098385829200ffe9.png",
+      "kind": "crop",
+      "values": [
+        813,
+        5,
+        383
+      ],
+      "sha256": "0f288f580c1a108b678339e7f7a79c00146d98d622764aa8fbfc8d6ba7e2d212"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/fed11c40b03d532f.png",
+      "kind": "missing-label",
+      "values": [
+        709,
+        771,
+        125
+      ],
+      "sha256": "85ef40f925e9de7756357810ec537c71736cf8c5f6bbe05752690f0766c05409"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/45609f1c675c7b23.png",
+      "kind": "ambiguous",
+      "values": [
+        617,
+        904,
+        141
+      ],
+      "sha256": "e86410199e95495e8044f0812bb978d150fed8005b2a146c0e173f1724e5d96e"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/fac669a74a9ae1d9.png",
+      "kind": "unsupported",
+      "values": [
+        377,
+        65,
+        208
+      ],
+      "sha256": "cf522a6caa3cc649b1e818642946693887860c44d6564eeb10ac05ec1ee64596"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1dd4079f37ac3777.png",
+      "kind": "erased-digit",
+      "values": [
+        822,
+        819,
+        62
+      ],
+      "sha256": "0351cb932e0b74e9e80d6bd7d06bdbf0af7aaf5847c7357dfd940a11e90708dd"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/fffcd842d8e28350.png",
+      "kind": "blur",
+      "values": [
+        353,
+        488,
+        222
+      ],
+      "sha256": "59e258e383c1c5a72a5fed40d7c6c390ab1d5fa8cfd9f35ef9ef4daeb82ee686"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c32e86a5b6591ad0.png",
+      "kind": "glare",
+      "values": [
+        799,
+        428,
+        19
+      ],
+      "sha256": "2e3ffde35d7803de8c44e69dd0aed56fa2fdf844298bae3e2404b8893df25adc"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/811f86ae3ad1581a.png",
+      "kind": "crop",
+      "values": [
+        990,
+        699,
+        63
+      ],
+      "sha256": "42d8d4595ebbc71e841bdf535d8269cd6fbe67881bbe52527293d473d27d5a65"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/48961346b2963513.png",
+      "kind": "missing-label",
+      "values": [
+        330,
+        921,
+        383
+      ],
+      "sha256": "c0d3c838aa97f90624631f6ec80abbb306bea599cadaf55ff2b1e5ecbe7924ef"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/8a22b38daba13445.png",
+      "kind": "ambiguous",
+      "values": [
+        685,
+        934,
+        956
+      ],
+      "sha256": "ce01d1698894f581a7b271c3d047a2034861718226ba89ae8069e5b01d9c2019"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/57f60df4c4caca4a.png",
+      "kind": "unsupported",
+      "values": [
+        160,
+        594,
+        707
+      ],
+      "sha256": "a105234e71426a946554c8635ecfb9d45a1d874b0a5bc10ad144a022776a0b79"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/92100dd37ea1c83f.png",
+      "kind": "erased-digit",
+      "values": [
+        526,
+        801,
+        193
+      ],
+      "sha256": "1bea67933b4b1cba6ff0370af4a23b38f29e2519c014166793294780741b5af2"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/95c58eb4c4cc5389.png",
+      "kind": "blur",
+      "values": [
+        441,
+        386,
+        181
+      ],
+      "sha256": "6b4c767bf3aea887d7db46ae56c2051891d0404a623e3880fe0d35c5ec9213e7"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/0109f5e63c32843b.png",
+      "kind": "glare",
+      "values": [
+        690,
+        807,
+        896
+      ],
+      "sha256": "03a44e0b58e78c790c9354dd1be542043f3b6aa86acc4215eb1845331a27ab2d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/bc60e2fecbe5b560.png",
+      "kind": "crop",
+      "values": [
+        727,
+        914,
+        708
+      ],
+      "sha256": "143cd1923a21243b9db4eddac5327618204186a650604c8ef2378888d0a71319"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/d11b2d9d83aab727.png",
+      "kind": "missing-label",
+      "values": [
+        906,
+        931,
+        124
+      ],
+      "sha256": "e98b9a0680b15492d4fa744a6d0b0fa996cf63a37ca66873f305a2866019382b"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c60a08888f257002.png",
+      "kind": "ambiguous",
+      "values": [
+        122,
+        482,
+        861
+      ],
+      "sha256": "d4bf63d4c2cfffd27902e98de3c570e1af6acd7dfe6220d04a89573785f34833"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/c3894609d665b14a.png",
+      "kind": "unsupported",
+      "values": [
+        289,
+        586,
+        335
+      ],
+      "sha256": "a4a2c5e09b6e06ef46429372633a6895b9cef33fb6e02736317eb260bf7b78d5"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/d11dd32a1ccbaa79.png",
+      "kind": "erased-digit",
+      "values": [
+        633,
+        40,
+        581
+      ],
+      "sha256": "b0c695bba9371d5e4bd6d536edf3aa455da277cbc48287cc95aa533f6a13751c"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/1bb7b8064cfa90b7.png",
+      "kind": "blur",
+      "values": [
+        711,
+        672,
+        166
+      ],
+      "sha256": "a7e8c60807b95e73fe9514e85a10eac9a0bffb117c7b20098a9dff907d57e55d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/35d8783b452e6b0a.png",
+      "kind": "glare",
+      "values": [
+        272,
+        544,
+        752
+      ],
+      "sha256": "beca5dbd7f74917d3ffc93973294cdf7bded8cfaaae9390d0aad0f9ec1750455"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/9f7d6123e88a4045.png",
+      "kind": "crop",
+      "values": [
+        470,
+        808,
+        969
+      ],
+      "sha256": "f4b8aab812462a954f43ebaf56e6c804d53d17b05ca88ff7addfce21a0dc704f"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/7f3f5424977c4d0c.png",
+      "kind": "missing-label",
+      "values": [
+        673,
+        809,
+        416
+      ],
+      "sha256": "2d45ccd38e3fa6b98b9605d8d5ed834c52a2381bd41f63ac934c5d1f8426a968"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/0e01e8851ad86cb3.png",
+      "kind": "ambiguous",
+      "values": [
+        776,
+        221,
+        517
+      ],
+      "sha256": "73f0ca96465ffe4cadc3e2d8dfe9ec11c70616ac6ae8dc11eaa8f737f1c31973"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/4507cf3c9446c25a.png",
+      "kind": "unsupported",
+      "values": [
+        977,
+        770,
+        160
+      ],
+      "sha256": "158942754a2baba85b5e9d6f5252058f87fffc71382f5e6c2ae647329bc1f70d"
+    },
+    {
+      "split": "development",
+      "file": "development-fixed-slots/3d596700321dce43.png",
+      "kind": "erased-digit",
+      "values": [
+        391,
+        684,
+        394
+      ],
+      "sha256": "11a57db72cd41e50d308b213759a99b12667b899e7a53e7c16fa9b551278e1a0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/0d2d62e8eeaa1ce2.png",
+      "kind": "clear",
+      "values": [
+        951,
+        210,
+        484
+      ],
+      "sha256": "7ef004a119750e59695be83dfdb234e8678bff87316b9217c74dd3c1a672165b"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/6078ace7d21b7c4c.png",
+      "kind": "clear",
+      "values": [
+        161,
+        927,
+        437
+      ],
+      "sha256": "715d30198a20a9a4bc5fafa6ce02b2a4155d7536f2b0f366a03b6635bcea60f7"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a638485bc55c4a7f.png",
+      "kind": "clear",
+      "values": [
+        51,
+        425,
+        441
+      ],
+      "sha256": "58bc54f5ab0f6395d4a49d89234b65e03d64980244de50aab8b2353fa1c71f9e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7734e620e61dd250.png",
+      "kind": "clear",
+      "values": [
+        752,
+        476,
+        605
+      ],
+      "sha256": "333a306ce9c45547b65e9a03d602ef7fbddaf9f4ea19b234ba18dc4d9fe29a61"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/4d8358961bdb5e84.png",
+      "kind": "clear",
+      "values": [
+        447,
+        698,
+        48
+      ],
+      "sha256": "1e84a9ae5194691f4dc2da07b129fc47cd63d976279949b0d647c6ab2bf6f29b"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/68f15751b468c5c6.png",
+      "kind": "clear",
+      "values": [
+        536,
+        945,
+        458
+      ],
+      "sha256": "b3a9e74f62cf1e9f790073b4fd634b888cd0a625a6a97d9b8e9475e96cdc8926"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d46572d179c6a17a.png",
+      "kind": "clear",
+      "values": [
+        707,
+        326,
+        531
+      ],
+      "sha256": "21bb281b00e378d8c3f75575eb62274541bf23bd505ec0824b7065194f51ccd4"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ea780459846ff4c2.png",
+      "kind": "clear",
+      "values": [
+        941,
+        83,
+        505
+      ],
+      "sha256": "b199cc445ee3f1bdff2090be0f384b7d0ef87697077ff57f652ac29f86b6176b"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c96fc6ed4fdd428b.png",
+      "kind": "clear",
+      "values": [
+        10,
+        350,
+        244
+      ],
+      "sha256": "d94faa682fa93d9cc47325216cdba5a214f14be97571c7bed6d4fe893fd22f59"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ebb61baa97b0cef0.png",
+      "kind": "clear",
+      "values": [
+        924,
+        860,
+        634
+      ],
+      "sha256": "da9b9324494b8b244d50b19ade96d8667213a0f56c87392db7ccedb033514a6e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1798412b6d8c4668.png",
+      "kind": "clear",
+      "values": [
+        152,
+        470,
+        585
+      ],
+      "sha256": "0f3f4c6ce627f47c1710d365005ddfd68428487ac5bae7ab484ffe81f67e8d80"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/26a1f26cd3564ef3.png",
+      "kind": "clear",
+      "values": [
+        628,
+        289,
+        868
+      ],
+      "sha256": "df668a26a336eb1b8417c818270c0959a381b0b43f96d99b94d2d99c72c709fc"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7d9163a4d536cb75.png",
+      "kind": "clear",
+      "values": [
+        181,
+        987,
+        435
+      ],
+      "sha256": "ebf555e634ce0f34786d0c42b6e2602ab4271b246970b9181ad7334e555c4ff9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7171892d25c1572e.png",
+      "kind": "clear",
+      "values": [
+        452,
+        770,
+        168
+      ],
+      "sha256": "8e02654e7209fcc7de49d9bc040ee2e9804c855c4d8171c5cc40dd88d5ba02a5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d73068e6ea59f7ce.png",
+      "kind": "clear",
+      "values": [
+        560,
+        153,
+        69
+      ],
+      "sha256": "05c56f1c0eeb4e41353427bb6dccff22284c38d45ff3758d9b32363de694c5ee"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2fbc660474574341.png",
+      "kind": "clear",
+      "values": [
+        316,
+        103,
+        265
+      ],
+      "sha256": "7a0f3f30920ef5d3e2f3f707cca0c6b103e759ae5778dfb3b3ebf3679be256c1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/8f11096a43f40506.png",
+      "kind": "clear",
+      "values": [
+        380,
+        135,
+        140
+      ],
+      "sha256": "294efa6e7fdc289e14b46e7267c5896cd0b8488d1104d654562e7a9a1fabf80c"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f43fdd68bb5cff08.png",
+      "kind": "clear",
+      "values": [
+        89,
+        781,
+        755
+      ],
+      "sha256": "5bb63af254f5996217a3195a275843aad9d0ad943bfa11c3116317e72ba7bc45"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d086978fc1736e67.png",
+      "kind": "clear",
+      "values": [
+        987,
+        583,
+        455
+      ],
+      "sha256": "2d38c7ea2a48c0b82607e52ac1073a258226e2c82cbf2ce8a96843eb74c932c5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f5e585d96f19c254.png",
+      "kind": "clear",
+      "values": [
+        955,
+        223,
+        302
+      ],
+      "sha256": "24f251c2a0fa1bc51e6e52dc3e693c7ad8ce5c8ef2dfe1f666ee26646c021ff1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/dd47a238f123b0a1.png",
+      "kind": "clear",
+      "values": [
+        70,
+        186,
+        997
+      ],
+      "sha256": "49f698ddb10e7a0e9cb2a6605989decd4c9be27983ece6c9d56ea8d23798ea9e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/828770705dbb4a97.png",
+      "kind": "clear",
+      "values": [
+        48,
+        723,
+        679
+      ],
+      "sha256": "547e590961a6ea99ecd5cbb4e49628581350119d50abbdffeae8f3f9b7f986be"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/94209a849217ebaa.png",
+      "kind": "clear",
+      "values": [
+        74,
+        951,
+        168
+      ],
+      "sha256": "c27ed1c2d074583dc761a1af9531aeeae2159e56e4b6dbca19a4e07e2e5e83a3"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/11ea52dc43d0d178.png",
+      "kind": "clear",
+      "values": [
+        910,
+        563,
+        738
+      ],
+      "sha256": "a22f11e8fc6e761dcbb41bab101e56d34113e3a2fa7fdac2e8838f6437460b4a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/9e74e8547803d07b.png",
+      "kind": "clear",
+      "values": [
+        991,
+        645,
+        210
+      ],
+      "sha256": "0930ae7c7188ebfd72585f866b8ea8c25136a10348aa4bd4575fa9801e5b0f92"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/b8ca84041fb0eafa.png",
+      "kind": "clear",
+      "values": [
+        954,
+        326,
+        22
+      ],
+      "sha256": "ee23d21448a997d5cff7954bbdfcbfdb8a04a3a537db8b0b1895d1d953aaf472"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/46ea9ed4a290d853.png",
+      "kind": "clear",
+      "values": [
+        31,
+        231,
+        543
+      ],
+      "sha256": "013a4cf48a64cf901da7ed6ff7864d253ff59a2d94cb7e8eddfa80045d471d7d"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/485e4612a27a43eb.png",
+      "kind": "clear",
+      "values": [
+        35,
+        788,
+        286
+      ],
+      "sha256": "8878197d05fac05d54f22884830ec1702844f25ecda50983bbf0f9d1411939cd"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/717b9d6534d6a88a.png",
+      "kind": "clear",
+      "values": [
+        353,
+        19,
+        778
+      ],
+      "sha256": "de310bbae4480b608449af85352350a03e193b5316d0ce9b1e711e64bd5117a8"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/3d272150321288c5.png",
+      "kind": "clear",
+      "values": [
+        31,
+        390,
+        206
+      ],
+      "sha256": "3799b415b5b42b00bf344b5188dedea71736f9ba8b53fdb16e86709f8376fbd6"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7be3f16d830dce7e.png",
+      "kind": "clear",
+      "values": [
+        708,
+        457,
+        473
+      ],
+      "sha256": "07ffc100ef4daab5fe87820e3f4fb35479100ade224276dafe30445abd02fe6f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7833dad2569bc7be.png",
+      "kind": "clear",
+      "values": [
+        404,
+        45,
+        939
+      ],
+      "sha256": "2f4900501b7da7f762ed4c3d3706e1672c12e1484272ca754e52f52ecefbca0a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/50c1c52a92d52683.png",
+      "kind": "clear",
+      "values": [
+        377,
+        190,
+        439
+      ],
+      "sha256": "7679312aee4bbe1772b2d88a106b87bb171ab098f2b09498e58c1fd004fa120d"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d83ad174a2066179.png",
+      "kind": "clear",
+      "values": [
+        282,
+        151,
+        870
+      ],
+      "sha256": "2960d8767c3f2875186fb8d4dc42dc10cd380f0846d8424f5c03c3376522f158"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f82f5814a32e3ac8.png",
+      "kind": "clear",
+      "values": [
+        388,
+        540,
+        276
+      ],
+      "sha256": "a8d2be9661b449979478ecedb1747eb040de7324f3220e95d2dc91296c7ba035"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c983333da315a7e2.png",
+      "kind": "clear",
+      "values": [
+        4,
+        533,
+        35
+      ],
+      "sha256": "42696cce70e499bfe156e566f443e55f2eb768a77025e61e1b97cf7ab752e725"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/b141d1db7f92b3a3.png",
+      "kind": "clear",
+      "values": [
+        803,
+        496,
+        166
+      ],
+      "sha256": "9eb242fa4da6a9b84e00f1cbe494a2ba2caa85f44160864031931fd9be545ed2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ded7adde1fa6f1d7.png",
+      "kind": "clear",
+      "values": [
+        299,
+        506,
+        784
+      ],
+      "sha256": "23e3787a14e9c608646cbaebbe7c998335ed4781c9360669ab73c76f2c8018ac"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a86ffef038f8ca03.png",
+      "kind": "clear",
+      "values": [
+        62,
+        620,
+        560
+      ],
+      "sha256": "cf1641f764b294a154fa18d6b42108af12f5bcf3ea9a84f3bf5e39090290dc0a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/86e9765cf4da8e40.png",
+      "kind": "clear",
+      "values": [
+        69,
+        539,
+        453
+      ],
+      "sha256": "6039d1be4cd10d3230b7361db0b4326529985331d1feb3aaaa0d36e344ddd338"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/bb63a37f56e36594.png",
+      "kind": "blur",
+      "values": [
+        930,
+        946,
+        478
+      ],
+      "sha256": "1180e6bbe43bbd9d3b90ee7039df59170c058ffc26d3f574e656302dd1c2cefb"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/e8ba974998024e6e.png",
+      "kind": "glare",
+      "values": [
+        5,
+        782,
+        720
+      ],
+      "sha256": "cb76a82e9cbe2fa93bf4b237987dbe20d841d0b4bf90626d2763b4d409cd10bc"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/0625dfd869d11fb1.png",
+      "kind": "crop",
+      "values": [
+        935,
+        348,
+        528
+      ],
+      "sha256": "19ef61a8721784a6c9cb039a3b17d76ff106d924965c06459cdf3eb9252803f2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7997e5b0863faad9.png",
+      "kind": "missing-label",
+      "values": [
+        821,
+        129,
+        855
+      ],
+      "sha256": "d915e98770e539844270791f255419d7c2dc95904c0e5dbbaf5c74fbf27cec60"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5021505cbc28067c.png",
+      "kind": "ambiguous",
+      "values": [
+        123,
+        419,
+        310
+      ],
+      "sha256": "3fa0714c2ea642e75e4d4671b0356c1132a6b9643c66eb6fd12ef59572ff52d8"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/79851fdfa61b5263.png",
+      "kind": "unsupported",
+      "values": [
+        261,
+        311,
+        452
+      ],
+      "sha256": "cbdeaba6233d8f4b3e1ce10eec765623ca2f4ab8cae0d3b05d0d7a40801dbca5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2e78822a48bb2107.png",
+      "kind": "erased-digit",
+      "values": [
+        646,
+        947,
+        677
+      ],
+      "sha256": "9bb41fc1f10cd82f568766c1dc08d336029492355c404bc7d6a42f15c0351b25"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5fb8d2053650c541.png",
+      "kind": "blur",
+      "values": [
+        955,
+        870,
+        437
+      ],
+      "sha256": "e316def55291661952452e518a0e5225ed507c8609ea4166b9d69751042ce994"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1b2b77dcb7615776.png",
+      "kind": "glare",
+      "values": [
+        656,
+        532,
+        17
+      ],
+      "sha256": "eff87936eb3b501c3ed80bd6d2fd006bc754ae3414a1295696f6f702f65e48e1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5f1dc204d24f8f1c.png",
+      "kind": "crop",
+      "values": [
+        147,
+        914,
+        541
+      ],
+      "sha256": "33c3909767ef1a707920fda5bc94062509411e69a40aca4efc05aaf26dde13f6"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7f9f2198e4b3e90c.png",
+      "kind": "missing-label",
+      "values": [
+        132,
+        944,
+        361
+      ],
+      "sha256": "b51464a3129840f6b6ae5e26dd2d55770d0671c46bab0f2d68fb00a12c99c0a2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/936229b5b8eac0ad.png",
+      "kind": "ambiguous",
+      "values": [
+        180,
+        473,
+        334
+      ],
+      "sha256": "0ce8cbb4340e99726531cb78cdec30c522f527be9daf1d0c43eec706f21fe5d9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/8d23f05c212d1ce0.png",
+      "kind": "unsupported",
+      "values": [
+        774,
+        508,
+        104
+      ],
+      "sha256": "cd283e3546050620a6f7fd3ea44f9176a6af4e154e43ca8721e9ba3499138e60"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/392916bf5df8f0f3.png",
+      "kind": "erased-digit",
+      "values": [
+        232,
+        94,
+        269
+      ],
+      "sha256": "e822170884b661db634b70fa82d6b5104c41b9b1fdf1b088212a50592ae0fbd7"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/3a319b33102a35b2.png",
+      "kind": "blur",
+      "values": [
+        30,
+        973,
+        794
+      ],
+      "sha256": "20dc7604ceec2f2e31a9f52a847dcac9c1f870c09383399d6da7da0671131b50"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/fe68859d97eb23bc.png",
+      "kind": "glare",
+      "values": [
+        865,
+        312,
+        472
+      ],
+      "sha256": "9f6385d050abbd7af7eb4ccec920036f1852cc1a2d04e1b8d030221b99d57738"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2fa4d2b71db3b9c1.png",
+      "kind": "crop",
+      "values": [
+        108,
+        696,
+        395
+      ],
+      "sha256": "1d0112a4453d946f07ba1f3f2171d9ea5f8f645547206990cb050c6e97401059"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d9b15a89773da2eb.png",
+      "kind": "missing-label",
+      "values": [
+        107,
+        980,
+        74
+      ],
+      "sha256": "6b41b2b797d7a25bd55490b86754509c35c6e503bf6accdbb2162a3be3b97cd3"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/680e59e468511662.png",
+      "kind": "ambiguous",
+      "values": [
+        234,
+        366,
+        55
+      ],
+      "sha256": "97e45f48827baf0f752564c57012c93a912f86b6b9e7683cb38eeb939a15b97a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/bfe4300e61c33ec8.png",
+      "kind": "unsupported",
+      "values": [
+        592,
+        623,
+        265
+      ],
+      "sha256": "68ab8376d789851978ed3bd5b6a56290ad15947ca4cefe36964d15a094c846b9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/78638359829aec8e.png",
+      "kind": "erased-digit",
+      "values": [
+        908,
+        637,
+        777
+      ],
+      "sha256": "da2f8f6004de4a9c64b61c901c53e7d56c35ea9c165034a814c5e0f90a27c55c"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f666b36f5af4a77c.png",
+      "kind": "blur",
+      "values": [
+        214,
+        585,
+        280
+      ],
+      "sha256": "0051b94f905d42c641df941d6aaad0da3838130003ca41b236a9ca93f85f1ed2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5400c8cbda5326ae.png",
+      "kind": "glare",
+      "values": [
+        739,
+        139,
+        55
+      ],
+      "sha256": "e48fc229f4f580fcbd6b520b9cf152fc0361c45605ed57f9dbd9d7304f300cf3"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/45daa27c19b91123.png",
+      "kind": "crop",
+      "values": [
+        975,
+        82,
+        841
+      ],
+      "sha256": "9ba6ab6c061bfcfb7ff08a9d987a2e3df0185834b75fb978816da5e4010b71bf"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7c1bd3829259a982.png",
+      "kind": "missing-label",
+      "values": [
+        319,
+        535,
+        609
+      ],
+      "sha256": "7305cdbae953dcc7b40aee17956a590174d215b45f2d0f50faf355a7117b1d4f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/019fb69ad7cebcf3.png",
+      "kind": "ambiguous",
+      "values": [
+        804,
+        754,
+        905
+      ],
+      "sha256": "771a8fdbde41840a654bffd778d12f51243a65f03e145a1ab31856dd070f452f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/eea53e24bbb71cd4.png",
+      "kind": "unsupported",
+      "values": [
+        856,
+        830,
+        372
+      ],
+      "sha256": "5a7ca0f59059645eae3d05a0f0b48096da3b2eb3575426c457e11a716a6d1766"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/e1fc8d06cbf107d9.png",
+      "kind": "erased-digit",
+      "values": [
+        41,
+        617,
+        957
+      ],
+      "sha256": "58995c379a15570936cda3b769d9679040ba233ae1369660bba64975c565d79b"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/93624cafeffa7c2d.png",
+      "kind": "blur",
+      "values": [
+        96,
+        844,
+        422
+      ],
+      "sha256": "d51245299cc22f52af28e5c95be4f0738d489a35592802fd0ab430a0028224c6"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2f21a017718e61a2.png",
+      "kind": "glare",
+      "values": [
+        964,
+        346,
+        380
+      ],
+      "sha256": "f628fe1ba86e3f054440167dd2b56c22f5fea96ddf042c17f6004a6271b21a56"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/faa6d3f0625304ce.png",
+      "kind": "crop",
+      "values": [
+        362,
+        713,
+        652
+      ],
+      "sha256": "69f3d98c3ae451415bc43d09f139593169148df50ce96d6b50c261f201944676"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/865bbca6a3f88c1b.png",
+      "kind": "missing-label",
+      "values": [
+        693,
+        11,
+        309
+      ],
+      "sha256": "ec0c632492682edc4c33d7f550518bf3d439c1d51f72dc7154c129bb15ffbc74"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1c78eb54574b04ab.png",
+      "kind": "ambiguous",
+      "values": [
+        420,
+        709,
+        684
+      ],
+      "sha256": "29c82fd4b1e52113a7fb63709a7e4a8da19879acbf0146aa5fa640389c9168d5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/b23b3782bd324f5f.png",
+      "kind": "unsupported",
+      "values": [
+        706,
+        575,
+        796
+      ],
+      "sha256": "459c76616e66ad40d7bce2d48fab70db8e3720b7c3e5c706f1ccd6c404c9b0d9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/9a19daa9a1abd074.png",
+      "kind": "erased-digit",
+      "values": [
+        601,
+        632,
+        174
+      ],
+      "sha256": "921c8dbf350400bd72216445fd1d75fc6f8fa8894a592551908fdf7512acd4ec"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/74ba0058371e5ad0.png",
+      "kind": "blur",
+      "values": [
+        954,
+        234,
+        222
+      ],
+      "sha256": "cd0fc0fe28409bf4052923916b5debc501efc26e5298ac84e078df798a783f41"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f0aac8cd95244b91.png",
+      "kind": "glare",
+      "values": [
+        439,
+        491,
+        346
+      ],
+      "sha256": "a334c0b4bd5369422583314c93d95ca3b641f2b0d37e7b84867d15fb0e82c0d2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2af90182db2cd484.png",
+      "kind": "crop",
+      "values": [
+        213,
+        304,
+        702
+      ],
+      "sha256": "68db9ad139b5aae1ef9110fcc2d2377620979d5a375af969f18eb96dffc805c1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/817dd1dc7697659a.png",
+      "kind": "missing-label",
+      "values": [
+        552,
+        880,
+        3
+      ],
+      "sha256": "6d6c785f061c6651a079d6efbef97a6bb46e39473f30a7e78f13e67ea7a732d4"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c464514acfb18755.png",
+      "kind": "ambiguous",
+      "values": [
+        604,
+        205,
+        149
+      ],
+      "sha256": "b6651da288f0a7eabd6a568c38e1e33789b662903e8bf502843c48df1a1ed8a3"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/017284491ff0426a.png",
+      "kind": "unsupported",
+      "values": [
+        792,
+        500,
+        267
+      ],
+      "sha256": "989ab3eb7388c274288f476d1e760e441fad9c405419e592982a547ff244d905"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/353530b7f564808a.png",
+      "kind": "erased-digit",
+      "values": [
+        130,
+        582,
+        716
+      ],
+      "sha256": "72ad9da3105c66e23dcc9210f6af53ab3e1c120d68318b1375df780ccdfbe56f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/8d8a9c389ef9b3ed.png",
+      "kind": "blur",
+      "values": [
+        951,
+        705,
+        146
+      ],
+      "sha256": "bd35c8a9fc253f85bcab77bd97ac35ce9e3c73d4a6da856380fabcea4461cd36"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2fac800c219e40c8.png",
+      "kind": "glare",
+      "values": [
+        210,
+        417,
+        789
+      ],
+      "sha256": "864d190fd309ee9c8a27d42d9b55dbd793a2f2c7a7625732898ea3e025a0e3b5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/e44894c6b2a0cc07.png",
+      "kind": "crop",
+      "values": [
+        596,
+        478,
+        642
+      ],
+      "sha256": "07776075e2bb3f5c9e96206c3ca332ccaccb653ee0a67799e653a49a585ce1b9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f15cecea6c8d218e.png",
+      "kind": "missing-label",
+      "values": [
+        336,
+        376,
+        869
+      ],
+      "sha256": "68573453de944ef33dacc8b8c3acdc301e542a18ec8946a9141b68d089843b51"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/4801d4413c0679ce.png",
+      "kind": "ambiguous",
+      "values": [
+        282,
+        722,
+        245
+      ],
+      "sha256": "8cce8d0093cb0cf6733393fa8a456019f238c7faf8ac355a5156376f534619e0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c10cc98d317c2a3b.png",
+      "kind": "unsupported",
+      "values": [
+        87,
+        723,
+        804
+      ],
+      "sha256": "5fe5b9fa9dd693dd250048c33914c82419743b22d9350be80438c1aea5735015"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1ef32aa187e8fdcc.png",
+      "kind": "erased-digit",
+      "values": [
+        972,
+        804,
+        69
+      ],
+      "sha256": "e12b92c5d3616f75ae6454161c79112ea6d40176d2c649c3dee39d031273bcd4"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2351b9b97447b771.png",
+      "kind": "blur",
+      "values": [
+        836,
+        130,
+        741
+      ],
+      "sha256": "8cba5d3d269bbe6978337bada9216692ccf7c38c4681a2d5c74a80b71311778e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/19a79fe3fc06b936.png",
+      "kind": "glare",
+      "values": [
+        429,
+        231,
+        647
+      ],
+      "sha256": "85fcb6e2efb9714318fa5ab5c3cd72e3c62dc7df00d5102363b24c9f48894637"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a11e61c15faf1207.png",
+      "kind": "crop",
+      "values": [
+        519,
+        980,
+        542
+      ],
+      "sha256": "b5a1160e2a716e145dd1e79a8598ad0e3e7bbd051bcc797fc04fed90350cbc81"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/9c70eda8cc9ab983.png",
+      "kind": "missing-label",
+      "values": [
+        816,
+        284,
+        350
+      ],
+      "sha256": "4378e15944083a561a00f4f34af841393454bdd9b7f9977545032e4516000b9e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5ad0c2533e4e7110.png",
+      "kind": "ambiguous",
+      "values": [
+        550,
+        564,
+        983
+      ],
+      "sha256": "7f1c4f0c1ef352fe2746563a0c2d48bafe8f74a69320ca974df6da02605be983"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/493b2c310b44b373.png",
+      "kind": "unsupported",
+      "values": [
+        33,
+        410,
+        247
+      ],
+      "sha256": "777e2849f34e84e1e9abd3d2ae5564520e21c837461eed48c92a57ce55110b2a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/70819d560e5ea42e.png",
+      "kind": "erased-digit",
+      "values": [
+        730,
+        317,
+        885
+      ],
+      "sha256": "0e5aa6786af00df1d799207bb15b0d38679cd7eb59cd62e3f1581f0ba78ace0f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ef9817cb4d7e8eb2.png",
+      "kind": "blur",
+      "values": [
+        520,
+        16,
+        644
+      ],
+      "sha256": "5bdbc5292ea7410080a4c5b78a8274a309562aff91cb7ffdd89ce053ff7666be"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/6a28fe76b1813977.png",
+      "kind": "glare",
+      "values": [
+        965,
+        329,
+        681
+      ],
+      "sha256": "062b833e099b64ba75a1a186af8a8c2e825d993719e8addbc660ac4a6df752a0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/0d12a43fccb5408c.png",
+      "kind": "crop",
+      "values": [
+        210,
+        723,
+        340
+      ],
+      "sha256": "45add8490fb12d2206b46c96168ad387abad399a35789109d920322bffa99bc2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2eaf42ea73625d6c.png",
+      "kind": "missing-label",
+      "values": [
+        180,
+        847,
+        397
+      ],
+      "sha256": "319ee155166cdf0708246ac1e3fa7ff9a46068cf2d6ae64e106b46d816c570f9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/411ca82432c93f0d.png",
+      "kind": "ambiguous",
+      "values": [
+        310,
+        701,
+        789
+      ],
+      "sha256": "3ed11e70f0be0fbb936ae8fd2eb7148e63d2ef8b74012289e4fa5623db50155c"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/34fd587b3989d4eb.png",
+      "kind": "unsupported",
+      "values": [
+        953,
+        651,
+        176
+      ],
+      "sha256": "9dcc49246111115bd8d683ccef5675c1e4bb934a4da03cfc1bfdf687842747be"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/441e141d08415f02.png",
+      "kind": "erased-digit",
+      "values": [
+        18,
+        762,
+        188
+      ],
+      "sha256": "7c6e5cc4b0aeee9a9246b2afe9535ecfdc794f08cc6ce53c5a2b0a22dcfb3774"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d865ee17ad86f807.png",
+      "kind": "blur",
+      "values": [
+        412,
+        671,
+        964
+      ],
+      "sha256": "c9cc722d03e8313badc32ba9d535a6920531b0581fb0923d11bb5da8d26c33c5"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/35b7c0dced789c47.png",
+      "kind": "glare",
+      "values": [
+        653,
+        272,
+        398
+      ],
+      "sha256": "5fc0f36d17161f49668319b6512330f6638baf797ed866882c0515ac9523fc5c"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/50564471bf502bc7.png",
+      "kind": "crop",
+      "values": [
+        993,
+        428,
+        607
+      ],
+      "sha256": "9d7bb6fb0b0a3d8c1f402a1eca7e55d67327b4da5188a91de43984d86e233c5e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/4c3bf10afa6cb2fa.png",
+      "kind": "missing-label",
+      "values": [
+        427,
+        159,
+        113
+      ],
+      "sha256": "d6d9284761dfd4618942bc3102e44d68468f25dcdafb8b533c7ac1406815d1e0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/255931ddcd5a63d0.png",
+      "kind": "ambiguous",
+      "values": [
+        798,
+        414,
+        121
+      ],
+      "sha256": "d9505a30c9abe36886b458015e5a6e72c55c6bf3edaf11333c36ae4a2fe0ece0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/3fd65295be566bdb.png",
+      "kind": "unsupported",
+      "values": [
+        878,
+        23,
+        896
+      ],
+      "sha256": "91bcc9312daaa7009899be87a58b5fba991395efbd2308ab6224ad82530164ba"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7f6b6c756bb31fea.png",
+      "kind": "erased-digit",
+      "values": [
+        834,
+        518,
+        972
+      ],
+      "sha256": "ebf5831209e30aa8c03560a8ff92e934f2851f352afa380401dfcf37a384ed59"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/695eb9ed150b270b.png",
+      "kind": "blur",
+      "values": [
+        394,
+        163,
+        513
+      ],
+      "sha256": "02d22b79635f090c9bf14e8bd4491d0e274bc5b33569e0434e6e98dba997d531"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/bb15205044d0f065.png",
+      "kind": "glare",
+      "values": [
+        230,
+        556,
+        603
+      ],
+      "sha256": "e4e4ea99637af4a3ce9df992ca9eb6d0fda659de1023fb941d5ef702b3c1d7d9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a6309fff93dbaa9c.png",
+      "kind": "crop",
+      "values": [
+        685,
+        284,
+        258
+      ],
+      "sha256": "426d90982bd14d7429fcee2b1a2a03bca014aa56f8d174a6a10d95a452c45095"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/b4f8b6916361fc5a.png",
+      "kind": "missing-label",
+      "values": [
+        633,
+        384,
+        549
+      ],
+      "sha256": "8b8c69ac7a5e99fc4c45599136fd878532719f72561d822e70d833aa5dd72225"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/fdd2b28316de6196.png",
+      "kind": "ambiguous",
+      "values": [
+        465,
+        161,
+        396
+      ],
+      "sha256": "8f53a0486b064680ff9a27c26094c2e44d6d78c46fa5a6c7cd58faea2c95b21e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ace94c13cd6ebc18.png",
+      "kind": "unsupported",
+      "values": [
+        951,
+        834,
+        665
+      ],
+      "sha256": "23cf50464a9dda1380ead243a5f983aaf8e76e33ae9e7f08b7296aaffadd9b96"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/4e7e3ea93c7a4a58.png",
+      "kind": "erased-digit",
+      "values": [
+        773,
+        132,
+        397
+      ],
+      "sha256": "ca0ecd3715896a238b4e89ab1bef263c92c279169f70e4d475ab628c05538801"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/46f677af8746bcda.png",
+      "kind": "blur",
+      "values": [
+        425,
+        196,
+        450
+      ],
+      "sha256": "a62f3268d05a34e8a2015184bccc40529f910b2d126b81564b12c272a51665de"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/0a143ea97abb300e.png",
+      "kind": "glare",
+      "values": [
+        250,
+        714,
+        916
+      ],
+      "sha256": "98c0b7fcaa2bc1d042fc6622a3273033207011d91a87c223ee7a59285ccc570f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/bc5222aac4d402ac.png",
+      "kind": "crop",
+      "values": [
+        765,
+        954,
+        790
+      ],
+      "sha256": "8fac68a1392b71faf4d37d31676b62dd6260a1376cbe5955318906ce1fdf3011"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f64cea4753d54146.png",
+      "kind": "missing-label",
+      "values": [
+        151,
+        948,
+        139
+      ],
+      "sha256": "e739bef933a40ed8f73ef55654e2793a74116cd28881a5985eeaa19459900a9f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/875d08be70fea343.png",
+      "kind": "ambiguous",
+      "values": [
+        333,
+        354,
+        110
+      ],
+      "sha256": "4367b9756dffa3604865e9d634d49b8714d877431642246041f5ca6d85b24fec"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/39c96b47f6ba42c7.png",
+      "kind": "unsupported",
+      "values": [
+        72,
+        962,
+        187
+      ],
+      "sha256": "b5155158cd47e3abb35633f1e0d053ba0b403ca252bf710e6c5d70833cefd31e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ae7c0c85f9cd33c1.png",
+      "kind": "erased-digit",
+      "values": [
+        296,
+        739,
+        772
+      ],
+      "sha256": "57689bb2ec4dcb2db2ba1f73fe2a1749c585f51a6a0cdbf0024c4db6808c47a3"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/d45993e937ad07db.png",
+      "kind": "blur",
+      "values": [
+        539,
+        461,
+        188
+      ],
+      "sha256": "e470d33c749686ebdc63fb3136ef87aa21cb91b1f812c02033674d78683f97a9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/67d6931ba12aa6c2.png",
+      "kind": "glare",
+      "values": [
+        792,
+        394,
+        860
+      ],
+      "sha256": "62ad6f58184f24f31901af594e640e86765b344abc965a16cc2e05dd2bdc94d7"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7fe76e63d1e63a8d.png",
+      "kind": "crop",
+      "values": [
+        336,
+        228,
+        594
+      ],
+      "sha256": "b6320c639c44e148bda6920e6963a9c853524a9450a06b2bb39a9973e620b665"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/140c613d47faa79d.png",
+      "kind": "missing-label",
+      "values": [
+        327,
+        749,
+        649
+      ],
+      "sha256": "53ad55f7397c06b5ab8281867ecb3f1094ff12f46c541a449391ba34d0583d60"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/81098b8d865ca7cb.png",
+      "kind": "ambiguous",
+      "values": [
+        631,
+        842,
+        175
+      ],
+      "sha256": "83e64992587179af00cde75ea188d46e27125bbcb0e9ef8b3e39e0244914b364"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a4ae49647cbe5395.png",
+      "kind": "unsupported",
+      "values": [
+        450,
+        582,
+        277
+      ],
+      "sha256": "749cc7b55447b1ee8dbf1228e1c6b5a7c85db40bf842ba8ff54a83bd997c033f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/3bac043b2f8bb765.png",
+      "kind": "erased-digit",
+      "values": [
+        424,
+        738,
+        988
+      ],
+      "sha256": "0546bc1dba902b4a8719a88a70f15285ca09514e86976340739d6e08a345a0ca"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/78045b5c91fd8468.png",
+      "kind": "blur",
+      "values": [
+        378,
+        516,
+        832
+      ],
+      "sha256": "74080474edcc9bd369ec466e8dc181408bf3ca35b06f6cd8e7817d06b897f503"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/0641d645e05dd98e.png",
+      "kind": "glare",
+      "values": [
+        994,
+        230,
+        841
+      ],
+      "sha256": "48764bee7bbcc1a979216b8b3951b8fa549f7e0c8b091ccae0de4c69f193270a"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/5efc3204b7b59812.png",
+      "kind": "crop",
+      "values": [
+        953,
+        246,
+        482
+      ],
+      "sha256": "9d8ac9cfe527eabee9026391e3c95ca29c85e53abce9926d955667cf10bbaacf"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c9398cbf5a901f41.png",
+      "kind": "missing-label",
+      "values": [
+        653,
+        843,
+        852
+      ],
+      "sha256": "2696ceb44e823cf6876624573a1839ba0f4ab4331a25ce70b9c27c2529357d7d"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/34ce32607ca0c280.png",
+      "kind": "ambiguous",
+      "values": [
+        413,
+        616,
+        819
+      ],
+      "sha256": "1519c17b939607b64181d9dbd4b140fc1725417635c86d554e22cfda0b4df78c"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/9da5591017ee3167.png",
+      "kind": "unsupported",
+      "values": [
+        389,
+        534,
+        864
+      ],
+      "sha256": "af7ecb81990296d4a30969657f29bd7c6c93be3626fb1d38fe6001102c9f8ed1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/e839b43f6ced66fe.png",
+      "kind": "erased-digit",
+      "values": [
+        394,
+        104,
+        310
+      ],
+      "sha256": "e4c05da839a7ae46aafb7a4a080386b0d483896deab77a3d7793008bafaf6be4"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/4130c9b79f498761.png",
+      "kind": "blur",
+      "values": [
+        195,
+        669,
+        521
+      ],
+      "sha256": "9255c30b0b366904da303c87a5193ffea402382b5ddd10318eaf41b8ca92453b"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/96f9352c06128c14.png",
+      "kind": "glare",
+      "values": [
+        715,
+        719,
+        615
+      ],
+      "sha256": "7678468e1b7b42e3d5b50cee7a7d9d25a63e220af771b0a252019dcd5b8cb8a7"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/317941ac98d9ca67.png",
+      "kind": "crop",
+      "values": [
+        348,
+        506,
+        489
+      ],
+      "sha256": "ea9c327dc6ceeef92824bf3916c165c5c7c443bf44219c87193fe358c6d01de0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2cae5d54962748d0.png",
+      "kind": "missing-label",
+      "values": [
+        799,
+        227,
+        320
+      ],
+      "sha256": "df25b884d94258b7859b890b547aea6474b7e1bd68d5731cd8df1bdf67d75209"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a10cd13039ce6dec.png",
+      "kind": "ambiguous",
+      "values": [
+        281,
+        578,
+        243
+      ],
+      "sha256": "609de97462eef40594827b61cc4e412da7f2fccddb2e2bf13aa0d1f1a91bb704"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/85cf8238b1038215.png",
+      "kind": "unsupported",
+      "values": [
+        511,
+        246,
+        664
+      ],
+      "sha256": "e2847dcf104df6a892489bcb1d40933b5ffd71df3f95432b9ea3e7fd7cc4bd76"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/a9f68110a9f884ea.png",
+      "kind": "erased-digit",
+      "values": [
+        672,
+        460,
+        5
+      ],
+      "sha256": "cc8f524ece91e078948ac93c455d4b3ef683098b34e3d70018ed9d0738cd94b0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/04e57c0328570435.png",
+      "kind": "blur",
+      "values": [
+        690,
+        424,
+        517
+      ],
+      "sha256": "60c52e99d9759f3253048c61e85a04d6f181b4390ee93926c6872ace70eeda2f"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ea35aabe4d9f629d.png",
+      "kind": "glare",
+      "values": [
+        962,
+        411,
+        620
+      ],
+      "sha256": "fbbfe4354d2bc53bdc779b473f5b8c0ed6ff0d2ee43b612ddaba9e7a62e54ead"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/f8f0c38b1059d3f3.png",
+      "kind": "crop",
+      "values": [
+        145,
+        215,
+        739
+      ],
+      "sha256": "8994f12d60c3b69d534248c352a00feb2ddd43479fc19a7738513b67900cc9bb"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/cf44c8f963ef2c16.png",
+      "kind": "missing-label",
+      "values": [
+        280,
+        99,
+        525
+      ],
+      "sha256": "ec7a31e1b813ee6671e954143165c6de6620e287da924ef43e59971158fc8ea1"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ab8cfec89689f35f.png",
+      "kind": "ambiguous",
+      "values": [
+        817,
+        636,
+        26
+      ],
+      "sha256": "246149c61971d39241b2fa5a505790f10a9af1548274d273101fd432cdc43875"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/ae7a0b7663a81aee.png",
+      "kind": "unsupported",
+      "values": [
+        543,
+        52,
+        865
+      ],
+      "sha256": "a65479653f221397eccd6b4cb0fac8ee508b179133b8b6c202c6a6835fa134cc"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/b5ad03cfa2721818.png",
+      "kind": "erased-digit",
+      "values": [
+        333,
+        815,
+        853
+      ],
+      "sha256": "5ad4c644bb64890b56b97e6000931723261ab4047ae490d27cf2e3f4a9d7e7e2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/da82c15bfac2b85a.png",
+      "kind": "blur",
+      "values": [
+        666,
+        788,
+        782
+      ],
+      "sha256": "eb86100d4af166e750d7e9aedfb4ebe854dec11b6ef07f5f68b019cb5f51fb02"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/20acb5629735094e.png",
+      "kind": "glare",
+      "values": [
+        760,
+        285,
+        967
+      ],
+      "sha256": "9f2823619315377b2d36b16b5dfc773fbc196f70e5662e3a5928ddfc773c8648"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/27718883fe999594.png",
+      "kind": "crop",
+      "values": [
+        509,
+        950,
+        967
+      ],
+      "sha256": "80221f0dabb4383ef56616ff4be319441d54e19b0e710adab6d66ffdbb3fa808"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/08791d6f8f028afc.png",
+      "kind": "missing-label",
+      "values": [
+        184,
+        718,
+        26
+      ],
+      "sha256": "0f5c19faca1417ee62bd1ce28322075e8c3e48ab3c3ce1ec72b13eb83fc859b9"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/32602951cf91b3b6.png",
+      "kind": "ambiguous",
+      "values": [
+        914,
+        856,
+        879
+      ],
+      "sha256": "9149561908bb5312204446baf8dd187408da73172dc61062d482e84dc0d446e2"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/3773c21b7d243e58.png",
+      "kind": "unsupported",
+      "values": [
+        973,
+        869,
+        816
+      ],
+      "sha256": "d4ce2041e1eb9f24acb75365d191b5bc7de637225106c6f9307f36096bc49956"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/321c41c0b97ecf91.png",
+      "kind": "erased-digit",
+      "values": [
+        772,
+        385,
+        30
+      ],
+      "sha256": "0482f51dcf8d500d4350f6764cdff79a4435a197c133e9e50b2b7ec839e69f94"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/64fcfe58fb696e78.png",
+      "kind": "blur",
+      "values": [
+        583,
+        9,
+        728
+      ],
+      "sha256": "8bfe0a7ead648a0b61b3e64a8f6dd80f5741ca0540349f14f7658e2313fe7aac"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/da10b14b8e265378.png",
+      "kind": "glare",
+      "values": [
+        895,
+        286,
+        931
+      ],
+      "sha256": "11f14eadb24ac0399bd4eff198c7aa19265cc1886825391bc9f7194da71634ac"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1e35120a06e20ff7.png",
+      "kind": "crop",
+      "values": [
+        757,
+        545,
+        156
+      ],
+      "sha256": "d628dd6151abbf009e9c64d4c90ab18c9b5711857364d4029b6b497130517a67"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1b477ecfd195935f.png",
+      "kind": "missing-label",
+      "values": [
+        6,
+        81,
+        228
+      ],
+      "sha256": "d9885e62b9b01756dc66bd99e4a055dbac7b6edfa6826d71382cce78658708fd"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/6d62da8f12791c51.png",
+      "kind": "ambiguous",
+      "values": [
+        11,
+        186,
+        406
+      ],
+      "sha256": "9899a080d97d489e9f0fbac85b93121da0727a4239c1d1029313e4b7e189dc39"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2abe91d68ec750b2.png",
+      "kind": "unsupported",
+      "values": [
+        780,
+        362,
+        724
+      ],
+      "sha256": "6891f05e11157efdd5d125fbff439090c013544b95a552c5cd395720f125cad6"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/acecc04d31371d86.png",
+      "kind": "erased-digit",
+      "values": [
+        127,
+        528,
+        707
+      ],
+      "sha256": "ff48e4f2c014ebe9db151ae36120abe9150cb46c88951a8209288e64023bebd0"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/c810458b9efcf0e3.png",
+      "kind": "blur",
+      "values": [
+        728,
+        65,
+        363
+      ],
+      "sha256": "cff197220a681408636549a0d0253cb5fdbdf02e97c78c0770e27e4c3d2b7473"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/120d7a2e4fc87a6e.png",
+      "kind": "glare",
+      "values": [
+        432,
+        374,
+        444
+      ],
+      "sha256": "1153dac2a5d8a333a9153ec41fa3d37d89690bf2231387840d1c4f698b9a6e89"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1f7c05df0cc9accd.png",
+      "kind": "crop",
+      "values": [
+        876,
+        117,
+        593
+      ],
+      "sha256": "2fbd44f2fba8fd17d3e2fa172949d5b40dd5bf8a62ce5b785eba8da56340720d"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2b38d06744c092fd.png",
+      "kind": "missing-label",
+      "values": [
+        189,
+        148,
+        811
+      ],
+      "sha256": "c5710769667622c268964fb654aace964a96f726dfdc71a13b74a9e14bfd363d"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/6c29c0030a6e14dc.png",
+      "kind": "ambiguous",
+      "values": [
+        887,
+        991,
+        618
+      ],
+      "sha256": "e3556870fad4fe056e1c7a129d4a54f07f843d14fa3097d4de779d7751d783ea"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1739c1d6d5d39707.png",
+      "kind": "unsupported",
+      "values": [
+        606,
+        787,
+        380
+      ],
+      "sha256": "6fb36ede323c3143eb9e01a95915e4e369429732c1afed18cd898e9ee7e19f87"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/e0fc223c213da642.png",
+      "kind": "erased-digit",
+      "values": [
+        105,
+        986,
+        895
+      ],
+      "sha256": "4d245644a726ffced875fb20215374bf72dde1ae5b6c5239253b58fea5e4bb2e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/2de71533de811f3c.png",
+      "kind": "blur",
+      "values": [
+        23,
+        610,
+        874
+      ],
+      "sha256": "9f3e5587c74348d22a8588f3d1c9bfc176f203e45aafc6b712d018c8b56b303e"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/acb877237d2ac5fa.png",
+      "kind": "glare",
+      "values": [
+        383,
+        586,
+        797
+      ],
+      "sha256": "519a4bb5864d2a08118e3c4b6b0faeb724c45fe78e3ce4167ff0fa9c2bb8b4fc"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/74bcbf67cda1fdf5.png",
+      "kind": "crop",
+      "values": [
+        762,
+        100,
+        233
+      ],
+      "sha256": "21e79bddbc16451ad1221601e33613c65e3b64f1bf446c5657fd11ef4f664543"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7ae8abd0865c87dd.png",
+      "kind": "missing-label",
+      "values": [
+        72,
+        208,
+        338
+      ],
+      "sha256": "e14ddcc8116cde91f2b4c185c82ca3ca55dd9a97ced79abea8802107800f6bb6"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/7a4b11806f78ea88.png",
+      "kind": "ambiguous",
+      "values": [
+        804,
+        864,
+        219
+      ],
+      "sha256": "cb45e726d85690d3cb01ea2cd028fc1554d473d1ef308c961d07927997ff1bc7"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/28661b1d0ab24a39.png",
+      "kind": "unsupported",
+      "values": [
+        136,
+        542,
+        294
+      ],
+      "sha256": "5451d5efa3f0e8866647a50dc633c4f00da30874e401bf73ff892b306fa60285"
+    },
+    {
+      "split": "heldout",
+      "file": "heldout-fixed-slots/1a2f0ce411b5ba0b.png",
+      "kind": "erased-digit",
+      "values": [
+        150,
+        67,
+        641
+      ],
+      "sha256": "e43d9755cdbb9adbd0c1f1c06ba205a8f484bf554535f2908241093fa4dea302"
+    }
+  ]
+}

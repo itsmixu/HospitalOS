@@ -1,0 +1,17 @@
+split/scenario,total,exact,wrong,rejected
+development/clear,80,80,0,0
+development/blur,10,0,0,10
+development/glare,10,0,0,10
+development/crop,10,0,0,10
+development/missing-label,10,0,0,10
+development/ambiguous,10,0,0,10
+development/unsupported,10,0,0,10
+development/erased-digit,10,0,0,10
+heldout/clear,40,40,0,0
+heldout/blur,20,0,0,20
+heldout/glare,20,0,0,20
+heldout/crop,20,0,0,20
+heldout/missing-label,20,0,0,20
+heldout/ambiguous,20,0,0,20
+heldout/unsupported,20,0,0,20
+heldout/erased-digit,20,0,0,20

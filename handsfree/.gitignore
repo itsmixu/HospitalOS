@@ -1,0 +1,6 @@
+# Local synthetic ward database, journals and lock files. Never commit real records.
+.local/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal

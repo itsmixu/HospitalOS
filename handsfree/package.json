@@ -1,0 +1,24 @@
+{
+  "name": "hospitalos-handsfree",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --import tsx server/src/handsfree-server.ts",
+    "test": "node --import tsx --test server/test/*.test.ts",
+    "check": "tsc --noEmit",
+    "format": "prettier --write \"server/**/*.{ts,js,html}\" package.json tsconfig.json demo-data/ward.json",
+    "test:handsfree": "node --import tsx --test server/test/handsfree.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "ws": "^8.18.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "prettier": "^3.10.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
