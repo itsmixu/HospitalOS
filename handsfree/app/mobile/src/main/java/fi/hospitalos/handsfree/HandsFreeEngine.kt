@@ -12,6 +12,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   private var visibleSince=0L
   private var previousVisible:Card?=null
   private val notifiedMessages=mutableSetOf<String>()
+  private var messageBaselineLoaded=false
   val bedside = BedsideController(clock, System::currentTimeMillis) { id, action ->
     // A note save uses the same opaque-ID recovery contract as communication.
     if(action.type=="note.save"){pending=id;deadline=clock()+5000}
@@ -59,6 +60,11 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   }
 
   fun snapshot(people: List<Colleague>, requests: List<Request>, incomingMessages: List<WardMessage> = messages) {
+    // The first snapshot is saved inbox history, not newly arriving notifications.
+    if(!messageBaselineLoaded){
+      notifiedMessages.addAll(incomingMessages.map { it.id })
+      messageBaselineLoaded=true
+    }
     staff = people; tasks = requests; messages=incomingMessages
     val a = draft
     if (a != null && ((a.taskId.isNotEmpty() && tasks.none { it.id == a.taskId && it.revision == a.revision }) ||
@@ -133,8 +139,14 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     tick()
     if (!online || pending != null || draft != null || bedside.blocksCommunication) return
     if(bedside.card!=null){bedside.wake();return}
-    openedMessage=null;composeTo=null; gesture.disarm(); deadline = clock() + (if(quietMode)20_000 else 12_000)
-    communicationCard = Card("listening", "Listening", "Ask Ben to bring the hoist to room 12", "Say cancel to stop", true)
+    openedMessage=null;composeTo=null; gesture.disarm(); deadline = if(quietMode)0 else clock()+12_000
+    communicationCard = Card("listening", "Listening", "Ask Ben to bring the hoist to room 12", "Say cancel to stop", true, ++sequence)
+  }
+
+  /** Stable SDK partials can compose a draft, never confirm a displayed action. */
+  fun proposeTranscript(raw:String) {
+    if(card.phase !in setOf("listening","dictating-message","dictating-note") || draft!=null || pending!=null)return
+    transcript(raw)
   }
 
   fun transcript(raw: String, final: Boolean = true) {
@@ -245,7 +257,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
 
   private fun beginMessage(who:Colleague){
     if(!who.reachable || who.id==me){reset("Colleague unavailable","Nothing sent");return}
-    draft=null;composeTo=who;reviewVisible=false;gesture.disarm();deadline=clock()+30000
+    draft=null;composeTo=who;reviewVisible=false;gesture.disarm();deadline=if(quietMode)0 else clock()+30000
     communicationCard=Card("dictating-message","Message ${who.name}","Say your short message. It will be shown before sending.","Up to 160 characters · say cancel to stop",true,++sequence)
   }
   private fun reviewMessage(who:Colleague,body:String){

@@ -156,3 +156,19 @@ Capture chat has finished its initial changes to `HandsFreeEngine.kt`, `handsfre
 - 2026-11-14 — Add reviewed request.broadcast: request N nurses to a room, sent to every connected available colleague except sender at send time. Server owns capacity and distinct acceptances, excludes busy/offline staff, closes unfilled invitations on quota/expiry; sender sees count/names. No patient content broadcast. Fewer recipients than requested is explicit, not fabricated staffing. Optional patient QR identifies only, requires same assigned-patient review; ZXing core 3.5.3 added for on-phone QR decoding, no network decoding or access grant.
 
 - 2026-11-14 — Broadcast + optional QR integration verified: 122 Android and 59 server tests pass. SDK-mock-speech rehearsal routed one two-nurse request to Ben/Sara with 1/2 then 2/2 confirmed. Generated QR camera pixels decoded to patient review, required confirmation, then permitted bound BP capture. These are simulator checks, not physical QR optics. Demo now has Demo/Blood pressure/Patient QR tabs and labelled simulated Sara; updated APK installed on physical phone. Current hardware blocker: Meta AI openChannel failures awaiting reconnect, before Display discovery.
+
+- 2026-11-14 — Add transient phone-only speech diagnostics to troubleshoot Hey Lumi failing on hardware; no saved audio/transcripts and no relaxation of command gates. Correct stale nod instructions to left/right tilt.
+
+- 2026-11-14 — Fix physical wake blocked by SDK partial-only Hey lumi result: exact high-confidence partial activation may reveal Listening only. Preserve final-only commands and stale-prompt rejection; verify on hardware after unit tests.
+
+- 2026-11-14 — Suppress historical inbox notification replay on app restart; 15 saved test messages caused repeated Ben cards. Preserve stored unread messages and notify only arrivals after the initial snapshot.
+
+- 2026-11-14 — After wake succeeds, address partial-only command timeout with a two-second stable high-confidence draft path. Separate DRAFT routing blocks review confirmations and retains explicit right-tilt submission.
+
+- 2026-11-14 — Fix confidence fluctuations resetting stable-draft timing; allow exact wake to renew an empty command window with a distinct prompt. Align draft/wake confidence with existing 0.6 final gate, without allowing partial confirmation.
+
+- 2026-11-14 — Keep Listening visible until explicit dismissal; remove its quiet-mode timeout and refresh physical listening content without changing prompt identity. Preserve bounded reviews, capture and pending-write handling.
+
+- 2026-11-14 — Remove quiet-mode message dictation expiry and ignore empty SDK speech events in the utterance buffer; verify back cancellation and preservation of final speech completion.
+
+- 2026-11-14 — User requests a more realistic monitor for filming. Restyle the live `/monitor` page and integration copy as a bedside NIBP device, retaining the exact optical canvas layout; hide setup controls and add an explicitly simulated Start/Stop cycle. No backend changes or real measurement claims.

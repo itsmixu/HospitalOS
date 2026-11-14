@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+  debugImplementation("com.meta.wearable:mwdat-mockdevice:1.0.1")
   implementation(platform("androidx.compose:compose-bom:2026.05.01"))
   implementation("androidx.compose.material3:material3")
   implementation("androidx.compose.material:material-icons-extended")

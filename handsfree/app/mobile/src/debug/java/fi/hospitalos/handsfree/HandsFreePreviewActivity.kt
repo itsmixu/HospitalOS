@@ -71,6 +71,8 @@ class HandsFreePreviewActivity : ComponentActivity() {
   private var computerVoice = false
   private var glassesVoice by mutableStateOf(false)
   private var voiceStatus by mutableStateOf("Microphone off")
+  private var speechDiagnostic by mutableStateOf("")
+  private var listeningDisplayRefreshAt=0L
   private var speechInput: DatSpeechInput? = null
   private var renderedCard: Card? = null
   private var reportedSpeechListening=false
@@ -136,14 +138,15 @@ class HandsFreePreviewActivity : ComponentActivity() {
     engine.bedside.cameraSource=if(physical || datCamera) "dat-camera" else "injected-camera"
     speechInput=DatSpeechInput(lifecycleScope,
       window={SpeechWindow(engine.card,renderedCard==engine.card,eligible)},
-      result={route,text->when(route){SpeechRoute.WAKE->engine.wake();SpeechRoute.COMMAND->engine.transcript(text);else->Unit};publish()},
+      result={route,text->when(route){SpeechRoute.WAKE->engine.wake();SpeechRoute.COMMAND->engine.transcript(text);SpeechRoute.DRAFT->engine.proposeTranscript(text);else->Unit};publish()},
       status={active,note->
         if(!active && glassesVoice && engine.card.microphone)engine.transcript("cancel")
         glassesVoice=active
         if(note.isNotEmpty())voiceStatus=if(physical)note else note.replace("Glasses voice", "Simulated SDK voice").replace("Glasses microphone", "Simulated SDK microphone")
         lastCard=null;publish()
       },
-      listening={listeningWindow=it;lastCard=null;publish()})
+      listening={listeningWindow=it;lastCard=null;publish()},
+      diagnostic={speechDiagnostic=it})
     connect()
     lifecycleScope.launch { while(isActive) { delay(100); engine.tick(); if(physical)engine.offerIncoming(); publish(); if(physical && SystemClock.elapsedRealtime()-motionReportAt>1000){motionReportAt=SystemClock.elapsedRealtime();report(engine.card,renderedCard==engine.card)} } }
     setContent {
@@ -160,10 +163,11 @@ class HandsFreePreviewActivity : ComponentActivity() {
           Spacer(Modifier.height(16.dp))
           Text(motionStatus)
           Text(voiceStatus)
+          if(speechDiagnostic.isNotBlank())Text(speechDiagnostic,style=MaterialTheme.typography.bodySmall)
           Text("Listening stays on until stopped, the app leaves the foreground, or the glasses disconnect.",style=MaterialTheme.typography.bodySmall)
           Button(enabled=displayReady && !computerVoice && !glassesVoice,onClick={startGlassesVoice()}){Text("Enable glasses voice")}
           Button(enabled=glassesVoice,onClick={stopGlassesVoice()}){Text("Stop glasses microphone")}
-          Text("Keep this screen open and USB connected. Say Hey Lumi, pause for Listening, then speak. Review before confirming. Computer voice and glasses voice are separate inputs. Incoming requests support a deliberate physical nod.",style=MaterialTheme.typography.bodySmall)
+          Text("Keep this screen open and USB connected. Say Hey Lumi, pause for Listening, then speak. Review before confirming. Computer voice and glasses voice are separate inputs. Tilt right to accept; tilt left to go back.",style=MaterialTheme.typography.bodySmall)
         }
       }
     }
@@ -290,6 +294,10 @@ class HandsFreePreviewActivity : ComponentActivity() {
     persistPending()
     shown=engine.card
     val card=shown
+    if(physical && card.phase in setOf("listening","dictating-message","dictating-note") && glassesVoice && SystemClock.elapsedRealtime()>=listeningDisplayRefreshAt){
+      listeningDisplayRefreshAt=SystemClock.elapsedRealtime()+5000
+      lastCard=null
+    }
     if(card==lastCard){if(reportedSpeechListening!=(mock?.services?.speech?.isListening ?: false))report(card,renderedCard==card);return}
     lastCard=card
     report(card)

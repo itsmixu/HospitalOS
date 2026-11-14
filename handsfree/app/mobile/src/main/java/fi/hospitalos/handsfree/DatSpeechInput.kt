@@ -19,6 +19,7 @@ class DatSpeechInput(
   private val result:(SpeechRoute,String)->Unit,
   private val status:(Boolean,String)->Unit,
   private val listening:(SpeechWindow?)->Unit,
+  private val diagnostic:(String)->Unit = {},
 ) {
   private var job:Job?=null
   val active get()=job?.isActive==true
@@ -42,20 +43,44 @@ class DatSpeechInput(
                 if(!stamp.rendered || stamp.card.phase in setOf("saving","sending","reconciling")){delay(50);continue}
                 // Install collector before start; ignore the previous StateFlow value.
                 val buffer=UtteranceBuffer()
-                val collector=launch(start=CoroutineStart.UNDISPATCHED) {speech.transcriptions.drop(1).collect{r->if(r!=null)buffer.accept(r.text,r.isFinal,r.confidence,SystemClock.elapsedRealtime())}}
+                var wokeFromPartial=false
+                val collector=launch(start=CoroutineStart.UNDISPATCHED) {
+                  speech.transcriptions.drop(1).collect { r ->
+                    if(r!=null) {
+                      buffer.accept(r.text,r.isFinal,r.confidence,SystemClock.elapsedRealtime())
+                      diagnostic("Speech ${if(r.isFinal) "final" else "partial"} · confidence ${r.confidence}" + if(!stamp.card.microphone) " · heard: ${r.text.take(80)}" else "")
+                      if(!r.isFinal && !wokeFromPartial && SpeechGate.partialWake(r.text,stamp,window(),r.confidence)==SpeechRoute.WAKE) {
+                        wokeFromPartial=true
+                        diagnostic("Wake phrase recognized · opening display")
+                        result(SpeechRoute.WAKE,SpeechGate.normalize(r.text))
+                      }
+                    }
+                  }
+                }
                 try {
                   speech.start().onFailure {_,_->throw IllegalStateException("Glasses speech could not start")}
                   withTimeout(2000){speech.state.first{it==SpeechState.STARTED}}
                   listening(stamp)
+                  diagnostic("Microphone listening · waiting for speech")
+                  var partialDraft:String?=null
+                  val canDraft=stamp.card.phase in setOf("listening","dictating-message","dictating-note")
                   val heard=withTimeoutOrNull(if(stamp.card.phase.startsWith("dictating-"))20_000 else 12_000) {
-                    while(!buffer.complete(SystemClock.elapsedRealtime()) && !buffer.overflow && window()==stamp)delay(25)
+                    while(!buffer.complete(SystemClock.elapsedRealtime()) && !buffer.overflow && window()==stamp){
+                      if(canDraft){partialDraft=buffer.stableDraft(SystemClock.elapsedRealtime());if(partialDraft!=null)break}
+                      delay(25)
+                    }
                     if(buffer.complete(SystemClock.elapsedRealtime()))buffer else null
                   }
                   speech.stop()
                   withTimeout(2000){speech.state.first{it==SpeechState.STOPPED}}
-                  if(heard!=null) {
+                  if(heard==null && partialDraft!=null && !wokeFromPartial && window()==stamp){
+                    diagnostic("Stable speech draft · review before confirming")
+                    result(SpeechRoute.DRAFT,SpeechGate.normalize(partialDraft!!))
+                  }
+                  if(heard!=null && !wokeFromPartial) {
                     val route=SpeechGate.route(heard.text,stamp,window(),heard.confidence)
                     if(route==SpeechRoute.STOP)break
+                    diagnostic("Speech decision: $route · confidence ${heard.confidence}" + if(!stamp.card.microphone) " · heard: ${heard.text.take(80)}" else "")
                     result(route,SpeechGate.normalize(heard.text))
                   }
                 } finally {listening(null);collector.cancel();speech.stop()}

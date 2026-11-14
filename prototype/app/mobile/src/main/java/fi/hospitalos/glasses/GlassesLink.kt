@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.meta.wearable.dat.core.Wearables
+import com.meta.wearable.dat.core.selectors.DeviceSelector
+import com.meta.wearable.dat.core.selectors.SpecificDeviceSelector
+import com.meta.wearable.dat.core.types.DeviceIdentifier
 import com.meta.wearable.dat.core.selectors.AutoDeviceSelector
 import com.meta.wearable.dat.core.session.DeviceSession
 import com.meta.wearable.dat.core.session.DeviceSessionState
@@ -53,6 +56,7 @@ class GlassesLink(
     const val TAG = "HospitalOSGlasses"
   }
 
+  private var previewing = false
   private var initialized = false
   private var session: DeviceSession? = null
   private var display: Display? = null
@@ -105,8 +109,20 @@ class GlassesLink(
       return
     }
     stopDisplay()
+    beginSession(AutoDeviceSelector(filter = { it.isDisplayCapable() }))
+  }
+
+  /** Called only by the debug activity with an explicitly paired mock device. */
+  internal fun startPreview(deviceId: DeviceIdentifier) {
+    check(initialized)
+    stopDisplay()
+    previewing = true
+    beginSession(SpecificDeviceSelector(deviceId))
+  }
+
+  private fun beginSession(selector: DeviceSelector) {
     _step.value = GlassesStep.STARTING
-    Wearables.createSession(AutoDeviceSelector(filter = { it.isDisplayCapable() }))
+    Wearables.createSession(selector)
         .onSuccess { s ->
           session = s
           jobs += scope.launch { s.errors.collect { _messages.tryEmit("Glasses: ${it.description}") } }
@@ -144,8 +160,8 @@ class GlassesLink(
                   Log.i(TAG, "Display $state")
                   if (state == DisplayState.STARTED) {
                     _step.value = GlassesStep.ON
-                    if (head.source.value == HeadingSource.NONE) head.attach(s) { _messages.tryEmit(it) }
-                    if (voice.source.value != VoiceSource.GLASSES) voice.attach(s) { _messages.tryEmit(it) }
+                    if (!previewing && head.source.value == HeadingSource.NONE) head.attach(s) { _messages.tryEmit(it) }
+                    if (!previewing && voice.source.value != VoiceSource.GLASSES) voice.attach(s) { _messages.tryEmit(it) }
                     onDisplayReady()
                   }
                 }
@@ -155,6 +171,7 @@ class GlassesLink(
   }
 
   fun stopDisplay() {
+    previewing = false
     jobs.forEach { it.cancel() }
     jobs.clear()
     head.detach(session)
