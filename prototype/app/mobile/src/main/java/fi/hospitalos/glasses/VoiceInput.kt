@@ -9,7 +9,10 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
+import com.meta.wearable.dat.core.Wearables
 import com.meta.wearable.dat.core.session.DeviceSession
+import com.meta.wearable.dat.core.types.Permission
+import com.meta.wearable.dat.core.types.PermissionStatus
 import com.meta.wearable.dat.speech.Speech
 import com.meta.wearable.dat.speech.addSpeech
 import com.meta.wearable.dat.speech.removeSpeech
@@ -69,9 +72,22 @@ class VoiceInput(private val context: Context, private val scope: CoroutineScope
           speech = s
           job =
               scope.launch {
+                launch { s.state.collect { Log.i(TAG, "glasses speech state $it") } }
+                launch {
+                  // Speech can fail after start (e.g. no MICROPHONE permission): don't wait silently.
+                  s.errors.collect { e ->
+                    if (e == null) return@collect
+                    Log.w(TAG, "glasses speech error $e: ${s.errorDetails.value}")
+                    if (_listening.value) {
+                      runCatching { s.stop() }
+                      startPhone()
+                    }
+                  }
+                }
                 s.transcriptions.collect { r ->
                   r ?: return@collect
                   if (!_listening.value) return@collect
+                  Log.d(TAG, "heard${if (r.isFinal) " (final)" else ""}: ${r.text}")
                   _partial.value = r.text
                   if (r.isFinal && r.text.isNotBlank()) finish(r.text)
                 }
@@ -104,14 +120,26 @@ class VoiceInput(private val context: Context, private val scope: CoroutineScope
     _partial.value = ""
     _listening.value = true
     val s = speech
-    if (s != null) {
-      s.start().onFailure { error, _ ->
-        Log.w(TAG, "glasses speech start failed: ${error.description}")
-        // Most often the MICROPHONE permission hasn't been granted in Meta AI yet.
-        startPhone()
-      }
-    } else {
+    if (s == null) {
       startPhone()
+    } else {
+      scope.launch {
+        // Glasses speech only works once the wearer allowed MICROPHONE in Meta AI.
+        val granted =
+            Wearables.checkPermissionStatus(Permission.MICROPHONE).fold(
+                onSuccess = { it == PermissionStatus.Granted },
+                onFailure = { _, _ -> false },
+            )
+        Log.i(TAG, "glasses MICROPHONE permission granted=$granted")
+        if (!granted) {
+          startPhone()
+          return@launch
+        }
+        s.start().onFailure { error, _ ->
+          Log.w(TAG, "glasses speech start failed: ${error.description}")
+          startPhone()
+        }
+      }
     }
     timeout =
         scope.launch {
@@ -146,10 +174,16 @@ class VoiceInput(private val context: Context, private val scope: CoroutineScope
   }
 
   private fun startPhone() {
+    if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+      Log.w(TAG, "no glasses mic permission and no phone mic permission")
+      fail("Allow the microphone: phone app, Connect, Voice")
+      return
+    }
     if (!SpeechRecognizer.isRecognitionAvailable(context)) {
       fail("No speech recognition available")
       return
     }
+    Log.i(TAG, "listening with the phone microphone")
     main.post {
       val r = phone ?: SpeechRecognizer.createSpeechRecognizer(context).also { phone = it }
       r.setRecognitionListener(

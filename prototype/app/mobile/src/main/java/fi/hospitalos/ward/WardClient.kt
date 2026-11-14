@@ -43,7 +43,26 @@ class WardClient {
   fun ask(text: String, patientId: String?) =
       send("assistant.ask", JSONObject().put("text", text).apply { if (patientId != null) put("patientId", patientId) })
 
+  /** Last server + token, for automatic reconnects. Only the connection is retried, never commands. */
+  private var target: Pair<String, String>? = null
+  private val retry = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
+  private var retryScheduled = false
+
+  /** After a drop (USB cable, server restart), try again every 3 s until it's back. */
+  private fun scheduleReconnect() {
+    val t = target ?: return
+    synchronized(this) {
+      if (retryScheduled) return
+      retryScheduled = true
+    }
+    retry.schedule({
+      synchronized(this) { retryScheduled = false }
+      if (_link.value == Link.OFFLINE && target == t) connect(t.first, t.second)
+    }, 3, TimeUnit.SECONDS)
+  }
+
   fun connect(url: String, token: String) {
+    target = url to token
     socket?.close(1000, "Reconnect")
     _link.value = Link.CONNECTING
     val request =
@@ -94,18 +113,21 @@ class WardClient {
                 if (webSocket !== socket) return
                 _link.value = Link.OFFLINE
                 _messages.tryEmit("Ward server unreachable. Nothing was resent.")
+                scheduleReconnect()
               }
 
               override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 if (webSocket !== socket) return
                 _link.value = Link.OFFLINE
                 if (reason.isNotBlank() && code != 1000) _messages.tryEmit(reason)
+                if (code != 1000) scheduleReconnect()
               }
             },
         )
   }
 
   fun disconnect() {
+    target = null
     socket?.close(1000, "Bye")
     socket = null
     _link.value = Link.OFFLINE
@@ -127,6 +149,7 @@ class WardClient {
   }
 
   fun close() {
+    retry.shutdownNow()
     disconnect()
     http.dispatcher.executorService.shutdown()
   }
