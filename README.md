@@ -453,7 +453,7 @@ HF_URL=ws://127.0.0.1:8796 node --import tsx server/test/rehearse-tilt-feedback.
 Optionally set `ADB` to the local adb executable to capture green/coral/neutral screenshots from emulator-5554 in `/tmp/lumi-*-progress.png`. The rehearsal creates synthetic requests; use an isolated test database. Current verification: 191 Android tests, 69 server tests, TypeScript checking, APK assembly, release Kotlin compilation and the complete DAT tilt rehearsal pass. This is simulator evidence; physical glasses remain a separate check.
 ## Lumi video and guided-demo handoff
 
-The current filmed reference is [Lumi v6](demo-video/lumi-demo-v6.mp4), a silent 89-second hackathon role-play with composited Display cards. Run `git lfs pull` after checkout to download the video assets. The final export, silent source footage, transparent overlay and three-second intro live in `demo-video/`; earlier local exports remain outside Git.
+The current filmed reference is [Lumi v7](demo-video/lumi-demo-v7.mp4), a silent 89-second hackathon role-play with composited Display cards. Run `git lfs pull` after checkout to download the video assets. The final export, silent source footage, transparent overlay and three-second intro live in `demo-video/`; earlier local exports remain outside Git.
 
 - [Visual preview](demo-video/preview.jpg)
 - [Final 89-second scene timings](prototype/demo-data/lumi-video-final-v6.json)
@@ -466,3 +466,5 @@ The intro reads **Your hands save lives. Keep them free.** The outro reads **Lum
 For editing, place `demo-video/source-silent.mp4` and `demo-video/lumi-overlay-v6.mov` at 00:03 after `demo-video/intro.mp4`. The alpha track provides the closing fade/title. To regenerate the 86-second body on macOS, install Python Pillow, NumPy and OpenCV plus ffmpeg, then run `python3 demo-video/render_overlay.py --output /tmp/lumi-body.mp4`; use `--alpha` for an editable MOV. The renderer currently uses macOS Arial fonts. Prepend the three-second intro for the final 89-second version. No location audio is included.
 
 The existing `handsfree/web-demo/` contains a procedural 3D guided film and a separate interactive playground, with vendored Meta UI styles and their notices. Its older ECG storyline is **not yet the new blood-pressure video flow**. The next guided interactive demo should follow the current brief at the end of SPEC.md. Netlify configuration is present; publishing remains deferred until the user explicitly requests it.
+
+Version 7 preserves the full v6 scenario and every cue time, adding a gentle transition: the intro fades out at 00:02.45–00:03.00, then the footage fades in at 00:03.00–00:03.80. Regenerate this pass with `python3 demo-video/add_intro_fade.py`; it uses the retained v6 export and ffmpeg. The v6 card fixtures and voice-over timing remain current.
