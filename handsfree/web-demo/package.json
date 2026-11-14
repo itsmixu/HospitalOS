@@ -1,1 +1,25 @@
-{"name":"lumi-ward-demo","private":true,"type":"module","scripts":{"build":"node build.mjs","dev":"node serve.mjs","test":"node --import tsx --test src/*.test.ts"},"dependencies":{"three":"0.180.0","zod":"^4.6.7"},"devDependencies":{"esbuild":"^0.25.0","tsx":"^4.19.0","@types/three":"^0.180.0"}}
+{
+  "name": "lumi-ward-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node serve.mjs",
+    "test": "node --import tsx --test src/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "three": "0.180.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/three": "^0.180.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

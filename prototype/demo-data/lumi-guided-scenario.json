@@ -1,0 +1,43 @@
+{
+  "synthetic": true,
+  "actor": {
+    "id": "jooyeon",
+    "name": "Jooyeon Lee"
+  },
+  "patient": {
+    "id": "demo-a",
+    "encounterId": "enc-a",
+    "name": "Mark Pokidko",
+    "room": "7",
+    "staff": [
+      "jooyeon",
+      "ben"
+    ],
+    "admissionReason": "High blood pressure",
+    "allergies": [],
+    "medications": [
+      {
+        "name": "Orion Furosemide",
+        "dose": "40mg \u00b7 1x tab",
+        "route": "Oral",
+        "schedule": "As prescribed",
+        "prescribedBy": "Existing demo prescription",
+        "prescribedAt": ""
+      }
+    ]
+  },
+  "qr": "hospitalos:patient:demo-a:enc-a",
+  "values": {
+    "systolic": 145,
+    "diastolic": 95,
+    "pulse": 88
+  },
+  "note": "40mg Orion Furosemide 1x tab given to Mark Pokidko by nurse Jooyeon Lee at 15:30 for high blood pressure.",
+  "isbar": {
+    "identify": "65-year-old male",
+    "situation": "Cardiac arrest. CPR ongoing.",
+    "background": "ASA medication allergy",
+    "assessment": "One defibrillation delivered. IV access established. No adrenaline given yet.",
+    "recommendation": "Join the response team."
+  }
+}

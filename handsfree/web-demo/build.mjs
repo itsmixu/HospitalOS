@@ -13,3 +13,9 @@ await copyFile('playground.html','dist/playground.html');
 await cp('public/vendor','dist/vendor',{recursive:true});
 
 await copyFile('public/wristband-qr.png','dist/wristband-qr.png');
+
+await build({entryPoints:['src/guided.ts'],bundle:true,outfile:'dist/guided.js',format:'esm',platform:'browser',minify:true,plugins:[{name:'guided-core',setup(b){b.onResolve({filter:/^node:crypto$/},()=>({path:'browser-crypto',namespace:'shim'}));b.onLoad({filter:/.*/,namespace:'shim'},()=>({contents:'export const randomUUID=()=>crypto.randomUUID();'}));b.onResolve({filter:/^zod$/},()=>({path:require.resolve('zod')}));}}]});
+await copyFile('src/guided.css','dist/guided.css');
+await copyFile('film.html','dist/film.html');
+await copyFile('public/icon.svg','dist/icon.svg');
+await cp('public/assets','dist/assets',{recursive:true});

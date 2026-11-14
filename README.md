@@ -426,11 +426,28 @@ DAT speech now collects finalized segments until an 850 ms quiet gap rather than
 
 Validation for this slice: **54/54 server tests pass**, including six manual-note durability/authorization/idempotency/provenance tests; **13 new Android dictation/note/buffer tests pass**, and the scoped controller/speech/bedside test build plus debug assembly and release Kotlin compile pass. TypeScript and demo-page script syntax checks pass. A concurrent full Android run had three failures in capture-owned MonitorReaderTest (frozen evaluation, bad-frame agreement, temporal consensus); combined camera validation is assigned to the camera/hardware chats. No phone installation or shared server restart was performed by this slice, and it has not yet been tested as a complete physical dictation flow.
 
-### Guided Lumi film (local, unpublished)
+### Guided Lumi experience (local, unpublished)
 
-From `handsfree/web-demo`, run `npm install`, `npm run build`, then `npm run dev`. Open `http://127.0.0.1:8800/`. Play runs the 1:55 guided 3D sequence. Previous/next or the timeline lets the presenter control narration pace; **C** switches to a clean recording view, **Escape** exits it, **Space** plays/pauses. The Narration panel contains the scene script and scope distinctions. The earlier playable ward remains at `/playground.html`.
+`handsfree/web-demo/` now opens the guided **blood-pressure / medication / Code Blue** walkthrough. The visitor scans the patient's wristband, holds right to confirm, holds left to decline Ben's request, captures 145/95 with pulse 88, dictates the video’s exact medication note, explicitly saves both reviewed records, then accepts the emergency and reads ISBAR while moving toward Room 8. Allow roughly 90 seconds at a natural reading pace; decisions wait for the visitor.
 
-The film uses procedural models, a wrist-mounted QR texture and Meta UI toolkit styles. All scans, records, speech, gestures, alerts and responses are scripted synthetic content; richer patient records and emergency ISBAR are product-vision scenes, not implemented EHR or emergency-service integration. No image-generation assets are used. Netlify configuration is ready, but publication is intentionally postponed.
+```sh
+cd handsfree/web-demo
+npm ci
+npm run typecheck
+npm test
+npm run build
+PORT=8805 npm run dev
+```
+
+Open **http://127.0.0.1:8805/**. Tap the suggested action or press **Space**. Hold **← / →** or the matching on-screen button for a simulated tilt; release early to cancel. **About → Reduce movement** disables camera travel. Restart and the final replay button create a clean session. The final **View saved records** panel shows the actual local patient binding, two saved records, Ben's receipt and emergency response.
+
+The browser reuses `HandsFreeWard`, `Observations`, `PatientNotes` and `Emergencies`. Its instance-only adapter supplies the acted video cast without changing Android fixtures. Both records remain pending until review; the combined save performs **two separately acknowledged writes**, preserves the successful receipt on a partial failure and does not claim an atomic backend transaction. No microphone, camera, account, API key, analytics or remote patient service is used. Assets are served locally; patient data exists only in that tab's memory and replay clears it.
+
+The scene uses a vendored CC0 rigged human (Innerscene / MakeHuman; source and license beside the GLB), modelled hospital equipment and a wristband parented to the actual wrist bone. Display content comes from the v6 fixtures used in the v7 video. Official Meta MRBD styles and notices are vendored; this is a **standalone browser presentation**, not Meta's SDK simulator. The original ECG storyboard is preserved at `/film.html`, and the earlier explorable ward remains at `/playground.html`.
+
+**Netlify is prepared, not published.** Root `netlify.toml` selects `handsfree/web-demo`, Node 22, `npm run typecheck && npm run build`, and `dist`. The nested configuration supports selecting that directory directly. The bundle includes the 3D assets; it does not include the 133 MB reference video. No environment secrets or backend are needed. Run the local checks above before a later authorized deployment.
+
+Verification (2026-11-14): clean `npm ci`, strict TypeScript checking, all **23 tests** and static build pass. Browser checks cover the complete workflow, partial keyboard/pointer holds, review cancellation, a held save spanning the emergency prompt, exact saved-note wording, desktop/phone/compact-phone layouts and reduced movement. The note card keeps a fixed footprint while its 19 words appear. Existing app/server sources were not modified; only a new synthetic scenario fixture was added under `prototype/demo-data/`.
 
 ### Patient information and Code Blue (integration build)
 
@@ -465,6 +482,6 @@ The intro reads **Your hands save lives. Keep them free.** The outro reads **Lum
 
 For editing, place `demo-video/source-silent.mp4` and `demo-video/lumi-overlay-v6.mov` at 00:03 after `demo-video/intro.mp4`. The alpha track provides the closing fade/title. To regenerate the 86-second body on macOS, install Python Pillow, NumPy and OpenCV plus ffmpeg, then run `python3 demo-video/render_overlay.py --output /tmp/lumi-body.mp4`; use `--alpha` for an editable MOV. The renderer currently uses macOS Arial fonts. Prepend the three-second intro for the final 89-second version. No location audio is included.
 
-The existing `handsfree/web-demo/` contains a procedural 3D guided film and a separate interactive playground, with vendored Meta UI styles and their notices. Its older ECG storyline is **not yet the new blood-pressure video flow**. The next guided interactive demo should follow the current brief at the end of SPEC.md. Netlify configuration is present; publishing remains deferred until the user explicitly requests it.
+The default `handsfree/web-demo/` entry now implements the guided interactive blood-pressure flow described above. The previous ECG film and playground are archived at separate routes. The v7 video remains the visual reference; Netlify publication is still deferred.
 
 Version 7 preserves the full v6 scenario and every cue time, adding a gentle transition: the intro fades out at 00:02.45–00:03.00, then the footage fades in at 00:03.00–00:03.80. Regenerate this pass with `python3 demo-video/add_intro_fade.py`; it uses the retained v6 export and ffmpeg. The v6 card fixtures and voice-over timing remain current.
