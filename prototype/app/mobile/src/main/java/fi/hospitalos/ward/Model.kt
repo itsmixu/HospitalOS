@@ -11,10 +11,15 @@ data class Snapshot(
     val tasks: List<Task>,
     val drafts: List<Draft>,
     val notes: List<Note>,
+    val messages: List<Message> = emptyList(),
 ) {
   fun patient(id: String?) = patients.firstOrNull { it.id == id }
 
   fun name(staffId: String) = staff.firstOrNull { it.id == staffId }?.name ?: staffId
+
+  /** Messages sent to me that I haven't read, oldest first. */
+  val unreadMessages: List<Message>
+    get() = messages.filter { it.to == me.id && it.status == "sent" }
 
   /** Colleagues I can ask for help (not me, not the ward overview account). */
   val colleagues: List<StaffRef>
@@ -40,10 +45,15 @@ data class Snapshot(
           tasks = o.optJSONArray("tasks").objects().map(::task),
           drafts = o.optJSONArray("drafts").objects().map(::draft),
           notes = o.optJSONArray("notes").objects().map(::note),
+          messages = o.optJSONArray("messages").objects().map(::message),
       )
     }
 
-    private fun staffRef(o: JSONObject) = StaffRef(o.optString("id"), o.optString("name"))
+    private fun staffRef(o: JSONObject) =
+        StaffRef(o.optString("id"), o.optString("name"), o.optString("status").ifBlank { null }.takeIf { !o.isNull("status") })
+
+    private fun message(o: JSONObject) =
+        Message(o.optString("id"), o.optString("from"), o.optString("to"), o.optString("text"), o.optString("at"), o.optString("status"))
 
     private fun patient(o: JSONObject) =
         Patient(
@@ -91,7 +101,14 @@ data class Snapshot(
   }
 }
 
-data class StaffRef(val id: String, val name: String)
+/** A colleague. [status] is "free" / "busy", or null for the ward overview account. */
+data class StaffRef(val id: String, val name: String, val status: String? = null) {
+  val isFree: Boolean
+    get() = status == "free"
+}
+
+/** Direct message between staff (not patient-linked). */
+data class Message(val id: String, val from: String, val to: String, val text: String, val at: String, val status: String)
 
 data class Patient(
     val id: String,

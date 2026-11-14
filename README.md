@@ -79,30 +79,43 @@ Use `ws://127.0.0.1:8787` in the phone app after USB reverse; the Android emulat
 
 **Rehearsal tokens:** start the server with `DEMO_TOKENS=fixed npm run dev` to get stable tokens `aino-demo`, `ben-demo`, `observer-demo` (loopback only). Without it, tokens are random per restart, as before.
 
-### The phone app
+### Voice assistant — on-phone Gemma first
 
-Two tabs:
+The assistant's "brain" runs **on the phone**: Gemma via Google's MediaPipe LLM Inference (`tasks-genai`). It turns the transcript into one JSON action, which the phone validates against ids the user may see and sends as a normal ward command — so the server's permission checks still apply, and only that command leaves the phone.
 
-- **Connect** — four steps in order, each turns green: ward server (address + token, remembered and auto-reconnected), Bluetooth, Meta AI registration, glasses display.
-- **Ward** — what's on your glasses right now (+ Start display / Home / Clear), requests for you, the open recording or draft note (edit and save on the phone), your patients (tap to expand: show on glasses, record with consent, ask a colleague), requests you sent with their real status, and clearly labelled simulated demo extras (staff map, fall alert).
+The model isn't in the APK (Gemma license + size). Download a MediaPipe `.task` model after accepting the Gemma terms — **demo default: `gemma-3n-E2B-it-int4.task`** (~3 GB, from Hugging Face `google/gemma-3n-E2B-it-litert-preview`; 10/10 on the built-in test, ~11–14 s per request). `gemma3-1b-it-int4.task` (~550 MB, `litert-community/Gemma3-1B-IT`) is ~3× faster but 7/10. The app loads the largest `.task` in the folder; rename the other to `.off`. Stage → **Test Gemma** reruns the 10-phrase test — then:
 
-### The glasses (Meta Ray-Ban Display)
+```sh
+adb push gemma-3n-E2B-it-int4.task /sdcard/Android/data/fi.hospitalos.demo/files/
+```
 
-Screens follow the mockups (`mockups/glasses-scenes.html` on branch `feat/glasses-app`) and are driven by live server state:
+and tap **Load model** on the Stage tab. If no model is loaded, or Gemma returns nothing usable, the request falls back to the server assistant below.
 
-| Flow | Glasses |
+### Server assistant fallback (Claude or rules)
+
+Put an Anthropic API key in `prototype/.env` (git-ignored; copy `.env.example`): `ANTHROPIC_API_KEY=...`. `npm run dev` loads it. The key stays on the laptop server, never on the phone.
+
+Speech is transcribed **on the glasses** (Meta DAT Speech, beta; allow the microphone in Meta AI via Connect → Voice). Meta has no language model, so the text goes to the server, where Claude (`claude-opus-5-5`, low effort) turns it into tool calls — request help (N free colleagues for "my room"), send a message, set status, open a patient, or answer from the patient's own record. **Every action runs through `ward.handle()` as the speaker**, so assignments and permissions are enforced by the server, not the model. Without a key (or if the API fails) a small rule parser handles the demo phrases: "two nurses to my room", "tell Ben …", "set me busy", "what did the patient report".
+
+### The glasses (Meta Ray-Ban Display) — glasses-first
+
+| Hub | Flow |
 |---|---|
-| Home | Ward card + tappable patient rows |
-| Patient | Name, room, warning, latest reviewed note or patient report; Record, Ask, Ask &lt;colleague&gt;, Back |
-| Encounter | Consent question → small corner recording pill (tap for Stop / Ask colleague / Keep going) → draft note with Reported / Planned / Done-by → Save or Discard |
-| Request I sent | "Not seen yet" → "Ben has seen it" → "Ben is coming" → "Ben finished" (sent ≠ delivered ≠ accepted, SPEC F1) |
-| Request for me | Pops up, auto-acknowledged as delivered once shown on the lens → On my way / Can't → briefing with only relevant info and its source → Done |
-| Ask | Demo answer from this patient's own record, always naming its source |
+| Home | Your name + free/busy (tap to toggle) · Patients · Message · Requests · **Ask assistant** |
+| Patients | List → card (tap card = back) → **Note** (consent → speak → draft → Save/Discard) · **Get help** (server picks a free assigned colleague, live status) · **Ask** (assistant with this patient as "my room") |
+| Message | Pick colleague (shows free/busy) → speak → confirm → Send |
+| Requests | Open requests, both directions, with real status (sent ≠ seen ≠ coming ≠ done, SPEC F1) |
+| Interruptions | Incoming help request, new message, fall alert (red banner, map turns with your head) — pop up over anything, then return you to where you were |
 | Offline | "Offline. Nothing is sent"; no automatic replay on reconnect |
 
-Code: `mobile/src/main/java/fi/hospitalos/` — `ward/` (server model + WebSocket client), `glasses/` (SDK link, screen flow, renderer, ward map bitmap), `ui/` (Compose phone screens).
+### The phone app (stage remote only)
 
-**Still demo-only:** no audio is captured; the draft uses the patient's synthetic report plus a fixed planned line (`GlassesFlow.DEMO_PLANNED`). Ask answers come from the record, not an AI model. Staff map and fall alert are simulated.
+- **Connect** — five steps: ward server, Bluetooth, Meta AI, glasses display, voice (glasses mic in Meta AI; phone mic as backup).
+- **Stage** — live mirror of the lens + live transcript, jump buttons, the assistant (Talk, or type a command as a stage fallback), demo events (fall alert, reset direction, staff map). Colleagues' requests/messages come from the browser at `http://127.0.0.1:8787` (log in as `ben-demo`).
+
+Code: `mobile/src/main/java/fi/hospitalos/` — `ward/` (model + WebSocket client), `glasses/` (SDK link, voice, head tracking, screen flow, renderer, ward map), `ui/` (Compose phone screens). Server: `server/src/core.ts` (ward rules), `server/src/assistant.ts` (Claude + rule fallback).
+
+**Simulated:** staff map positions and the fall itself. Spoken notes are saved as plans/observations; completed care still only comes from colleagues' explicit "Done".
 
 ## Next implementation steps
 

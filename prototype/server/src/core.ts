@@ -14,6 +14,15 @@ type Patient = {
   summary?: string;
 };
 type Staff = { id: string; name: string; patients: string[] };
+type Presence = "free" | "busy";
+type Message = {
+  id: string;
+  from: string;
+  to: string;
+  text: string;
+  at: string;
+  status: "sent" | "read";
+};
 type Task = {
   id: string;
   patientId: string;
@@ -54,7 +63,25 @@ export class Ward {
     completed: string[];
     at: string;
   }[] = [];
+  /** Declared availability (SPEC F1). Everyone starts free; the overview account has none. */
+  presence = new Map<string, Presence>(
+    seed.staff.filter((s) => s.id !== "observer").map((s) => [s.id, "free"]),
+  );
+  /** Direct messages between staff. Not patient-linked, so no clinical fields. */
+  messages: Message[] = [];
   private seen = new Map<string, string>();
+  /**
+   * Colleagues who may help with this patient and are free right now — the routing rule for
+   * "send 2 nurses": declared availability + assignment, never simulated proximity.
+   */
+  freeHelpers(actor: string, patientId: string) {
+    return this.staff.filter(
+      (s) =>
+        s.id !== actor &&
+        s.patients.includes(patientId) &&
+        this.presence.get(s.id) === "free",
+    );
+  }
   person(id: string) {
     const s = this.staff.find((s) => s.id === id);
     if (!s) throw Error("Unknown staff");
@@ -69,8 +96,13 @@ export class Ward {
   snapshot(id: string) {
     const s = this.person(id);
     return {
-      me: { id: s.id, name: s.name },
-      staff: this.staff.map((x) => ({ id: x.id, name: x.name })),
+      me: { id: s.id, name: s.name, status: this.presence.get(s.id) ?? null },
+      staff: this.staff.map((x) => ({
+        id: x.id,
+        name: x.name,
+        status: this.presence.get(x.id) ?? null,
+      })),
+      messages: this.messages.filter((m) => m.from === id || m.to === id),
       patients: this.patients.filter((p) => s.patients.includes(p.id)),
       tasks: this.tasks.map((t) =>
         s.patients.includes(t.patientId)
@@ -108,6 +140,49 @@ export class Ward {
     const p = c.payload;
     if (c.type === "patient.select") {
       this.access(actor, key.parse(p.patientId));
+    } else if (c.type === "presence.update") {
+      if (!this.presence.has(actor)) throw Error("No presence for this account");
+      this.presence.set(actor, z.enum(["free", "busy"]).parse(p.status));
+    } else if (c.type === "msg.send") {
+      const v = z.object({ to: key, text }).strict().parse(p);
+      this.person(v.to);
+      if (v.to === actor) throw Error("Select another colleague");
+      if (!this.presence.has(v.to)) throw Error("Cannot message this account");
+      this.messages.push({
+        id: randomUUID(),
+        from: actor,
+        to: v.to,
+        text: v.text,
+        at: new Date().toISOString(),
+        status: "sent",
+      });
+      if (this.messages.length > 200) this.messages.shift();
+    } else if (c.type === "msg.read") {
+      const m = this.messages.find((m) => m.id === key.parse(p.messageId));
+      if (!m || m.to !== actor) throw Error("Unknown message");
+      m.status = "read";
+    } else if (c.type === "help.auto") {
+      // "Get help": the server picks free colleagues assigned to this patient (SPEC F1 routing).
+      const v = z
+        .object({ patientId: key, count: z.number().int().min(1).max(4), summary: text })
+        .strict()
+        .parse(p);
+      this.access(actor, v.patientId);
+      const helpers = this.freeHelpers(actor, v.patientId).slice(0, v.count);
+      if (helpers.length === 0) throw Error("Nobody free for this patient right now");
+      const encounterId = this.drafts.find(
+        (d) => d.owner === actor && d.patientId === v.patientId && d.status === "open",
+      )?.id;
+      for (const h of helpers)
+        this.tasks.push({
+          id: randomUUID(),
+          from: actor,
+          to: h.id,
+          patientId: v.patientId,
+          summary: v.summary,
+          status: "sent",
+          encounterId,
+        });
     } else if (c.type === "help.request") {
       const v = z
         .object({ patientId: key, to: key, summary: text })

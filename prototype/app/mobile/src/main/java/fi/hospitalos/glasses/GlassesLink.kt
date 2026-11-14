@@ -43,6 +43,10 @@ enum class GlassesStep(val label: String) {
  */
 class GlassesLink(
     private val scope: CoroutineScope,
+    /** Head turn for the alert map; attached with the display session. */
+    val head: HeadTracker,
+    /** Speech for messages, notes and the assistant; attached with the display session. */
+    val voice: VoiceInput,
     private val onDisplayReady: () -> Unit,
 ) {
   private companion object {
@@ -140,6 +144,8 @@ class GlassesLink(
                   Log.i(TAG, "Display $state")
                   if (state == DisplayState.STARTED) {
                     _step.value = GlassesStep.ON
+                    if (head.source.value == HeadingSource.NONE) head.attach(s) { _messages.tryEmit(it) }
+                    if (voice.source.value != VoiceSource.GLASSES) voice.attach(s) { _messages.tryEmit(it) }
                     onDisplayReady()
                   }
                 }
@@ -151,6 +157,8 @@ class GlassesLink(
   fun stopDisplay() {
     jobs.forEach { it.cancel() }
     jobs.clear()
+    head.detach(session)
+    voice.detach(session)
     session?.let { s ->
       runCatching { s.removeDisplay() }
       s.stop()
@@ -164,12 +172,37 @@ class GlassesLink(
     }
   }
 
-  /** Replace what's on the glasses. Sends are serialized so screens never arrive out of order. */
+  /** Newest screen waiting to be sent; older waiting screens are dropped (they'd be stale). */
+  private var pending: (ContentScope.() -> Unit)? = null
+  private var sending = false
+
+  /**
+   * Replace what's on the glasses. One send at a time, and only the latest screen is kept while
+   * a send is in flight — so fast updates (the head-turning map) never build a backlog.
+   */
   fun show(content: ContentScope.() -> Unit) {
     val d = display ?: return
+    synchronized(this) {
+      pending = content
+      if (sending) return
+      sending = true
+    }
     scope.launch(Dispatchers.IO) {
       sendLock.withLock {
-        d.sendContent(content).onFailure { error, _ -> _messages.tryEmit("Display: ${error.description}") }
+        while (true) {
+          val next =
+              synchronized(this@GlassesLink) {
+                val p = pending
+                pending = null
+                if (p == null) sending = false
+                p
+              } ?: break
+          val t0 = System.nanoTime()
+          // A thrown exception must not leave `sending` stuck true (that would freeze the lens).
+          runCatching { d.sendContent(next).onFailure { error, _ -> _messages.tryEmit("Display: ${error.description}") } }
+              .onFailure { Log.w(TAG, "send failed", it) }
+          Log.d(TAG, "send ${(System.nanoTime() - t0) / 1_000_000} ms")
+        }
       }
     }
   }

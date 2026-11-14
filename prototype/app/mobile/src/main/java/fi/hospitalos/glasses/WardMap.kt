@@ -20,6 +20,9 @@ object WardMap {
   private const val MAP_H = 150f
   private const val SCALE = 2f // 520 x 300 px bitmap
 
+  /** Downscale for images re-sent often (alert banner, turning map). */
+  private const val SMALL = 0.7f
+
   private val GREEN = 0xFF5BE38F.toInt()
   private val AMBER = 0xFFFFCC4D.toInt()
   private val BLUE = 0xFF64D2FF.toInt()
@@ -77,6 +80,101 @@ object WardMap {
     dot(canvas, from, BLUE)
     label(canvas, "You", from, BLUE)
   }
+
+  /**
+   * Red alert banner. The display's text views can't be colored, so the alert is drawn as an
+   * image; red light shows clearly on the see-through lens.
+   */
+  fun alertBanner(text: String): Bitmap {
+    // Designed at 520x96, stored at ~half the pixels: less to push over Bluetooth on every update.
+    val k = SMALL
+    val bmp = Bitmap.createBitmap((520 * k).toInt(), (96 * k).toInt(), Bitmap.Config.ARGB_8888)
+    val c = Canvas(bmp)
+    c.drawColor(0xFF000000.toInt())
+    c.scale(k, k)
+    val w = 520
+    val h = 96
+    c.drawRoundRect(RectF(0f, 0f, w.toFloat(), h.toFloat()), 28f, 28f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = RED })
+    // Warning triangle, white outline with "!".
+    val white = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFFFFFFF.toInt(); style = Paint.Style.STROKE; strokeWidth = 5f; strokeJoin = Paint.Join.ROUND }
+    val tri = Path().apply { moveTo(56f, 22f); lineTo(84f, 72f); lineTo(28f, 72f); close() }
+    c.drawPath(tri, white)
+    c.drawLine(56f, 40f, 56f, 56f, white)
+    c.drawCircle(56f, 64f, 3f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFFFFFFF.toInt() })
+    c.drawText(
+        text,
+        104f,
+        62f,
+        Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFFFFFFF.toInt(); textSize = 40f; typeface = Typeface.DEFAULT_BOLD },
+    )
+    return bmp
+  }
+
+  /**
+   * Heading-up map: the plan rotates around the wearer so "up" is where they're facing.
+   * [turnDeg] is how far they've turned left since the alert opened (they start facing map-up).
+   */
+  fun headingUpMap(from: MapPoint, alertRoom: Int, turnDeg: Float): Bitmap {
+    // Re-sent on every head turn, so keep it small: designed at 520x300, stored at ~half the pixels.
+    val k = SMALL
+    val bmp = Bitmap.createBitmap((520 * k).toInt(), (300 * k).toInt(), Bitmap.Config.ARGB_8888)
+    val c = Canvas(bmp)
+    c.drawColor(0xFF000000.toInt())
+    c.scale(k, k)
+    val w = 520
+    val h = 300
+    val target = roomCenter(alertRoom)
+    c.save()
+    c.translate(w / 2f, h * 0.68f)
+    c.rotate(turnDeg) // turning left swings the world clockwise
+    c.translate(-from.x * SCALE, -from.y * SCALE)
+    drawPlan(c)
+    c.drawPath(routePath(from, target), routePaint())
+    c.drawCircle(target.x * SCALE, target.y * SCALE, 14f * SCALE, Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 2.5f * SCALE; color = RED; alpha = 140 })
+    dot(c, target, RED, radius = 9f)
+    c.restore()
+    // The wearer: a blue arrow at the center, always pointing up (= forward).
+    val cx = w / 2f
+    val cy = h * 0.68f
+    val arrow = Path().apply { moveTo(cx, cy - 18f); lineTo(cx + 13f, cy + 14f); lineTo(cx, cy + 6f); lineTo(cx - 13f, cy + 14f); close() }
+    c.drawPath(arrow, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = BLUE })
+    return bmp
+  }
+
+  /** First leg of the route as a bearing, degrees clockwise from map-up. */
+  fun firstLegBearing(from: MapPoint, alertRoom: Int): Float {
+    val target = roomCenter(alertRoom)
+    return if (kotlin.math.abs(target.x - from.x) > 1f) (if (target.x < from.x) -90f else 90f) else (if (target.y < from.y) 0f else 180f)
+  }
+
+  /** "Turn left" etc. for where to go next, given how far the wearer has turned left. */
+  fun direction(from: MapPoint, alertRoom: Int, turnDeg: Float): String {
+    var rel = firstLegBearing(from, alertRoom) + turnDeg // relative to where they face; + = right
+    while (rel > 180f) rel -= 360f
+    while (rel < -180f) rel += 360f
+    return when {
+      rel in -30f..30f -> "Straight ahead"
+      rel in 30f..150f -> "Turn right"
+      rel in -150f..-30f -> "Turn left"
+      else -> "Turn around"
+    }
+  }
+
+  private fun routePath(from: MapPoint, target: MapPoint) =
+      Path().apply {
+        moveTo(from.x * SCALE, from.y * SCALE)
+        lineTo(target.x * SCALE, from.y * SCALE)
+        lineTo(target.x * SCALE, (target.y + 12f) * SCALE)
+      }
+
+  private fun routePaint() =
+      Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = 3.5f * SCALE
+        strokeCap = Paint.Cap.ROUND
+        color = 0xFFFFFFFF.toInt()
+        pathEffect = DashPathEffect(floatArrayOf(7f * SCALE, 7f * SCALE), 0f)
+      }
 
   private fun roomCenter(room: Int): MapPoint {
     val top = topRooms.indexOf(room.toString())

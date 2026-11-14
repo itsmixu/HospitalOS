@@ -43,4 +43,8 @@ dependencies {
   implementation("com.squareup.okhttp3:okhttp:4.12.0")
   implementation("com.meta.wearable:mwdat-core:1.0.1")
   implementation("com.meta.wearable:mwdat-display:1.0.1")
+  implementation("com.meta.wearable:mwdat-motion:1.0.1")
+  implementation("com.meta.wearable:mwdat-speech:1.0.1")
+  // On-phone Gemma (MediaPipe LLM Inference). The model file is pushed separately, not bundled.
+  implementation("com.google.mediapipe:tasks-genai:0.10.35")
 }
