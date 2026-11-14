@@ -1,5 +1,68 @@
 # HospitalOS — product and implementation plan
 
+## Next hands-free implementation steps — 2026-11-14
+
+Status: planned, not implemented or physically validated by this section. Build on the current `handsfree/` version and preserve Miko's `prototype/`. Reuse useful screen designs where practical. These steps extend §16; retain its authorization, exact-review, confirmation and recovery safeguards.
+
+### 1. Finish the receiving nurse's briefing — first priority
+
+- Carry attached readings from the server into the glasses request model; the current glasses snapshot mapping does not retain the attachment.
+- Add "Show details" to incoming and accepted requests.
+- Show patient identity, requested action, exact readings and units, capture time, unknown measurement freshness, and any manual-correction label.
+- Include relevant patient warnings only when the recipient has access.
+- Keep Accept, Decline and Complete as separate actions.
+
+**Done when:** one nurse captures and shares a reading, and another reviews the same values on their glasses and accepts the request. Check recipient permissions and attachment fidelity through the full server-to-display path.
+
+### 2. Add a compact patient overview
+
+- Extend the patient model with available warnings, reported information and the latest permitted note.
+- Add "Show patient details," "Show latest note" and "Show latest reading."
+- Keep patient identity visible; distinguish reported information from confirmed observations and show timestamps.
+- Show an explicit empty state when information is unavailable. Existing author-only notes stay author-only unless a separately authorized sharing contract is added.
+
+**Done when:** the wearer selects a patient and reviews relevant information without opening the phone. Patient switching and assignment changes must not expose stale or unauthorized details.
+
+### 3. Make lists and commands discoverable
+
+- Add "Show patients," "Who's available?", "Show requests" and "Show messages."
+- Support "Next," "Previous," "Open" and "Back."
+- Separate pending requests from accepted work and completed history; allow access beyond the current three-entry request summary.
+- Add "What can I say?" with commands appropriate to the current screen.
+- Preserve the previous screen when opening and closing details, without reviving an expired confirmation.
+
+**Done when:** the wearer finds a patient, colleague or pending task without memorising names or exact commands. Check empty lists, multiple entries and changes while browsing.
+
+### 4. Make speech more forgiving
+
+- Support common alternatives such as "Send Ben a message" and "Ask Ben for help."
+- Support contextual commands such as "Get help here" only with a confirmed patient/location; review the resolved recipient or routing choice before sending.
+- Ask for clarification when the recipient, location or request is ambiguous.
+- Retain exact message/note review and explicit confirmation before sending or saving.
+- Start with command aliases and context rules. Add a language model only if testing demonstrates a need, with a separate scope/dependency decision.
+
+**Done when:** several natural phrasings reach the same correct review screen, while ambiguous, negated and incidental speech sends nothing. Test command-like words inside dictated content as content.
+
+### 5. Make the phone-in-pocket flow reliable
+
+- Move active connection and sensor lifecycle ownership out of the foreground-only test screen using supported Android and DAT mechanisms.
+- Show clear connection, listening and stopped states; retain explicit microphone opt-in and manual stop.
+- Handle phone locking, app switching, glasses removal and reconnection.
+- Preserve pending-action recovery without automatically repeating writes or restoring discarded reviews.
+- Verify supported voice activation and physical right/left tilt controls on the actual glasses; do not infer hardware support from simulator success.
+
+**Done when:** the wearer completes a request, message and capture/share flow with the phone locked in a pocket, including a disconnect/reconnect check. If the platform prevents a required operation, document the specific limitation and leave the gate open.
+
+### 6. Run one complete rehearsal
+
+Use two glasses pairs where available:
+
+**Select patient → review context → capture reading → share request → recipient reviews details → accepts → completes.**
+
+Also check cancellation, unavailable colleagues, multiple pending requests, speech mistakes and patient switching. Use synthetic data and record which steps worked on physical hardware. A browser responder remains a labelled fallback, not evidence of two-glasses completion.
+
+**Defer:** staff maps, simulated fall alerts and a general-purpose assistant until this complete workflow is reliable.
+
 > Authoritative plan, revised 2026-11-14. **The hands-free revision in §16 supersedes conflicting interaction and build priorities below for `handsfree/`; `prototype/` remains Miko’s preserved version.** This replaces earlier feature priorities; historical decisions remain in CLAUDE.md. Implementation lives in `prototype/`. A planned capability is not an implemented or validated capability.
 
 ## 1. Product decision

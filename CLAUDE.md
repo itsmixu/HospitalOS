@@ -28,6 +28,8 @@ HospitalOS focuses on nurse-to-nurse communication plus verified bedside observa
 
 ## Decision log
 
+- 2026-11-14 — **User requests publication of the next hands-free implementation plan.** Add ordered work in SPEC: recipient attachments/briefing, compact patient overview, voice-accessible lists, forgiving command phrasing, phone-in-pocket lifecycle and a full physical rehearsal. Preserve `prototype/`, retain explicit review/access/recovery safeguards, and defer maps/fall-alert extras/general assistant. This is a planning-only publication; it does not claim implementation or hardware validation.
+
 Newest at the bottom. Format: `YYYY-MM-DD — decision — why`.
 
 - 2026-11-13 — Project is **HospitalOS**: glasses for hospital ward staff — the brief asks for everyday, hands-free, first-person value; ward staff have busy, gloved hands all shift.
