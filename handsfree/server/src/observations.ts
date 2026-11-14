@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 export const patients = [
-  { id:'demo-a', name:'Demo Patient A', encounterId:'enc-a', room:'12', staff:['aino','ben'] },
-  { id:'demo-b', name:'Demo Patient B', encounterId:'enc-b', room:'14', staff:['aino'] },
+  { id:'demo-a', name:'Demo Patient A', encounterId:'enc-a', room:'12', warning:'Synthetic warning: assistance required for transfers', reported:'Patient reports discomfort when standing.', staff:['aino','ben'] },
+  { id:'demo-b', name:'Demo Patient B', encounterId:'enc-b', room:'14', warning:null, reported:'Patient requested water.', staff:['aino'] },
 ];
 const id = z.string().min(1).max(100);
 const tuple = z.object({ systolic:z.number().int().min(0).max(999), diastolic:z.number().int().min(0).max(999), pulse:z.number().int().min(0).max(999) }).strict();

@@ -8,3 +8,56 @@ test('save alone is private; separate share is minimal and participant-only',()=
 test('sharing never grants access to another patient, stale context or missing observation',()=>{const{w,context}=fixture();assert.equal(w.apply('aino',{id:'no',type:'observation.share',...context,observationId:'no',to:'ben',text:'Review'},'s').ok,false)});
 
 test('server rejects superseded encounter and removed assignment even before client snapshot',()=>{const{w,save}=fixture();const p=patients[0];const encounter=p.encounterId;const assigned=[...p.staff];try{p.encounterId='new-encounter';assert.equal(w.apply('aino',save,'s').ok,false);p.encounterId=encounter;p.staff=[];assert.equal(w.apply('aino',{...save,id:'revoked'},'s').ok,false)}finally{p.encounterId=encounter;p.staff=assigned}});
+
+test('recipient briefing preserves the exact corrected attachment through snapshot serialization', () => {
+  const {w, save, context} = fixture();
+  const saved = w.apply('aino', {...save, values: {...save.values, pulse: 72}, corrected: ['pulse']}, 's');
+  w.apply('aino', {id:'share', type:'observation.share', ...context, observationId:saved.observationId, to:'ben', text:'Review bedside reading'}, 's');
+  const snapshot = JSON.parse(JSON.stringify(w.snapshot('ben')));
+  const a = snapshot.tasks[0].attachment;
+  assert.deepEqual(a.values, {systolic:137, diastolic:82, pulse:72});
+  assert.deepEqual(a.units, {pressure:'mmHg', pulse:'bpm'});
+  assert.deepEqual(a.corrected, ['pulse']);
+  assert.equal(a.capturedAt, save.capturedAt);
+  assert.equal(a.measurementTime, null);
+  assert.equal(a.source, 'injected-camera');
+  assert.equal(snapshot.patients[0].warning, patients[0].warning);
+  assert.equal(snapshot.patients[0].reported, patients[0].reported);
+  assert.equal(snapshot.notes.length, 0);
+  assert.equal(w.snapshot('sara').patients.length, 0);
+  assert.equal(w.snapshot('sara').tasks.length, 0);
+});
+
+test('assignment revocation redacts patient details without changing or deleting the shared task', () => {
+  const {w, save, context} = fixture();
+  const saved = w.apply('aino', save, 's');
+  const shared = w.apply('aino', {id:'share', type:'observation.share', ...context, observationId:saved.observationId, to:'ben', text:'Review bedside reading'}, 's');
+  const p = patients[0], original = [...p.staff];
+  try {
+    p.staff = ['aino'];
+    const ben = w.snapshot('ben');
+    assert.equal(ben.patients.length, 0);
+    assert.equal(ben.tasks[0].id, shared.taskId);
+    assert.equal(ben.tasks[0].attachment, undefined);
+    assert.equal(ben.tasks[0].attachmentUnavailable, true);
+    assert.equal(ben.tasks[0].text, 'Patient-bound request');
+    assert.equal(w.snapshot('aino').tasks[0].attachment?.values.pulse, 71);
+    assert.ok(w.tasks[0].attachment, 'projection must not mutate stored attachment');
+  } finally { p.staff = original; }
+});
+
+test('superseded encounter hides old readings, notes and request attachments', () => {
+  const {w, save, context} = fixture();
+  const saved = w.apply('aino', save, 's');
+  assert.equal(w.apply('aino', {id:'note', type:'note.save', ...context, draftId:'draft', text:'Requested water.', source:'manual-dictation', reviewedAt:new Date().toISOString()}, 's').ok, true);
+  w.apply('aino', {id:'share', type:'observation.share', ...context, observationId:saved.observationId, to:'ben', text:'Review bedside reading'}, 's');
+  const p = patients[0], original = p.encounterId;
+  try {
+    p.encounterId = 'enc-next';
+    const snapshot = w.snapshot('aino');
+    assert.equal(snapshot.observations.length, 0);
+    assert.equal(snapshot.notes.length, 0);
+    assert.equal(snapshot.tasks[0].attachment, undefined);
+    assert.equal(snapshot.tasks[0].attachmentUnavailable, true);
+  } finally { p.encounterId = original; }
+});

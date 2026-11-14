@@ -1,5 +1,28 @@
 # HospitalOS
 
+## Isolated next version: briefings and voice navigation
+
+Branch `feat/handsfree-briefing-navigation` implements the first software slice of the next-steps plan in `SPEC.md`. It is based on committed hands-free version `bdec78b`; concurrent speech/hardware changes in the active test checkout are intentionally not included. Development and build output live in the separate `HospitalOS-next` worktree. This slice has not been installed on the shared phone or connected to the active simulator/ward.
+
+New wearer commands, after enabling voice and activating Lumi as usual:
+
+| Intent | Commands |
+|---|---|
+| Inspect an incoming request | `Show details` → `Next` / `Previous` → `Back` to a fresh acceptance review |
+| Browse work | `Show requests`, `Show accepted requests`, `Show request history`, `Show all requests` |
+| Find people | `Show patients`, `Who's available?` → `Next` / `Previous` → `Open` |
+| Inspect a confirmed patient | `Show patient details`, `Show latest note`, `Show latest reading` |
+| Browse messages | `Show messages` → `Open`; `Back` leaves unread, `Close message` explicitly marks an incoming message opened |
+| Learn available commands | `What can I say?` |
+| Dictate a message | `Send Ben a message` → dictate exact text → review → `Send message` |
+| Request assistance | `Ask Ben for help in room twelve`; with confirmed patient context, `Get help here` reviews a one-nurse room-only broadcast |
+
+Request details preserve the shared observation's exact values/units, patient identifiers, timestamp, correction fields and source. Capture time is not measurement freshness. Current patient assignment and encounter are checked for patient warnings and stored observations/notes; revoked request attachments are explicitly unavailable. Notes stay author-only. New detail/list screens are paged, use stable item IDs, and expire after a bounded command window. Returning from request details never reuses an old confirmation prompt.
+
+Physical list controls use right tilt to open the exact rendered item and left tilt to go back. Those new interactions and their display layout still require hardware validation. This branch retains foreground-only session operation: phone locking/background support and the two-glasses physical rehearsal are the next unimplemented stages, not passed gates.
+
+Software verification on 2026-11-14: **152 Android tests passed (30 new briefing/navigation checks)**; **62 server tests passed (3 new recipient-projection checks)**; TypeScript checks, debug APK assembly and release Kotlin compilation passed. Tests cover mapped attachment fidelity, review/accept/complete, revoked assignment/encounter, stale prompts, navigation changes, message read semantics, contextual help, dictation collisions, capture interruption and the existing regression suites. No new runtime or model dependency was added. These are software checks; no new hardware or optical-success claim is made.
+
 Display-first nurse-to-nurse communication, with a bedside observation capture feature. Junction 2026, Meta challenge.
 
 **Core:** request help or send a short reviewed message, see who received/accepted it, and explicitly complete the task. **Camera feature:** look at one supported instrument display, verify the extracted reading on the glasses, then optionally share it with the assigned colleague. No diagnosis or automatic clinical escalation.

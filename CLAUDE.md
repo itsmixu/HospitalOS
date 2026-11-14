@@ -28,6 +28,8 @@ HospitalOS focuses on nurse-to-nurse communication plus verified bedside observa
 
 ## Decision log
 
+- 2026-11-14 — **Implement the first hands-free plan slice in isolation at the user's request.** Branch `feat/handsfree-briefing-navigation` / worktree `HospitalOS-next`: preserve attachments in the receiving glasses, add current-assignment patient briefings, paged voice navigation and constrained natural command aliases. Reuse current dependencies; no runtime/model dependency added. Preserve the active test worktree, phone, simulator forwarding and ward process. Keep phone-in-pocket lifecycle and two-glasses physical rehearsal as outstanding work, and reconcile concurrent speech changes before integration.
+
 - 2026-11-14 — **User requests publication of the next hands-free implementation plan.** Add ordered work in SPEC: recipient attachments/briefing, compact patient overview, voice-accessible lists, forgiving command phrasing, phone-in-pocket lifecycle and a full physical rehearsal. Preserve `prototype/`, retain explicit review/access/recovery safeguards, and defer maps/fall-alert extras/general assistant. This is a planning-only publication; it does not claim implementation or hardware validation.
 
 Newest at the bottom. Format: `YYYY-MM-DD — decision — why`.

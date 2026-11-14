@@ -159,18 +159,24 @@ export class HandsFreeWard {
         .map(({ staff, ...p }) => p),
       context: this.observations.context(session) ?? null,
       observations: this.observations.records.filter(
-        (o) => o.reviewer === actor,
+        (o) => o.reviewer === actor && this.observations.assigned(actor, o.patientId)?.encounterId === o.encounterId,
       ),
       notes: this.patientNotes.records.filter(
         (n) =>
           n.author === actor &&
-          !!this.observations.assigned(actor, n.patientId),
+          this.observations.assigned(actor, n.patientId)?.encounterId === n.encounterId,
       ),
       type: "snapshot",
       me: actor,
       staff: this.staff,
-      tasks: this.tasks.filter((t) => t.from === actor || t.to === actor || t.recipients?.includes(actor)).map(t=>{
-        if(!t.required)return t;
+      tasks: this.tasks.filter((t) => t.from === actor || t.to === actor || t.recipients?.includes(actor)).map((t): Task & {attachmentUnavailable?: boolean}=>{
+        if(!t.required){
+          if (!t.attachment) return t;
+          const patient = this.observations.assigned(actor, t.attachment.patientId);
+          if (patient?.encounterId === t.attachment.encounterId) return t;
+          const {attachment, ...generic} = t;
+          return {...generic, text: "Patient-bound request", attachmentUnavailable: true};
+        }
         const accepted=t.acceptedBy??[];
         const status=t.from===actor?t.status:(t.completedBy?.includes(actor)?"completed":accepted.includes(actor)?"accepted":t.declinedBy?.includes(actor)?"declined":["cancelled","expired"].includes(t.status)?t.status:accepted.length>=t.required?"filled":t.deliveredTo?.includes(actor)?"delivered":"sent");
         return {...t,to:t.from===actor?"available nurses":actor,status};

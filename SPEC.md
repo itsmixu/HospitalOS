@@ -2,7 +2,19 @@
 
 ## Next hands-free implementation steps — 2026-11-14
 
-Status: planned, not implemented or physically validated by this section. Build on the current `handsfree/` version and preserve Miko's `prototype/`. Reuse useful screen designs where practical. These steps extend §16; retain its authorization, exact-review, confirmation and recovery safeguards.
+Plan scope; see the implementation checkpoint below for current status. Build on the current `handsfree/` version and preserve Miko's `prototype/`. Reuse useful screen designs where practical. These steps extend §16; retain its authorization, exact-review, confirmation and recovery safeguards.
+
+**Implementation checkpoint:** the first software slice is on `feat/handsfree-briefing-navigation`, based on the committed hands-free version plus this plan. It implements the recipient attachment/briefing, patient overview, navigation and bounded command-alias work below. Steps 5–6 remain open. It is developed in the separate `HospitalOS-next` worktree; do not install it on the shared test phone, repoint the simulator, restart the active ward or merge into the tested branch as part of this slice. Concurrent speech/hardware edits on the original worktree are not included and must be reconciled before integration.
+
+Implementation contracts for this slice:
+
+- Recipient snapshots retain the exact observation attachment through a platform-independent mapper used by the Android bridge. Invalid/incomplete attachments are explicitly unavailable, never filled with guessed/default readings. Detail pages show identifiers, values/units, capture timestamp, unknown measurement freshness, correction fields and input source. Warnings come only from the recipient's currently assigned patient with the matching encounter.
+- Server projections re-check current assignment/encounter for observation and note history and shared attachments. Revoked/superseded attachments are omitted with `attachmentUnavailable: true`; their task identity/status remains visible to participants. Projection does not alter stored history or share author-only notes.
+- `Show patient details`, `Show latest note` and `Show latest reading` require confirmed patient context. The overview labels reported information and author-reported notes; absent information has explicit empty states. Long text uses additional pages, not truncation.
+- `Show patients`, `Who's available?`, `Show requests`, `Show accepted requests`, `Show request history`, `Show all requests` and `Show messages` support `Next`, `Previous`, `Open`, `Back`. Selection uses stable entity IDs; removal never silently retargets Open. Right tilt opens only the exact rendered list card, and left tilt returns from details. Browsing a message does not mark it read; `Close message` remains explicit.
+- `Show details` from a request review disarms that review. Back prepares a fresh review of the current request only if still eligible; a prior prompt/gesture cannot submit it. Incoming alerts do not replace navigation, dictation or capture. New lists/details have bounded 20-second command windows, cleared on timeout/disconnect; snapshots do not extend them.
+- Add `Send Ben a message [saying …]`, `Ask Ben for help [in room … / here]`, and `Get help here`. Contextual help requires a confirmed current location and a reviewed routing choice. It sends room-only assistance, not patient data. Ambiguity asks for a complete location/recipient command; no broad language model or cloud fallback is introduced. Exact dictated text, including command-like words, remains content; Cancel/Stop retain their explicit escape behavior.
+- `What can I say?` offers paged general help or instructions for an active review. Changing review instructions disarms the previous rendered prompt without extending its deadline. Unknown-outcome recovery still blocks new writes. Hardware processing/voice accuracy, physical layout/usability, background operation and two-glasses completion remain unverified by software tests.
 
 ### 1. Finish the receiving nurse's briefing — first priority
 

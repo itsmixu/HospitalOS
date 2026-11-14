@@ -2,7 +2,7 @@ package fi.hospitalos.handsfree
 
 /** Pure local control. Only final transcripts are accepted; no language model executes actions. */
 data class Colleague(val id: String, val name: String, val reachable: Boolean, val status: String = "available")
-data class Request(val id: String, val from: String, val to: String, val room: String, val text: String, val status: String, val revision: Int, val required:Int=0, val acceptedBy:List<String> = emptyList())
+data class Request(val id: String, val from: String, val to: String, val room: String, val text: String, val status: String, val revision: Int, val required:Int=0, val acceptedBy:List<String> = emptyList(), val attachment:RequestAttachment? = null, val attachmentUnavailable:Boolean = false)
 data class WardMessage(val id:String,val from:String,val to:String,val text:String,val read:Boolean=false)
 data class Action(val type: String, val to: String = "", val room: String = "", val text: String = "", val taskId: String = "", val revision: Int = 0, val fields: Map<String,Any> = emptyMap())
 data class Card(val phase: String, val title: String, val body: String, val hint: String, val microphone: Boolean = false, val promptId: Int = 0)
@@ -17,6 +17,8 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(action.type=="note.save"){pending=id;deadline=clock()+5000}
     send(id,action)
   }
+  private val navigator = WardNavigator(me, bedside)
+  private var draftContext: PatientContext? = null
   val card get() = bedside.card ?: communicationCard
   var communicationCard = Card("offline", "Not connected", "Nothing will be sent", "Reconnect to the local ward")
     private set
@@ -48,6 +50,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if (!connected) {
       if(pending!=null)uncertainId=pending
       val uncertain = uncertainId != null
+      navigator.clear(); draftContext=null
       draft = null; pending = null; openedMessage=null;composeTo=null; gesture.disarm(); deadline = 0
       communicationCard = Card("offline", "Connection lost", if (uncertain) "Outcome unknown. Check requests after reconnecting." else "Unsent draft discarded", "No automatic resend")
     } else if (uncertainId!=null) {
@@ -59,13 +62,17 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   }
 
   fun snapshot(people: List<Colleague>, requests: List<Request>, incomingMessages: List<WardMessage> = messages) {
+    val priorTasks = tasks
     staff = people; tasks = requests; messages=incomingMessages
+    navigator.snapshot(staff, tasks, messages)
     val a = draft
-    if (a != null && ((a.taskId.isNotEmpty() && tasks.none { it.id == a.taskId && it.revision == a.revision }) ||
+    if (a != null && ((a.taskId.isNotEmpty() && tasks.none { it.id == a.taskId && it.revision == a.revision && it == priorTasks.find { old -> old.id == a.taskId } }) ||
           (a.to.isNotEmpty() && staff.none { it.id == a.to && it.reachable }))) {
       if(a.taskId.isNotEmpty())offeredIncoming.remove(a.taskId)
       reset("Review expired", "Request changed or colleague disconnected. Start again.")
     }
+    if (draftContext != null && draftContext != bedside.context) reset("Review expired", "Patient context changed. Start again.")
+    if (communicationCard.phase in setOf("browse", "details")) renderNavigation()
     if (communicationCard.phase == "idle") idle()
     if(communicationCard.phase=="status" && trackedTask==null && notifications().isNotEmpty())communicationCard=communicationCard.copy(hint=notifications()+" · wake to review")
     if (communicationCard.phase == "status" && trackedTask != null) {
@@ -80,6 +87,8 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   private val offeredIncoming = mutableSetOf<String>()
   fun dismissScreen() {
     if(pending!=null || card.phase in setOf("saving","sending","reconciling"))return
+    if(navigator.active && communicationCard.phase in setOf("browse", "details", "message")) { navigationResult(if(card.phase=="message") WardNavigator.Result.Changed else navigator.command("back")); return }
+    navigator.clear();draftContext=null
     bedside.dismiss();draft=null;openedMessage=null;noticeMessage=null;gesture.disarm();deadline=0;trackedTask=null
     composeTo=null
     communicationCard=Card("quiet","Display hidden","Say Hey Lumi with glasses voice enabled","",false)
@@ -108,6 +117,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(card.phase=="review" && card.promptId==promptId && draft?.type=="request.accept")confirm(true)
   }
   val tiltActionLabel:String? get()=if(bedside.card!=null)bedside.tiltActionLabel else when {
+    card.phase=="browse" -> if(navigator.canOpen) "open" else null
     card.phase=="message-notice" && noticeMessage!=null -> "open"
     card.phase=="review" -> when(draft?.type){
       "request.accept"->"accept";"request.create"->"send request";"request.broadcast"->"request nurses";"message.send"->"send message"
@@ -118,6 +128,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   fun physicalAccept(promptId:Int){
     tick();if(!online || card.promptId!=promptId)return
     if(bedside.card!=null){bedside.physicalAccept(promptId);return}
+    if(card.phase=="browse" && reviewVisible){navigationResult(navigator.command("open"));return}
     if(card.phase=="message-notice"){physicalNod(promptId);return}
     if(card.phase=="review")confirm(true)
   }
@@ -132,6 +143,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   fun wake() {
     tick()
     if (!online || pending != null || draft != null || bedside.blocksCommunication) return
+    if(navigator.active && card.phase in setOf("browse","details")){deadline=clock()+20000;renderNavigation();return}
     if(bedside.card!=null){bedside.wake();return}
     openedMessage=null;composeTo=null; gesture.disarm(); deadline = clock() + (if(quietMode)20_000 else 12_000)
     communicationCard = Card("listening", "Listening", "Ask Ben to bring the hoist to room 12", "Say cancel to stop", true)
@@ -140,7 +152,12 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   fun transcript(raw: String, final: Boolean = true) {
     tick()
     if (!final || !card.microphone || !online) return
-    if(composeTo==null && draft==null && pending==null && bedside.handles(raw)) { deadline=0;gesture.disarm();idle();bedside.transcript(raw,final);return }
+    val command = raw.trim().trimEnd('.', '!', '?').lowercase()
+    if(uncertainId!=null && command !in setOf("check outcome","check requests","show requests","show pending requests","show accepted requests","show request history","show all requests","show messages","next","previous","back","show details","what can i say","open")){
+      reset("Previous outcome unresolved","Say check outcome before sending another action");return
+    }
+    if(composeTo==null && pending==null && !bedside.blocksCommunication && draft==null && navigationCommand(command)) return
+    if(composeTo==null && draft==null && pending==null && bedside.handles(raw)) { navigator.clear();deadline=0;gesture.disarm();idle();bedside.transcript(raw,final);return }
     if(bedside.blocksCommunication)return
     bedside.dismiss()
     val text = raw.trim().replace(Regex("[.!?]+$"), "")
@@ -148,6 +165,17 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if (lower == "cancel" || lower == "stop") { reset("Cancelled", "Nothing sent"); return }
     if(composeTo!=null){val who=composeTo!!;composeTo=null;reviewMessage(who,raw.trim());return}
     if (draft != null) {
+      if(lower=="show details" && draft!!.taskId.isNotEmpty()) { openRequestDetails(draft!!.taskId, true); return }
+      if(lower=="what can i say") {
+        val hint=when(draft!!.type){
+          "request.accept"->"Say show details, accept request, decline request or cancel"
+          "request.complete"->"Say show details, confirm completion or cancel"
+          "message.send"->"Say send message, edit message or cancel"
+          else->communicationCard.hint
+        }
+        reviewVisible=false;gesture.disarm();communicationCard=communicationCard.copy(hint="Commands: $hint",promptId=++sequence);return
+      }
+      if(lower=="back"){reset("Review closed","Nothing sent");return}
       if(draft?.type=="message.send" && lower=="edit message") {staff.find{it.id==draft?.to}?.let{beginMessage(it)};return}
       if(draft?.type=="message.send" && lower.startsWith("replace message ")) {staff.find{it.id==draft?.to}?.let{reviewMessage(it,raw.trim().substring(16).trim())};return}
       when(lower) {
@@ -183,12 +211,12 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
       openedMessage=found.first();val m=openedMessage!!;deadline=clock()+12000;gesture.disarm()
       communicationCard=Card("message","Message from ${name(m.from)}",m.text,"Say reply followed by your message, or close message",true);return
     }
-    if(lower=="close message" && openedMessage!=null) {
+    if(lower=="close message" && openedMessage?.to==me) {
       val m=openedMessage!!;openedMessage=null
       submit(Action("message.read",fields=mapOf("messageId" to m.id)));return
     }
-    if(lower=="reply" && openedMessage!=null){staff.find{it.id==openedMessage?.from}?.let{beginMessage(it)};return}
-    if(lower.startsWith("reply ") && openedMessage!=null) {
+    if(lower=="reply" && openedMessage?.to==me){staff.find{it.id==openedMessage?.from}?.let{beginMessage(it)};return}
+    if(lower.startsWith("reply ") && openedMessage?.to==me) {
       val m=openedMessage!!;val body=raw.trim().substring(6).trim()
       if(body.length !in 1..160){reset("Message too long","Use up to 160 characters");return}
       if(staff.none{it.id==m.from && it.reachable}){reset("Colleague unavailable","Nothing sent");return}
@@ -210,6 +238,34 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
         "cancel"->review(Action("request.cancel",taskId=t.id,revision=t.revision),"Cancel request to ${name(t.to)}?","Room ${t.room} · ${t.text}","confirm cancellation")
         else->reviewIncoming(t)
       };return
+    }
+    val naturalMessagePattern=Regex("send ([A-Za-z]+) (?:a )?message(?: saying (.+))?",RegexOption.IGNORE_CASE)
+    val naturalMessage=naturalMessagePattern.matchEntire(raw.trim()) ?: naturalMessagePattern.matchEntire(text)
+    if(naturalMessage!=null){
+      val people=staff.filter{it.id!=me && it.name.equals(naturalMessage.groupValues[1],true)}
+      if(people.size!=1){reset("Colleague not identified","Say show available colleagues");return}
+      val body=naturalMessage.groupValues[2]
+      if(body.isEmpty())beginMessage(people.single()) else reviewMessage(people.single(),body)
+      return
+    }
+    val help=Regex("ask ([A-Za-z]+) for help(?: (?:in|to) room ([A-Za-z -]+|\\d{1,3})| (here))?",RegexOption.IGNORE_CASE).matchEntire(text)
+    if(help!=null || lower=="get help here"){
+      val p=bedside.currentPatient
+      val explicitRoom=help?.groupValues?.get(2).orEmpty()
+      val room=if(explicitRoom.isNotEmpty())roomNumber(explicitRoom) else p?.room
+      if(room==null){reset("Which room?","Say ask Ben for help in room twelve, or confirm a patient first");return}
+      if(help==null){
+        val available=staff.count{it.id!=me && it.reachable && it.status=="available"}
+        if(available==0){reset("No available nurses","Nothing sent");return}
+        review(Action("request.broadcast",room=room,fields=mapOf("required" to 1)),"Request one nurse?","Room $room · from confirmed patient location\nSent to $available available nurses · first acceptance fills request","send request")
+      }else{
+        val people=staff.filter{it.id!=me && it.name.equals(help.groupValues[1],true) && it.reachable}
+        if(people.size!=1){reset("Colleague unavailable","Choose one connected colleague by name");return}
+        val who=people.single()
+        review(Action("request.create",to=who.id,room=room,text="Help needed"),"Ask ${who.name}${if(who.status=="busy") " (busy)" else ""}?","Room $room · Help needed","send request")
+      }
+      if(explicitRoom.isEmpty())draftContext=bedside.context
+      return
     }
     Regex("(?:message|send (?:a )?message to|tell) ([A-Za-z]+)",RegexOption.IGNORE_CASE).matchEntire(text)?.let { m ->
       val people=staff.filter{it.name.equals(m.groupValues[1],true)&&it.id!=me}
@@ -243,7 +299,90 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     reset("Didn't understand", "Try: ask Ben to bring the hoist to room 12")
   }
 
+  private fun navigationCommand(words: String): Boolean {
+    val section=when(words){
+      "show patients"->WardNavigator.Section.PATIENTS
+      "who's available", "who is available", "show available colleagues"->WardNavigator.Section.STAFF
+      "show requests", "show pending requests", "show accepted requests", "show request history", "show all requests"->WardNavigator.Section.REQUESTS
+      "show messages"->WardNavigator.Section.MESSAGES
+      else->null
+    }
+    if(section!=null){
+      bedside.dismiss();openedMessage=null;trackedTask=null
+      val filter=when(words){"show accepted requests"->"accepted";"show request history"->"history";"show all requests"->"all";else->"pending"}
+      navigator.list(section,filter);deadline=clock()+20000;renderNavigation();return true
+    }
+    if(words in setOf("show patient details","show latest note","show latest reading")){
+      val p=bedside.currentPatient
+      if(p==null){bedside.dismiss();reset("Confirm patient first","Say show patients, then open one");return true}
+      bedside.dismiss();openedMessage=null
+      navigator.patient(when(words){"show latest note"->"note";"show latest reading"->"reading";else->"patient"},p.id)
+      deadline=clock()+20000;renderNavigation();return true
+    }
+    if(words=="show details"){
+      val id=navigator.selectedRequestId ?: trackedTask
+      if(id==null){bedside.dismiss();reset("Choose a request","Say show requests, then open one")}else openRequestDetails(id,false)
+      return true
+    }
+    if(words=="what can i say"){
+      bedside.dismiss();navigator.help();deadline=clock()+20000;renderNavigation();return true
+    }
+    if(words in setOf("review request","complete request","cancel request") && navigator.selectedRequestId!=null){
+      val t=tasks.find{it.id==navigator.selectedRequestId}
+      if(t!=null)reviewTask(t,words) else reset("Request unavailable","Say show requests")
+      return true
+    }
+    if(navigator.active){
+      val result=if(words=="back" && card.phase=="message") WardNavigator.Result.Changed else navigator.command(words)
+      if(result!=null){navigationResult(result);return true}
+    }
+    return false
+  }
+  private fun renderNavigation() {
+    val next=navigator.card() ?: return
+    if(communicationCard.copy(promptId=0)!=next){reviewVisible=false;gesture.disarm();communicationCard=next.copy(promptId=++sequence)}
+  }
+  private fun openRequestDetails(id:String,returnReview:Boolean){
+    draft=null;draftContext=null;reviewVisible=false;gesture.disarm();bedside.dismiss()
+    navigator.request(id,returnReview);deadline=clock()+20000;renderNavigation()
+  }
+  private fun navigationResult(result:WardNavigator.Result?) {
+    deadline=clock()+20000
+    when(result){
+      WardNavigator.Result.Changed->{openedMessage=null;renderNavigation()}
+      WardNavigator.Result.Exit->{navigator.clear();openedMessage=null;deadline=0;idle()}
+      is WardNavigator.Result.SelectPatient->{
+        if(uncertainId!=null)reset("Previous outcome unresolved","Say check outcome first")
+        else {navigator.clear();idle();bedside.transcript("select patient ${result.id}")}
+      }
+      is WardNavigator.Result.Compose->{staff.find{it.id==result.id}?.let{beginMessage(it)} ?: reset("Colleague unavailable","Say who's available")}
+      is WardNavigator.Result.ReadMessage->{
+        val m=messages.find{it.id==result.id}
+        if(m==null)reset("Message unavailable","Say show messages") else {
+          openedMessage=m
+          communicationCard=Card("message",if(m.to==me)"Message from ${name(m.from)}" else "Message to ${name(m.to)}",m.text,if(m.to==me)"Say reply, close message or back" else "Say back",true,++sequence)
+        }
+      }
+      is WardNavigator.Result.ReviewRequest->{
+        val t=tasks.find{it.id==result.id}
+        if(t==null)reset("Request unavailable","Say show requests") else if(t.to==me && t.status in setOf("sent","delivered"))reviewIncoming(t)
+        else {navigator.request(t.id);renderNavigation()}
+      }
+      null->Unit
+    }
+  }
+  private fun reviewTask(t:Request,words:String){
+    when {
+      words=="review request" && t.to==me && t.status in setOf("sent","delivered")->reviewIncoming(t)
+      words=="complete request" && t.to==me && t.status=="accepted"->review(Action("request.complete",taskId=t.id,revision=t.revision),"Mark complete?","Room ${t.room} · ${t.text}","confirm completion")
+      words=="cancel request" && t.from==me && t.status in setOf("sent","delivered")->review(Action("request.cancel",taskId=t.id,revision=t.revision),"Cancel request to ${name(t.to)}?","Room ${t.room} · ${t.text}","confirm cancellation")
+      else->reset("Action unavailable","Request is ${t.status}; say show requests")
+    }
+  }
+
   private fun beginMessage(who:Colleague){
+    if(uncertainId!=null){reset("Previous outcome unresolved","Say check outcome first");return}
+    navigator.clear()
     if(!who.reachable || who.id==me){reset("Colleague unavailable","Nothing sent");return}
     draft=null;composeTo=who;reviewVisible=false;gesture.disarm();deadline=clock()+30000
     communicationCard=Card("dictating-message","Message ${who.name}","Say your short message. It will be shown before sending.","Up to 160 characters · say cancel to stop",true,++sequence)
@@ -253,16 +392,22 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(!who.reachable){reset("Colleague unavailable","Nothing sent");return}
     composeTo=null
     review(Action("message.send",to=who.id,text=body),"Message ${who.name}?",body,"send message")
-    communicationCard=communicationCard.copy(hint="Say send message, edit message, or cancel")
+    if(draft!=null)communicationCard=communicationCard.copy(hint="Say send message, edit message, or cancel")
   }
-  private fun reviewIncoming(t: Request) = review(Action("request.accept", taskId=t.id, revision=t.revision), if(t.required>0)"${t.required} nurses requested" else "${name(t.from)} needs help", "Room ${t.room} · ${t.text}"+if(t.required>0)"\n${t.acceptedBy.size}/${t.required} confirmed · from ${name(t.from)}" else "", "accept request")
+  private fun reviewIncoming(t: Request) {
+    review(Action("request.accept", taskId=t.id, revision=t.revision), if(t.required>0)"${t.required} nurses requested" else "${name(t.from)} needs help", "Room ${t.room} · ${t.text}"+(if(t.required>0)"\n${t.acceptedBy.size}/${t.required} confirmed · from ${name(t.from)}" else "")+(if(t.attachmentUnavailable)"\nPatient details unavailable" else if(t.attachment!=null)"\nReading attached" else ""), "accept request")
+    if(draft!=null)communicationCard=communicationCard.copy(hint="Say show details, accept request or decline request")
+  }
   private fun review(action: Action, title: String, body: String, phrase: String) {
+    if(uncertainId!=null){reset("Previous outcome unresolved","Say check outcome first");return}
+    navigator.clear();draftContext=null
     reviewVisible = false; draft = action; deadline = clock() + (if(quietMode)20_000 else 8_000); sequence++
     communicationCard = Card("review", title, body, "Double nod or say ‘$phrase’ · shake to ${if(action.type == "request.accept") "decline" else "cancel"}", true, sequence)
     gesture.disarm()
   }
   /** Called after DAT accepts this exact review communicationCard; failed rendering never arms confirmation. */
   fun reviewDisplayed(promptId: Int) {
+    if(card.phase=="browse" && card.promptId==promptId){reviewVisible=true;return}
     if(card.phase=="message-notice" && card.promptId==promptId){reviewVisible=true;return}
     if(bedside.card!=null){bedside.displayAccepted(promptId);return}
     if(draft != null && communicationCard.promptId == promptId && !reviewVisible && clock() < deadline) { reviewVisible=true; gesture.arm(promptId, clock(), deadline) }
@@ -270,6 +415,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
   fun motion(sample: HeadSample) { tick(); if(bedside.card!=null){bedside.motion(sample);return}; gesture.sample(sample, clock())?.let { confirm(it) } }
   private fun confirm(yes: Boolean) {
     val action = draft ?: return
+    if(draftContext!=null && draftContext!=bedside.context){reset("Review expired","Patient context changed. Start again.");return}
     if(!reviewVisible) return
     if (!online || clock() >= deadline) { tick(); return }
     if (!yes && action.type != "request.accept") { reset("Cancelled", "Nothing sent"); return }
@@ -277,6 +423,7 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     submit(execute)
   }
   private fun submit(execute:Action) {
+    navigator.clear();draftContext=null
     draft = null;composeTo=null;pendingKind=execute.type; gesture.disarm(); deadline = clock() + 5_000
     val id = "$session-${++sequence}"; pending = id
     communicationCard = Card("sending", "Waiting for ward acknowledgement", "No colleague response yet", "Microphone off")
@@ -317,11 +464,12 @@ class HandsFreeEngine(val me: String, private val clock: () -> Long, private val
     if(pending!=null)uncertainId=pending
     val unknown = uncertainId != null
     pending = null
-    if(quietMode && !unknown){dismissScreen();return}
+    if(quietMode && !unknown){navigator.clear();dismissScreen();return}
     reset(if(unknown) "Outcome unknown" else "Timed out", if(unknown) "Check requests. Do not assume delivery; nothing is retried." else "Nothing sent. Wake to try again.")
   }
   fun deviceLost() { connection(false) }
   private fun reset(title: String, body: String) {
+    navigator.clear();draftContext=null
     draft = null; openedMessage=null;composeTo=null; gesture.disarm(); deadline=0; trackedTask=null
     communicationCard = Card("notice", title, body, "Microphone off · wake to continue")
   }

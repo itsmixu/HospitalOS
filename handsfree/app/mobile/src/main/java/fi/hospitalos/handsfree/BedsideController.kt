@@ -6,7 +6,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-data class Patient(val id:String,val name:String,val encounterId:String,val room:String)
+data class Patient(val id:String,val name:String,val encounterId:String,val room:String,val warning:String?=null,val reported:String?=null)
 data class PatientContext(val patientId:String,val encounterId:String,val contextRevision:Int)
 data class CaptureTicket(val id:String,val context:PatientContext,val started:Long,val capturedAt:String,val source:String)
 data class SavedReading(val id:String,val patientId:String,val values:Reading,val capturedAt:String,val corrected:Boolean)
@@ -29,6 +29,10 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
   private var noteDraftId:String?=null
   private var noteSaved=false
   private var selected:Patient?=null;private val gesture=HeadGestureDetector()
+  val assignedPatients get() = patients
+  val currentPatient get() = context?.let { c -> patients.singleOrNull { it.id == c.patientId && it.encounterId == c.encounterId } }
+  fun latestNote(patientId:String) = savedNotes.filter { it.patientId == patientId }.maxByOrNull { it.savedAt }
+  fun latestReading(patientId:String) = records.filter { it.patientId == patientId }.maxByOrNull { it.capturedAt }
   var cameraSource="injected-camera"
   private var lastCaptureIssue="No stable complete reading"
   val blocksCommunication get()=card?.phase in setOf("review","camera","camera-qr","saving","dictating-note")
@@ -52,6 +56,20 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
     tick();if(!online || !final || card?.microphone==false || pending!=null)return
     val s=raw.trim().replace(Regex("[.!?]+$"),"").lowercase()
     if(s=="cancel" || s=="stop"){invalidate("Unsubmitted reading discarded; camera off");return}
+    if(card?.phase=="dictating-note"){reviewNote(raw.trim());return}
+    if(s=="what can i say"){
+      if(draft!=null){
+        val hint=when(draft?.type){
+          "patient.confirm"->"Say confirm patient or cancel"
+          "note.save"->"Say save note, edit note or cancel"
+          "observation.save"->"Say save reading, correct field digits, retry or cancel"
+          "observation.share"->"Say send attachment or cancel"
+          else->card?.hint.orEmpty()
+        }
+        visible=false;gesture.disarm();card=card?.copy(hint="Commands: $hint",promptId=++sequence)
+      }
+      return
+    }
     if(s in setOf("scan patient","scan patient qr","scan qr code")){
       clearContext();ticket=null;draft=null;gesture.disarm();visible=false;qrScanId=UUID.randomUUID().toString();deadline=clock()+8000
       card=Card("camera-qr","Scan patient QR","Look at one synthetic patient code","Camera on · tilt left to cancel",true,++sequence);return
@@ -65,7 +83,7 @@ class BedsideController(private val clock:()->Long,private val wall:()->Long,pri
       selected=found.single();val p=selected!!
       review(Action("patient.confirm",fields=mapOf("patientId" to p.id,"encounterId" to p.encounterId)),"Confirm patient", "${p.name} · ID ${p.id}\nRoom ${p.room} · synthetic", "confirm patient");return
     }
-    if(card?.phase=="dictating-note"){reviewNote(raw.trim());return}
+    if(card?.phase in setOf("camera","camera-qr"))return
     if(draft!=null){
       if(draft?.type=="note.save") {
         when {s=="save note"->confirm(true);s=="edit note"->beginNote();s.startsWith("replace note ")->reviewNote(raw.trim().substring(13).trim())}

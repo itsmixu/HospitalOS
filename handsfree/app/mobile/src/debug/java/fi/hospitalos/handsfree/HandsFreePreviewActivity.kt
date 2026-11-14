@@ -240,17 +240,17 @@ class HandsFreePreviewActivity : ComponentActivity() {
         if(!authReady) {authReady=true;syncReadiness()}
         val people=m.getJSONArray("staff");val requests=m.getJSONArray("tasks")
         val staff=(0 until people.length()).map { people.getJSONObject(it).let { Colleague(it.getString("id"),it.getString("name"),it.getBoolean("reachable"),it.optString("status","available")) } }
-        val tasks=(0 until requests.length()).map { requests.getJSONObject(it).let { Request(it.getString("id"),it.getString("from"),it.getString("to"),it.getString("room"),it.getString("text"),it.getString("status"),it.getInt("revision"),it.optInt("required",0),it.optJSONArray("acceptedBy")?.let{a->(0 until a.length()).map{a.getString(it)}}?:emptyList()) } }
+        val tasks=(0 until requests.length()).mapNotNull { WardSnapshot.request(jsonMap(requests.getJSONObject(it))) }
         val messages=m.optJSONArray("messages")
         val mail=if(messages==null)emptyList()else (0 until messages.length()).map{messages.getJSONObject(it).let{WardMessage(it.getString("id"),it.getString("from"),it.getString("to"),it.getString("text"),it.has("readAt") && !it.isNull("readAt"))}}
-        engine.snapshot(staff,tasks,mail)
         val patients=m.optJSONArray("patients")
-        val assigned=if(patients==null)emptyList()else (0 until patients.length()).map{patients.getJSONObject(it).let{Patient(it.getString("id"),it.getString("name"),it.getString("encounterId"),it.getString("room"))}}
+        val assigned=if(patients==null)emptyList()else (0 until patients.length()).mapNotNull { WardSnapshot.patient(jsonMap(patients.getJSONObject(it))) }
         val obs=m.optJSONArray("observations")
         val saved=if(obs==null)emptyList()else (0 until obs.length()).map{obs.getJSONObject(it).let{o->val v=o.getJSONObject("values");SavedReading(o.getString("id"),o.getString("patientId"),Reading(v.getInt("systolic"),v.getInt("diastolic"),v.getInt("pulse")),o.getString("capturedAt"),o.getJSONArray("corrected").length()>0)}}
         val notes=m.optJSONArray("notes")
         val savedNotes=if(notes==null)emptyList()else (0 until notes.length()).map{notes.getJSONObject(it).let{SavedNote(it.getString("id"),it.getString("patientId"),it.getString("text"),it.getString("savedAt"))}}
         engine.bedside.snapshot(assigned,staff,context(m.optJSONObject("context")),saved,savedNotes)
+        engine.snapshot(staff,tasks,mail)
         if(eligible) for(t in tasks) if(t.to==actor && t.status=="sent" && delivered.add(t.id)) socket?.send(JSONObject().put("id",UUID.randomUUID().toString()).put("type","request.delivered").put("taskId",t.id).put("revision",t.revision).toString())
       }
       "command.status" -> {val ack=m.optJSONObject("ack");engine.reconciled(m.getString("commandId"),if(m.optBoolean("found"))ack?.optBoolean("ok") else null,ack?.optString("taskId")?.takeIf{it.isNotEmpty()},ack?.optString("reason")?.takeIf{it.isNotEmpty()})}
@@ -306,11 +306,11 @@ class HandsFreePreviewActivity : ComponentActivity() {
             text(if(glassesVoice) {if(listeningWindow?.card!=card) "Preparing microphone…" else if(!physical) "SDK speech · simulated" else if(card.microphone) "Glasses mic · listening" else "Glasses mic · say Hey Lumi"} else if(computerVoice) {if(card.microphone) "Computer mic · listening" else "Computer mic · wake phrase only"} else if(card.microphone) "Simulated input window" else "Microphone off",style=TextStyle.BODY,color=TextColor.SECONDARY)
             text(card.title,style=TextStyle.HEADING)
             card.body.split("\n").forEach{line->text(line,style=TextStyle.BODY)}
-            text(if(physical)engine.tiltHint.ifEmpty{card.hint}else card.hint,style=TextStyle.BODY,color=TextColor.SECONDARY)
+            text(cardHint(card),style=TextStyle.BODY,color=TextColor.SECONDARY)
           }
         }
       }?.onSuccess { if(card==engine.card)renderedCard=card
-        if(card.phase=="review" || card.phase=="camera" || card.phase=="camera-qr" || card.phase=="message-notice")engine.reviewDisplayed(card.promptId)
+        if(card==engine.card)engine.reviewDisplayed(card.promptId)
         if(card==engine.card){report(card,true);if(card.phase=="camera")startCamera();if(card.phase=="camera-qr")startQrCamera()} }?.onFailure { e,_ -> error=e.description;renderedCard=null;lastCard=null;nextRenderAt=SystemClock.elapsedRealtime()+1000 }
     } }
   }
@@ -320,7 +320,20 @@ class HandsFreePreviewActivity : ComponentActivity() {
   }
   private fun report(card:Card,rendered:Boolean=false){
     reportedSpeechListening=mock?.services?.speech?.isListening ?: false
-    socket?.send(JSONObject().put("type","sim.state").put("connectionError",error).put("motion",JSONObject().put("raw",motionRaw).put("samples",motionSamples).put("ageMs",if(motionLastAt==0L)-1 else SystemClock.elapsedRealtime()-motionLastAt).put("source",motionSource).put("state",motionState).put("status",motionStatus).put("eligible",eligible).put("rendered",renderedCard==card)).put("glassesVoice",glassesVoice).put("sdkReady",listeningWindow==SpeechWindow(engine.card,renderedCard==engine.card,eligible)).put("sdkListening",mock?.services?.speech?.isListening ?: false).put("renderedPromptId",if(rendered)card.promptId else 0).put("card",JSONObject().put("phase",card.phase).put("title",card.title).put("body",card.body).put("hint",if(physical)engine.tiltHint.ifEmpty{card.hint}else card.hint).put("microphone",card.microphone).put("promptId",card.promptId)).toString())
+    socket?.send(JSONObject().put("type","sim.state").put("connectionError",error).put("motion",JSONObject().put("raw",motionRaw).put("samples",motionSamples).put("ageMs",if(motionLastAt==0L)-1 else SystemClock.elapsedRealtime()-motionLastAt).put("source",motionSource).put("state",motionState).put("status",motionStatus).put("eligible",eligible).put("rendered",renderedCard==card)).put("glassesVoice",glassesVoice).put("sdkReady",listeningWindow==SpeechWindow(engine.card,renderedCard==engine.card,eligible)).put("sdkListening",mock?.services?.speech?.isListening ?: false).put("renderedPromptId",if(rendered)card.promptId else 0).put("card",JSONObject().put("phase",card.phase).put("title",card.title).put("body",card.body).put("hint",cardHint(card)).put("microphone",card.microphone).put("promptId",card.promptId)).toString())
+  }
+  private fun cardHint(card:Card):String = if(!physical)card.hint else when(card.phase){
+    "browse" -> "Say next or previous · tilt right to open · left to back"
+    "details" -> card.hint
+    "review" -> if(card.hint.startsWith("Commands:"))card.hint else engine.tiltHint + if(card.hint.contains("show details")) " · say show details" else ""
+    else -> engine.tiltHint.ifEmpty{card.hint}
+  }
+  private fun jsonMap(o:JSONObject):Map<String,Any?> = o.keys().asSequence().associateWith { key -> jsonValue(o.get(key)) }
+  private fun jsonValue(value:Any?):Any? = when(value){
+    JSONObject.NULL, null -> null
+    is JSONObject -> jsonMap(value)
+    is org.json.JSONArray -> (0 until value.length()).map { jsonValue(value.get(it)) }
+    else -> value
   }
   private fun context(o:JSONObject?):PatientContext?=o?.let{PatientContext(it.getString("patientId"),it.getString("encounterId"),it.getInt("contextRevision"))}
   private fun startQrCamera(){
