@@ -1,5 +1,9 @@
 # HospitalOS
 
+## Submission presentation
+
+[Download the final five-slide Lumi presentation](presentation/Lumi_Junction_2026_Submission.pptx).
+
 ## Isolated next version: briefings and voice navigation
 
 Branch `feat/handsfree-briefing-navigation` implements the first software slice of the next-steps plan in `SPEC.md`. It is based on committed hands-free version `bdec78b`; concurrent speech/hardware changes in the active test checkout are intentionally not included. Development and build output live in the separate `HospitalOS-next` worktree. This slice has not been installed on the shared phone or connected to the active simulator/ward.
