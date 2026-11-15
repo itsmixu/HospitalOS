@@ -1,0 +1,13 @@
+{
+  "name": "lumi-display-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --import ../web-demo/node_modules/tsx/dist/loader.mjs --test src/*.test.ts",
+    "typecheck": "../web-demo/node_modules/.bin/tsc --noEmit -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

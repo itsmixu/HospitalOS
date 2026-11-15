@@ -640,3 +640,11 @@ The latest final asset is `demo-video/lumi-demo-v7.mp4`. It keeps the v6 single-
 - Netlify builds statically on Node 22. The public demo does not ship video sources, require API secrets or request camera/microphone/location permissions. GLB loading has progress and a retry screen; WebGL context loss is explicit. Browser state is in memory only, not a production EHR.
 
 Verification results are recorded after the final clean-install and browser pass in README. Physical glasses and clinical workflows are outside this browser-validation claim. Publication remains blocked by the user's explicit “do not publish” instruction.
+
+## Unguided public display sandbox — 2026-11-15
+
+Separate `handsfree/display-demo` and Netlify site. No timed storyline, care authorization or forced order. Only scan/capture/dictation processing and short acknowledgement visibility use timers. Side controls inject synthetic wearer/ward events. Right tilt confirms patient, saves an individual reading or note, opens a message, accepts a request or acknowledges an emergency. Left declines a routine request; an unopened message is retained unread; other screens close without saving. Drafts survive interruptions. No microphone, camera or patient data leaves the browser.
+
+Reuse production ward command validation and access checks. Browser presentation/inputs are a test adapter, not the native Kotlin controller or hardware validation. Preserve Android and the 3D demo. `/display.html` supports Meta's official Chrome simulator and same-origin tab controls. The public optics preview uses WASD's MIT optics model and additive blending with a blurred licensed hospital photo. It is not branded as an official simulator.
+
+Verify arbitrary event order, retained/read messages, patient gates, independent reading/note saves, request decline receipts, interrupted drafts, scoped emergency handover, partial/stale gestures and reset.

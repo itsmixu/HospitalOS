@@ -485,3 +485,13 @@ For editing, place `demo-video/source-silent.mp4` and `demo-video/lumi-overlay-v
 The default `handsfree/web-demo/` entry now implements the guided interactive blood-pressure flow described above. The previous ECG film and playground are archived at separate routes. The v7 video remains the visual reference; Netlify publication is still deferred.
 
 Version 7 preserves the full v6 scenario and every cue time, adding a gentle transition: the intro fades out at 00:02.45–00:03.00, then the footage fades in at 00:03.00–00:03.80. Regenerate this pass with `python3 demo-video/add_intro_fade.py`; it uses the retained v6 export and ffmpeg. The v6 card fixtures and voice-over timing remain current.
+
+## Unguided display sandbox
+
+`handsfree/display-demo/` is the separate public, hardware-free Lumi sandbox. It has no guided storyline or 3D scene: use any side control to inject a message, request, emergency, wristband scan, blood-pressure capture or arbitrary patient note, then hold left/right to respond. Records use the existing `HandsFreeWard`, observations, notes and emergency engines locally. Inputs and the browser display controller are simulated; this is not an execution of the Android app.
+
+Run `npm ci --prefix handsfree/web-demo`, then in `handsfree/display-demo` run `npm run typecheck`, `npm test`, `npm run build`. Serve `dist/` over HTTP. Netlify site: `lumi-display-demo`, distinct from `lumi-ward-demo`. For Git-connected Netlify builds choose base `handsfree/display-demo`, its `netlify.toml`, and publish `dist`.
+
+`/display.html` is a standalone black-background display surface for Meta's Chrome simulator. Open the sandbox and one display tab in the same browser; enable **Control separate display tab** to send synthetic inputs via same-origin BroadcastChannel. The extension itself is not embedded or redistributed. Meta's native MockDeviceKit preview remains in `HandsFreePreviewActivity` and needs the running Android app plus ward server. A static Netlify deployment cannot execute it.
+
+Browser additive optics reuse MIT-licensed WASD `optics.js` (license included). The display geometry remains Meta's documented square web-app viewport, not WASD's alternative profile. Hospital background: W.carter, *Corridor in Uddevalla Hospital*, https://commons.wikimedia.org/wiki/File:Corridor_in_Uddevalla_Hospital.jpg, CC BY-SA 4.0; resized source thumbnail, CSS crop/blur/darkening. The photo adaptation remains CC BY-SA 4.0. Credits are available in display settings.
