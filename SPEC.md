@@ -648,3 +648,5 @@ Separate `handsfree/display-demo` and Netlify site. No timed storyline, care aut
 Reuse production ward command validation and access checks. Browser presentation/inputs are a test adapter, not the native Kotlin controller or hardware validation. Preserve Android and the 3D demo. `/display.html` supports Meta's official Chrome simulator and same-origin tab controls. The public optics preview uses WASD's MIT optics model and additive blending with a blurred licensed hospital photo. It is not branded as an official simulator.
 
 Verify arbitrary event order, retained/read messages, patient gates, independent reading/note saves, request decline receipts, interrupted drafts, scoped emergency handover, partial/stale gestures and reset.
+
+The free display sandbox smoothly rolls the hospital scene opposite a held head tilt and returns to level on release/cancellation. The HUD remains head-locked; reduced-motion disables camera roll. Motion follows accepted tilt input, including remote display controls.
